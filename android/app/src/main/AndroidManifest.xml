@@ -1,0 +1,104 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for external storage size reporting -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!-- Required on Android 11+ (API 30+) to enumerate installed applications and games -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <!-- Network permissions for gaming diagnostics -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Battery info is read via sticky broadcast; no permission needed -->
+    <!-- READ_PHONE_STATE not required for Build.* constants -->
+    <application
+        android:label="Moha Lab Optimization"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon
+                 as the Android process has started. This theme is visible to the
+                 user while the Flutter UI initializes. -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            ShizukuProvider — MANDATORY for Shizuku binder to attach to this app.
+            Without this declaration Shizuku.pingBinder() always returns false,
+            even when the Shizuku service is fully running.
+            authorities MUST match the applicationId exactly.
+        -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="com.mohalab.optimization.shizuku"
+            android:multiprocess="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+        <!-- Don't delete the meta-data below. This is used by the Flutter
+             tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+        <!--
+            Google Mobile Ads (AdMob) — Required SDK meta-data.
+            Development: uses Google's official test App ID (safe to commit).
+            Production:  replace with your real AdMob App ID from https://admob.google.com
+                         after registering com.mohalab.optimization.
+            See: lib/core/ads/ad_configuration.dart for unit ID configuration.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
+        <!--
+            TODO (before release): replace the value above with your production AdMob App ID.
+            Format: ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
+        -->
+
+        <!-- Home Screen Widget Receiver -->
+        <receiver
+            android:name=".MohaWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/moha_widget_info" />
+        </receiver>
+    </application>
+    <!-- Required to query activities if the app is using Android 11+ -->
+    <queries>
+        <!-- Required on Android 11+ to detect whether Shizuku is installed -->
+        <package android:name="moe.shizuku.privileged.api" />
+        <package android:name="rikka.shizuku" />
+        <package android:name="rikka.sui" />
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.GAME" />
+        </intent>
+    </queries>
+</manifest>

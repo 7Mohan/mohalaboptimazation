@@ -1,0 +1,64 @@
+name: mohalab_optimization
+description: Moha Lab Optimization — Android gaming optimization and diagnostics utility.
+publish_to: 'none'
+version: 1.2.0+2
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Navigation
+  go_router: ^14.2.7
+
+  # Local persistence
+  shared_preferences: ^2.3.2
+  path_provider: ^2.1.4
+
+  # App metadata (version, build number)
+  package_info_plus: ^8.0.2
+
+  # Typography
+  google_fonts: ^6.2.1
+
+  # SVG support for potential icon assets
+  flutter_svg: ^2.0.10+1
+
+  # Monetisation — Google Mobile Ads SDK (AdMob)
+  # Uses Google official test ads in debug builds.
+  # Replace production IDs in AdConfiguration.production() before release.
+  google_mobile_ads: ^5.1.0
+
+  # Local notifications — optimization reminders, schedule nudges
+  flutter_local_notifications: ^17.2.3
+
+  # Android home screen widget support
+  home_widget: ^0.6.0
+
+  # Share content (images, text)
+  share_plus: ^10.0.2
+
+  # Capture widget as image for sharing
+  screenshot: ^3.0.0
+
+  # Background tasks for scheduled optimization
+  workmanager: ^0.5.2
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/images/
