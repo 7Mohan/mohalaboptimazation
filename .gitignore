@@ -48,11 +48,14 @@ app.*.map.json
 key.properties
 local.properties
 **/android/local.properties
-.env
-.env.*
+.env*
+*.env*
 *.token
 *.pem
 *.key
+*.p12
+credentials*.json
+service-account*.json
 google-services.json
 GoogleService-Info.plist
 
@@ -60,4 +63,5 @@ GoogleService-Info.plist
 Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
+
 
