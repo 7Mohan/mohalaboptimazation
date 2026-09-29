@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/extensions/color_ext.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/ads/ad_placement.dart';
@@ -65,7 +67,7 @@ class _RewardedAdButtonState extends ConsumerState<RewardedAdButton> {
         side: BorderSide(
           color: isReady
               ? theme.colorScheme.primary
-              : theme.colorScheme.outline.withOpacity(0.4),
+              : theme.colorScheme.outline.fade(0.4),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

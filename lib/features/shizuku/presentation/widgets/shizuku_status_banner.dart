@@ -58,9 +58,9 @@ class _BannerContent extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
             color: bannerColor,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: onBannerColor.withOpacity(0.15),
+              color: dotColor.withOpacity(0.35),
               width: 1,
             ),
           ),
@@ -132,38 +132,18 @@ class _BannerContent extends ConsumerWidget {
     ShizukuStatus status,
     ColorScheme cs,
   ) =>
-      switch (status) {
-        ShizukuStatus.notInstalled => (
-            cs.errorContainer,
-            cs.onErrorContainer,
-            cs.error,
-          ),
-        ShizukuStatus.notRunning => (
-            cs.errorContainer,
-            cs.onErrorContainer,
-            cs.error,
-          ),
-        ShizukuStatus.binderConnected => (
-            cs.tertiaryContainer,
-            cs.onTertiaryContainer,
-            cs.tertiary,
-          ),
-        ShizukuStatus.permissionDenied => (
-            cs.secondaryContainer,
-            cs.onSecondaryContainer,
-            cs.secondary,
-          ),
-        ShizukuStatus.permissionGranted => (
-            cs.primaryContainer,
-            cs.onPrimaryContainer,
-            cs.primary,
-          ),
-        ShizukuStatus.ready => (
-            cs.primaryContainer,
-            cs.onPrimaryContainer,
-            cs.primary,
-          ),
-      };
+      _glass(switch (status) {
+        ShizukuStatus.notInstalled => cs.error,
+        ShizukuStatus.notRunning => cs.error,
+        ShizukuStatus.binderConnected => cs.tertiary,
+        ShizukuStatus.permissionDenied => cs.secondary,
+        ShizukuStatus.permissionGranted => cs.primary,
+        ShizukuStatus.ready => cs.primary,
+      }, cs);
+
+  /// Translucent tint of [accent] so the banner reads as glass on the canvas.
+  (Color, Color, Color) _glass(Color accent, ColorScheme cs) =>
+      (accent.withOpacity(0.12), cs.onSurface, accent);
 
   void _openSetupSheet(BuildContext context) {
     showModalBottomSheet<void>(

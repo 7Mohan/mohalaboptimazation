@@ -222,8 +222,7 @@ class AcknowledgementsSheet extends ConsumerWidget {
                           showLicensePage(
                             context: context,
                             applicationName: config.appName,
-                            applicationVersion:
-                                appInfo?.versionDisplay ?? '1.0.0',
+                            applicationVersion: appInfo?.versionDisplay ?? '1.0.0',
                             applicationLegalese: config.copyrightDisplay,
                           );
                         },
@@ -235,8 +234,7 @@ class AcknowledgementsSheet extends ConsumerWidget {
                         shape: const RoundedRectangleBorder(
                           borderRadius: AppRadius.radiusMd,
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       ),
                       onPressed: () => Navigator.of(context).pop(),
                       child: const Text('Close'),

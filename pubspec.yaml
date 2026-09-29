@@ -47,8 +47,6 @@ dependencies:
   # Capture widget as image for sharing
   screenshot: ^3.0.0
 
-  # Background tasks for scheduled optimization
-  workmanager: ^0.5.2
   url_launcher: ^6.3.1
 
 dev_dependencies:

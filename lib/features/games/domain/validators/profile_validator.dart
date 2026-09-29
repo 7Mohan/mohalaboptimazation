@@ -75,6 +75,11 @@ abstract final class ProfileValidator {
       }
     }
 
+    // 5. Render scale bounds (Game Mode accepts 0.3–1.0; we expose 0.5–1.0)
+    if (profile.renderScale < 0.5 || profile.renderScale > 1.0) {
+      errors.add('Render scale must be between 0.5 and 1.0');
+    }
+
     if (errors.isEmpty) {
       return ProfileValidationResult.success();
     }

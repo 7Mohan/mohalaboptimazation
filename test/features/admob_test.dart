@@ -63,11 +63,17 @@ void main() {
       expect(config.isTestMode, isFalse);
     });
 
-    test('production() configuration constants are non-null for all placements', () {
+    test('production IDs are real AdMob IDs or null while unconfigured', () {
       final config = AdConfiguration.production();
+      expect(config.appId, matches(RegExp(r'^ca-app-pub-\d{16}~\d{10}$')));
       for (final placement in AdPlacement.values) {
         final id = config.adUnitId(placement);
-        expect(id, isNotNull, reason: 'Production ID null for $placement');
+        // Unconfigured placements must never send a TODO string to AdMob.
+        if (id != null) {
+          expect(id, matches(RegExp(r'^ca-app-pub-\d{16}/\d{10}$')), reason: '$placement');
+          expect(id.startsWith('ca-app-pub-3940256099942544'), isFalse,
+              reason: 'Production must not use Google test IDs: $placement');
+        }
       }
     });
 
@@ -80,10 +86,10 @@ void main() {
 
     test('isProductionReady returns false when IDs contain TODO', () {
       final config = AdConfiguration.production();
-      // Production IDs start with TODO — not ready until replaced.
+      // A placement is ready exactly when it has a real (non-TODO) ID.
       for (final placement in AdPlacement.values) {
-        expect(config.isProductionReady(placement), isFalse,
-            reason: 'Production IDs must be replaced before release: $placement');
+        expect(config.isProductionReady(placement), config.adUnitId(placement) != null,
+            reason: '$placement');
       }
     });
 

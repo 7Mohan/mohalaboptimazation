@@ -8,14 +8,31 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/network/presentation/screens/network_diagnostics_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/optimization/presentation/screens/optimization_screen.dart';
-import '../../features/performance/presentation/screens/performance_screen.dart';
 import '../../features/settings/presentation/screens/data_management_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../shared/widgets/app_shell.dart';
+import '../../shared/widgets/glass/glass_background.dart';
+import '../theme/app_theme.dart';
 import 'route_names.dart';
 
-/// Application router configuration using GoRouter with shell route for
-/// persistent bottom navigation.
+/// Page with the glass fade-through transition. Tab switches use a shorter
+/// duration so the bottom bar feels instant; pushed pages get a touch more.
+Page<void> _glassPage(GoRouterState state, Widget child, {bool tab = false}) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: Duration(milliseconds: tab ? 220 : 300),
+    reverseTransitionDuration: Duration(milliseconds: tab ? 180 : 240),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        GlassFadeThrough(
+      animation: animation,
+      secondaryAnimation: secondaryAnimation,
+      child: child,
+    ),
+  );
+}
+
+/// Application router with a shell route for persistent glass navigation.
 final appRouter = GoRouter(
   initialLocation: RouteNames.home,
   debugLogDiagnostics: false,
@@ -23,9 +40,13 @@ final appRouter = GoRouter(
     GoRoute(
       path: RouteNames.onboarding,
       name: 'onboarding',
-      pageBuilder: (context, state) => const MaterialPage(
-        child: OnboardingScreen(),
-      ),
+      pageBuilder: (context, state) =>
+          _glassPage(state, const GlassBackground(child: OnboardingScreen())),
+    ),
+    // Legacy deep link: the Performance screen merged into Tweaks.
+    GoRoute(
+      path: RouteNames.performance,
+      redirect: (context, state) => RouteNames.optimization,
     ),
     ShellRoute(
       builder: (context, state, child) => AppShell(child: child),
@@ -33,72 +54,47 @@ final appRouter = GoRouter(
         GoRoute(
           path: RouteNames.home,
           name: 'home',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: HomeScreen(),
-          ),
+          pageBuilder: (context, state) => _glassPage(state, const HomeScreen(), tab: true),
         ),
         GoRoute(
           path: RouteNames.games,
           name: 'games',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: GamesScreen(),
-          ),
+          pageBuilder: (context, state) => _glassPage(state, const GamesScreen(), tab: true),
         ),
         GoRoute(
           path: RouteNames.optimization,
           name: 'optimization',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: OptimizationScreen(),
-          ),
-        ),
-        GoRoute(
-          path: RouteNames.performance,
-          name: 'performance',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: PerformanceScreen(),
-          ),
+          pageBuilder: (context, state) => _glassPage(state, const OptimizationScreen(), tab: true),
         ),
         GoRoute(
           path: RouteNames.about,
           name: 'aboutRoot',
-          pageBuilder: (context, state) => const MaterialPage(
-            child: AboutScreen(),
-          ),
+          pageBuilder: (context, state) => _glassPage(state, const AboutScreen()),
         ),
         GoRoute(
           path: RouteNames.diagnostics,
           name: 'diagnostics',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: DiagnosticsScreen(),
-          ),
+          pageBuilder: (context, state) => _glassPage(state, const DiagnosticsScreen(), tab: true),
         ),
         GoRoute(
           path: RouteNames.network,
           name: 'network',
-          pageBuilder: (context, state) => const MaterialPage(
-            child: NetworkDiagnosticsScreen(),
-          ),
+          pageBuilder: (context, state) => _glassPage(state, const NetworkDiagnosticsScreen()),
         ),
         GoRoute(
           path: RouteNames.settings,
           name: 'settings',
-          pageBuilder: (context, state) => const NoTransitionPage(
-            child: SettingsScreen(),
-          ),
+          pageBuilder: (context, state) => _glassPage(state, const SettingsScreen(), tab: true),
           routes: [
             GoRoute(
               path: 'about',
               name: 'about',
-              pageBuilder: (context, state) => const MaterialPage(
-                child: AboutScreen(),
-              ),
+              pageBuilder: (context, state) => _glassPage(state, const AboutScreen()),
             ),
             GoRoute(
               path: 'data',
               name: 'dataManagement',
-              pageBuilder: (context, state) => const MaterialPage(
-                child: DataManagementScreen(),
-              ),
+              pageBuilder: (context, state) => _glassPage(state, const DataManagementScreen()),
             ),
           ],
         ),

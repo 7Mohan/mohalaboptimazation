@@ -13,6 +13,9 @@
 | `android.permission.ACCESS_WIFI_STATE` | Normal | Checks Wi-Fi frequency band (2.4 GHz vs 5 GHz) and link speed (Mbps) to advise gamer on jitter reduction. | Granted automatically at install time. | Diagnostics engine omits Wi-Fi frequency recommendations and link speed telemetry. |
 | `android.permission.READ_EXTERNAL_STORAGE`<br>*(maxSdkVersion=32)* | Dangerous | Computes total and free storage space for device diagnostics on Android 12 and below. | Requested at runtime if user views Hardware Diagnostics on legacy devices. | Storage card displays "Storage telemetry unavailable". No crash occurs. |
 | `android.permission.QUERY_ALL_PACKAGES` | High-Scrutiny / Special | Enumerates installed games and applications so users can configure gaming profiles and launch games directly. | Declared in manifest for Android 11+ (API 30+). | App cannot auto-discover installed games; user cannot select existing games for optimization profiles. |
+| `android.permission.KILL_BACKGROUND_PROCESSES` | Normal | Lets RAM Boost stop cached background apps when Shizuku is not connected. | Granted automatically at install time. | RAM Boost only works through Shizuku. |
+| `android.permission.ACCESS_NOTIFICATION_POLICY` | Special (user toggle) | Turns Gaming Do Not Disturb on and off without Shizuku. | User enables it in system "Do Not Disturb access" settings (linked from the Tweaks screen). | Gaming DND requires Shizuku. |
+| `android.permission.WRITE_SECURE_SETTINGS` | Signature/Development (optional) | Applies settings-based tweaks (refresh rate, animations, blurs, pop-ups, DNS, scans, touch & hold) without Shizuku. Originals are saved and restored. | Never granted by default; only via `adb shell pm grant com.mohalab.optimization android.permission.WRITE_SECURE_SETTINGS`. | Settings tweaks require Shizuku. |
 
 ---
 

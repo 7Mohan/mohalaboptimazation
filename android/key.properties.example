@@ -1,0 +1,11 @@
+# Copy this file to key.properties (same folder) and fill in your own values.
+# key.properties is git-ignored — never commit it or share its passwords.
+#
+# Create the key once from the project root:
+#   keytool -genkey -v -keystore android/app/upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+# storeFile is relative to android/app/.
+storeFile=upload-key.jks
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyAlias=upload
+keyPassword=YOUR_KEY_PASSWORD

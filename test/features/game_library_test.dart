@@ -325,8 +325,8 @@ void main() {
 
       // Bottom sheet should be visible showing the new profile hierarchy
       expect(find.text('PROFILE STATUS'), findsOneWidget);
-      expect(find.text('AVAILABLE CATEGORIES'), findsOneWidget);
       expect(find.text('CURRENT CONFIGURATION'), findsOneWidget);
+      expect(find.text('Turbo Launch'), findsOneWidget);
       // The game name should appear in the sheet header
       expect(find.text('Space War Pro'), findsWidgets);
     });

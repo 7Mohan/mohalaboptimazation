@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
@@ -209,16 +208,6 @@ class _GlassButtonState extends State<GlassButton> with SingleTickerProviderStat
       ),
       child: Center(child: content),
     );
-
-    if (widget.variant == GlassButtonVariant.glass) {
-      button = ClipRRect(
-        borderRadius: effectiveRadius,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: button,
-        ),
-      );
-    }
 
     return GestureDetector(
       onTapDown: _handleTapDown,

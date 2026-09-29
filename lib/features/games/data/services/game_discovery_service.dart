@@ -22,7 +22,7 @@ class GameDiscoveryService {
       final List<dynamic>? rawList = await _channel.invokeListMethod(
         'getInstalledApps',
         {'includeIcons': includeIcons},
-      ).timeout(const Duration(seconds: 5));
+      ).timeout(const Duration(seconds: 15));
 
       if (rawList == null) return const [];
 

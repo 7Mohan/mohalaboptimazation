@@ -58,32 +58,38 @@ class AnnouncementsFeedWidget extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0088CC).withAlpha(25),
-                        borderRadius: BorderRadius.circular(AppRadius.xs),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0088CC).withAlpha(25),
+                          borderRadius: BorderRadius.circular(AppRadius.xs),
+                        ),
+                        child: const Icon(
+                          Icons.campaign_rounded,
+                          color: Color(0xFF0088CC),
+                          size: 20,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.campaign_rounded,
-                        color: Color(0xFF0088CC),
-                        size: 20,
+                      const SizedBox(width: AppSpacing.xs),
+                      Flexible(
+                        child: Text(
+                          'Lab News & Announcements',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.xs),
-                    Text(
-                      'Lab News & Announcements',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                const SizedBox(width: AppSpacing.xs),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: const Color(0xFF0088CC).withAlpha(20),
                     borderRadius: BorderRadius.circular(AppRadius.full),
@@ -117,24 +123,29 @@ class AnnouncementsFeedWidget extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: item.tagColor.withAlpha(25),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            item.tag,
-                            style: TextStyle(
-                              color: item.tagColor,
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: item.tagColor.withAlpha(25),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              item.tag,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: item.tagColor,
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
+                        const SizedBox(width: 8),
                         Text(
                           item.date,
                           style: theme.textTheme.labelSmall?.copyWith(
@@ -184,8 +195,8 @@ class AnnouncementsFeedWidget extends ConsumerWidget {
                       );
                     },
                     icon: const Icon(Icons.send_rounded, size: 16),
-                    label: const Text('Open Telegram',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    label:
+                        const Text('Open Telegram', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),

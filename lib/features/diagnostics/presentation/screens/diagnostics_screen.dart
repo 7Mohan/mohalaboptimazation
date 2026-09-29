@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/tokens/app_radius.dart';
 import '../../../../core/theme/tokens/app_spacing.dart';
+import '../../../../shared/widgets/app_shell.dart';
 import '../../../../shared/widgets/app_bars/moha_app_bar.dart';
 import '../../../../shared/widgets/feedback/moha_error_state.dart';
 import '../../../../shared/widgets/feedback/moha_loading_state.dart';
@@ -76,7 +77,7 @@ class _DeviceDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+      padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
       children: [
         // -- Device Identity ----------------------------------------------
         const SectionHeader(

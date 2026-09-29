@@ -20,38 +20,44 @@
 
 ## 📖 Overview
 
-**Moha Lab Optimization** is an advanced Android utility and gaming acceleration engine designed to eliminate frame drops, minimize network jitter, and optimize device hardware resources during intense mobile gaming sessions. 
+**Moha Lab Optimization** is an Android gaming utility that applies **real, verifiable system tweaks** — documented Android settings and `cmd` services — with live telemetry, per-game Game Mode tuning and gaming network diagnostics.
 
-Built with **Flutter** and styled with a sleek, minimalist **Tailwind Zinc** design language, the app provides real-time system monitoring, automated memory garbage collection, thermal throttling mitigation, and elevated process management via the rootless **Shizuku API**.
+Built with **Flutter** and a performant **glassmorphism** design language, it works rootless through the **Shizuku API** (or a one-time ADB permission grant for settings-based tweaks).
 
 ---
 
 ## ✨ Key Features
 
-### 🚀 1. 144Hz FPS Pipeline Bypass
-- Unlocks display refresh rates and render buffers up to 144Hz.
-- Synchronizes surface composer queues to prevent frame pacing stutter and vsync tearing.
-- Low-latency touch dispatch optimization for responsive gaming input.
+### ⚙️ 1. Verified System Tweaks
+- Lock max refresh rate, faster animations, disable window blurs, fixed performance mode, gaming Do Not Disturb, block pop-up banners, private DNS, background scan control, faster touch & hold.
+- Every tweak is **read back from the device** after applying — toggles reflect real state and survive app restarts.
+- Original values are saved on-device before the first change and restored exactly when switched off.
+- Tweaks Android resets on reboot are re-applied automatically when Shizuku reconnects.
 
-### ⚡ 2. Shizuku System Privilege Engine
-- Rootless system-level command execution via Android ADB IPC binding.
-- Dynamic CPU and GPU governor tuning for sustained performance states.
-- Aggressive background process demotion and memory reclamation without requiring root access.
+### ⚡ 2. Rootless Privilege Paths
+- **Shizuku**: full access to settings and `cmd` services (power, game, package, notification).
+- **ADB grant** (`pm grant … WRITE_SECURE_SETTINGS`): unlocks every settings-based tweak without Shizuku.
+- No arbitrary shell endpoint — commands are built natively from fixed templates and validated arguments.
 
-### 🎮 3. Game Profile Manager
-- Automatic game detection and per-game optimization profiles.
-- Custom presets for competitive titles (Free Fire, PUBG Mobile, Call of Duty: Mobile, Genshin Impact).
-- One-tap boost triggers that clear OS memory caches before game launch.
+### 🔓 Root Mode (Magisk / KernelSU / APatch)
+- Tweaks are split into **Non-root** and **Root** tabs.
+- Detects Magisk, KernelSU (and Next), APatch and Kitsune; "Grant root" triggers the manager's standard `su` prompt. One persistent root shell is reused (no per-command toasts); the grant is resumed silently on next launch.
+- Root-only kernel tweaks: CPU performance governor, GPU (Adreno / Mali) performance governor, TCP BBR, reduced swappiness, Wi-Fi low-latency / high-perf locks. Root actions: drop kernel caches, storage TRIM.
+- Every kernel node's original value is saved and restored; values reset on reboot and active tweaks are re-applied when the root session resumes. Shizuku started as root is also treated as root.
 
-### 🌐 4. Gaming Network Diagnostics
-- Real-time ICMP and UDP ping latency probing.
-- Network jitter and packet loss detection to isolate local Wi-Fi vs. ISP routing issues.
-- Smart connection quality scoring for multiplayer gaming.
+### 🎮 3. Per-Game Tuning (Android 13/14+ Game Mode)
+- Game Mode (standard / performance / battery), render-resolution downscale and FPS override per game.
+- Settings are per-app and only active while the game runs.
+- ART `speed` compilation per game; Turbo Launch applies the profile before launching.
 
-### 📊 5. Live Diagnostics & System Telemetry
-- Real-time CPU core utilization tracking.
-- Battery thermal monitoring with overheating warnings.
-- Device specification inspector (SoC architecture, RAM bandwidth, Android API levels).
+### 🧹 4. Measured Maintenance
+- RAM Boost, app-cache cleanup and ART background dexopt — results are measured (MB freed), never estimated.
+
+### 🌐 5. Gaming Network Diagnostics
+- Latency, jitter and packet-loss probing with connection quality scoring.
+
+### 📊 6. Live Telemetry
+- Per-core CPU clocks, battery temperature with PowerManager thermal status and throttling-headroom forecast, RAM, battery and storage.
 
 ---
 
@@ -63,22 +69,23 @@ The codebase adheres to **Clean Architecture** with strict feature separation an
 lib/
 ├── core/
 │   ├── constants/             # App-wide configurations and presets
-│   ├── theme/                 # Tailwind Zinc design tokens & typography
+│   ├── theme/                 # Glass design tokens, colors & typography
 │   └── utils/                 # Security, platform checks, and formatting
 ├── features/
 │   ├── diagnostics/           # Hardware telemetry & thermal sensors
-│   ├── games/                 # Game library, detection, and profile state
-│   ├── home/                  # Unified dashboard & quick-action triggers
+│   ├── games/                 # Game library, detection, and per-game Game Mode tuning
+│   ├── home/                  # Dashboard, live telemetry & quick actions
 │   ├── network/               # Ping latency, packet loss, & network tests
 │   ├── onboarding/            # First-run guided setup & permissions tour
-│   ├── optimization/          # 144Hz bypass, memory trims, & execution handlers
-│   ├── performance/           # Live charts, frame pacing, & monitor widgets
+│   ├── optimization/          # Tweak catalog, presets & TweakEngine bridge
 │   ├── settings/              # App preferences, data backup, & cache management
-│   └── shizuku/               # Shizuku IPC bridge & ADB permission dispatchers
+│   └── shizuku/               # Shizuku IPC bridge & permission flow
 ├── shared/
-│   └── widgets/               # Reusable Tailwind cards, badges, buttons & glass UI
+│   └── widgets/               # Glass cards, sheets, navigation shell & components
 └── main.dart                  # Application entry point & Riverpod provider scope
 ```
+
+Native side (`android/app/src/main/kotlin/.../`): `TweakEngine.kt` owns every privileged command, snapshots and state read-back; `ShizukuBridge.kt` executes them with exit-code checking.
 
 ---
 

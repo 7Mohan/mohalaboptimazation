@@ -5,6 +5,8 @@ import '../../../../core/theme/tokens/app_radius.dart';
 import '../../../../core/theme/tokens/app_sizes.dart';
 import '../../../../core/theme/tokens/app_spacing.dart';
 import '../../../../core/ads/ad_placement.dart';
+import '../../../onboarding/presentation/tour/feature_tour.dart';
+import '../../../../shared/widgets/app_shell.dart';
 import '../../../../shared/widgets/ads/moha_banner_ad_widget.dart';
 import '../../../../shared/widgets/app_bars/moha_app_bar.dart';
 import '../../../../shared/widgets/dialogs/moha_bottom_sheet.dart';
@@ -90,6 +92,7 @@ class _GamesScreenState extends ConsumerState<GamesScreen> {
       body: RefreshIndicator(
         onRefresh: () => ref.read(gameLibraryControllerProvider.notifier).refresh(),
         child: Column(
+          key: TourKeys.gamesList,
           children: [
             // Search Input Header (visible when expanded)
             if (_isSearchExpanded)
@@ -226,6 +229,7 @@ class _GamesScreenState extends ConsumerState<GamesScreen> {
                   // If there are truly no games installed on the device
                   if (totalGamesCount == 0) {
                     return ListView(
+                      padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
                       children: [
                         MohaEmptyState(
                           icon: Icons.sports_esports_outlined,
@@ -280,9 +284,11 @@ class _GamesScreenState extends ConsumerState<GamesScreen> {
 
                   // Render detected games list
                   return ListView.separated(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.md,
-                      vertical: AppSpacing.sm,
+                    padding: EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      AppSpacing.sm,
+                      AppSpacing.md,
+                      AppShell.bottomInset(context),
                     ),
                     itemCount: games.length,
                     separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),

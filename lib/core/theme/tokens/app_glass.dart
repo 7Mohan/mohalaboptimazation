@@ -1,175 +1,132 @@
 import 'package:flutter/material.dart';
 import '../app_colors.dart';
 
-/// Defines the visual depth levels for the Moha Lab Glassmorphism System.
+/// Visual depth levels for the Moha Lab glass system.
 enum AppGlassLevel {
-  /// Level 1: Flat Background / Canvas (OLED-black / deep slate, 0 blur, 60-120fps scrolling).
+  /// Level 1: the canvas itself — no surface.
   level1,
 
-  /// Level 2: Base Glass for standard cards, panels, system metric tiles (10-12px blur, 7% surface, 16px radius).
+  /// Level 2: standard glass panel (cards, list groups, metric tiles).
   level2,
 
-  /// Level 3: Elevated Glass for interactive/active elements (18px blur, 12% surface with cobalt tint, 20px radius).
+  /// Level 3: raised / accented glass for interactive or active elements.
   level3,
 
-  /// Level 4: Floating Glass for modal bottom sheets, dialogs, floating action bars (28px blur, 24px radius, specular highlight).
+  /// Level 4: floating chrome (nav bar, sheets, dialogs) — the only level
+  /// that uses a real backdrop blur.
   level4,
 }
 
-/// Token constants and style resolvers for the 4-Level Glass Design System.
+/// Tokens and resolvers for the glass design system.
+///
+/// Performance rule: a live [BackdropFilter] re-renders everything beneath
+/// it every frame. Panels sit over a smooth ambient gradient, where a blur is
+/// visually indistinguishable from none — so only floating chrome (level 4)
+/// blurs. Panels get their depth from translucency, a specular hairline and
+/// soft shadow instead, which keeps scrolling at full refresh rate.
 abstract final class AppGlass {
-  // Blur values
   static const double blurLevel1 = 0.0;
-  static const double blurLevel2 = 12.0;
-  static const double blurLevel3 = 18.0;
-  static const double blurLevel4 = 28.0;
+  static const double blurLevel2 = 0.0;
+  static const double blurLevel3 = 0.0;
+  static const double blurLevel4 = 24.0;
 
-  // Corner radii
   static const double radiusLevel1 = 0.0;
-  static const double radiusLevel2 = 16.0;
-  static const double radiusLevel3 = 20.0;
-  static const double radiusLevel4 = 24.0;
+  static const double radiusLevel2 = 20.0;
+  static const double radiusLevel3 = 22.0;
+  static const double radiusLevel4 = 28.0;
 
-  /// Returns blur sigma according to [level].
-  static double blurFor(AppGlassLevel level) {
-    switch (level) {
-      case AppGlassLevel.level1:
-        return blurLevel1;
-      case AppGlassLevel.level2:
-        return blurLevel2;
-      case AppGlassLevel.level3:
-        return blurLevel3;
-      case AppGlassLevel.level4:
-        return blurLevel4;
-    }
-  }
+  static bool _dark(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark;
 
-  /// Returns corner radius according to [level].
-  static double radiusFor(AppGlassLevel level) {
-    switch (level) {
-      case AppGlassLevel.level1:
-        return radiusLevel1;
-      case AppGlassLevel.level2:
-        return radiusLevel2;
-      case AppGlassLevel.level3:
-        return radiusLevel3;
-      case AppGlassLevel.level4:
-        return radiusLevel4;
-    }
-  }
+  static double blurFor(AppGlassLevel level) => switch (level) {
+        AppGlassLevel.level1 => blurLevel1,
+        AppGlassLevel.level2 => blurLevel2,
+        AppGlassLevel.level3 => blurLevel3,
+        AppGlassLevel.level4 => blurLevel4,
+      };
 
-  /// Resolves surface fill color based on brightness and [level].
+  static double radiusFor(AppGlassLevel level) => switch (level) {
+        AppGlassLevel.level1 => radiusLevel1,
+        AppGlassLevel.level2 => radiusLevel2,
+        AppGlassLevel.level3 => radiusLevel3,
+        AppGlassLevel.level4 => radiusLevel4,
+      };
+
+  /// Translucent fill for a glass surface.
   static Color surfaceColor(BuildContext context, AppGlassLevel level) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    switch (level) {
-      case AppGlassLevel.level1:
-        return isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
-      case AppGlassLevel.level2:
-        return isDark
-            ? Colors.white.withOpacity(0.06)
-            : Colors.black.withOpacity(0.04);
-      case AppGlassLevel.level3:
-        return isDark
-            ? const Color(0xFF1E56DE).withOpacity(0.08)
-            : AppColors.primary.withOpacity(0.05);
-      case AppGlassLevel.level4:
-        return isDark
-            ? const Color(0xFF111724).withOpacity(0.90)
-            : Colors.white.withOpacity(0.92);
-    }
+    final dark = _dark(context);
+    return switch (level) {
+      AppGlassLevel.level1 => Colors.transparent,
+      AppGlassLevel.level2 => dark
+          ? Colors.white.withOpacity(0.055)
+          : Colors.white.withOpacity(0.62),
+      AppGlassLevel.level3 => dark
+          ? const Color(0xFF7AA5FF).withOpacity(0.10)
+          : Colors.white.withOpacity(0.78),
+      AppGlassLevel.level4 => dark
+          ? const Color(0xFF0E1428).withOpacity(0.72)
+          : Colors.white.withOpacity(0.74),
+    };
   }
 
-  /// Resolves specular border gradient based on brightness and [level].
+  /// Specular hairline: bright at the top-left light source, fading out.
   static Gradient? borderGradient(BuildContext context, AppGlassLevel level) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    switch (level) {
-      case AppGlassLevel.level1:
-        return null;
-      case AppGlassLevel.level2:
-        return LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  Colors.white.withOpacity(0.14),
-                  Colors.white.withOpacity(0.04),
-                ]
-              : [
-                  Colors.black.withOpacity(0.10),
-                  Colors.black.withOpacity(0.02),
-                ],
-        );
-      case AppGlassLevel.level3:
-        return LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  AppColors.primaryDark.withOpacity(0.35),
-                  Colors.white.withOpacity(0.08),
-                ]
-              : [
-                  AppColors.primary.withOpacity(0.30),
-                  Colors.black.withOpacity(0.04),
-                ],
-        );
-      case AppGlassLevel.level4:
-        return LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDark
-              ? [
-                  Colors.white.withOpacity(0.25),
-                  Colors.white.withOpacity(0.06),
-                ]
-              : [
-                  Colors.black.withOpacity(0.15),
-                  Colors.black.withOpacity(0.04),
-                ],
-        );
-    }
+    final dark = _dark(context);
+    if (level == AppGlassLevel.level1) return null;
+    final accent = level == AppGlassLevel.level3;
+    return LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: dark
+          ? [
+              (accent ? AppColors.primaryDark : Colors.white)
+                  .withOpacity(accent ? 0.55 : 0.20),
+              Colors.white.withOpacity(0.04),
+              Colors.white.withOpacity(accent ? 0.14 : 0.08),
+            ]
+          : [
+              Colors.white.withOpacity(0.95),
+              Colors.white.withOpacity(0.45),
+              (accent ? AppColors.primary : const Color(0xFF8C9AC0))
+                  .withOpacity(accent ? 0.35 : 0.22),
+            ],
+      stops: const [0.0, 0.55, 1.0],
+    );
   }
 
-  /// Resolves box shadow based on [level].
+  /// Plain hairline color, for widgets that cannot paint a gradient border.
+  static Color hairline(BuildContext context) => _dark(context)
+      ? Colors.white.withOpacity(0.09)
+      : const Color(0xFF8C9AC0).withOpacity(0.22);
+
   static List<BoxShadow>? shadowsFor(BuildContext context, AppGlassLevel level) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    switch (level) {
-      case AppGlassLevel.level1:
-        return null;
-      case AppGlassLevel.level2:
-        return isDark
-            ? [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.20),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ];
-      case AppGlassLevel.level3:
-        return [
+    final dark = _dark(context);
+    return switch (level) {
+      AppGlassLevel.level1 => null,
+      AppGlassLevel.level2 => [
           BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.35) : Colors.black.withOpacity(0.08),
-            blurRadius: 14,
-            spreadRadius: -2,
-            offset: const Offset(0, 4),
-          ),
-        ];
-      case AppGlassLevel.level4:
-        return [
-          BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.50) : Colors.black.withOpacity(0.12),
-            blurRadius: 28,
-            spreadRadius: -4,
+            color: dark ? Colors.black.withOpacity(0.28) : const Color(0xFF3A4A7A).withOpacity(0.07),
+            blurRadius: 24,
+            spreadRadius: -6,
             offset: const Offset(0, 10),
           ),
-        ];
-    }
+        ],
+      AppGlassLevel.level3 => [
+          BoxShadow(
+            color: dark ? AppColors.glowAzure.withOpacity(0.16) : AppColors.primary.withOpacity(0.10),
+            blurRadius: 28,
+            spreadRadius: -6,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      AppGlassLevel.level4 => [
+          BoxShadow(
+            color: dark ? Colors.black.withOpacity(0.45) : const Color(0xFF3A4A7A).withOpacity(0.14),
+            blurRadius: 32,
+            spreadRadius: -8,
+            offset: const Offset(0, 12),
+          ),
+        ],
+    };
   }
 }

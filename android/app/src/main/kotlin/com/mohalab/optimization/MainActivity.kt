@@ -1,14 +1,12 @@
 package com.mohalab.optimization
 
 import android.app.ActivityManager
-import android.app.NotificationManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.content.Intent
 import android.content.IntentFilter
-import android.provider.Settings
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -19,6 +17,7 @@ import android.graphics.drawable.Drawable
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Environment
+import android.os.PowerManager
 import android.os.StatFs
 import android.util.DisplayMetrics
 import android.view.Display
@@ -36,10 +35,11 @@ class MainActivity : FlutterActivity() {
     companion object {
         private const val CHANNEL = "com.mohalab.optimization/device_info"
         private const val GAME_CHANNEL = "com.mohalab.optimization/game_discovery"
-        private const val OPTIMIZATION_CHANNEL = "com.mohalab.optimization/optimizations"
     }
 
     private var shizukuBridge: ShizukuBridge? = null
+    private var tweakEngine: TweakEngine? = null
+    private val backgroundWork = java.util.concurrent.Executors.newFixedThreadPool(3)
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -60,6 +60,8 @@ class MainActivity : FlutterActivity() {
                 "getCpuInfo"         -> result.success(getCpuInfo())
                 "getAllDeviceInfo"    -> result.success(getAllDeviceInfo())
                 "getNetworkInfo"     -> result.success(getNetworkInfo())
+                "getCpuFreqs"        -> result.success(getCpuFreqs())
+                "getThermal"         -> result.success(getThermal())
                 "checkAppIntegrity"  -> result.success(getAppIntegrityInfo())
                 "openUrl"            -> {
                     val url = call.argument<String>("url")
@@ -93,14 +95,21 @@ class MainActivity : FlutterActivity() {
             GAME_CHANNEL,
         ).setMethodCallHandler { call, result ->
             when (call.method) {
+                // Package scans and icon encoding are slow; keep them off the UI thread.
                 "getInstalledApps" -> {
                     val includeIcons = call.argument<Boolean>("includeIcons") ?: true
-                    result.success(getInstalledApps(includeIcons))
+                    backgroundWork.execute {
+                        val apps = runCatching { getInstalledApps(includeIcons) }.getOrDefault(emptyList())
+                        runOnUiThread { result.success(apps) }
+                    }
                 }
                 "getAppIcon" -> {
                     val packageName = call.argument<String>("packageName")
                     if (isValidPackageName(packageName)) {
-                        result.success(getAppIcon(packageName!!))
+                        backgroundWork.execute {
+                            val icon = getAppIcon(packageName!!)
+                            runOnUiThread { result.success(icon) }
+                        }
                     } else {
                         result.error("INVALID_ARGUMENT", "Invalid package name format", null)
                     }
@@ -117,380 +126,51 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(
+        tweakEngine = TweakEngine(
+            applicationContext,
+            shizukuBridge!!,
             flutterEngine.dartExecutor.binaryMessenger,
-            OPTIMIZATION_CHANNEL,
-        ).setMethodCallHandler { call, result ->
-            when (call.method) {
-                "trimMemory" -> {
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("am kill-all")
-                            shizukuBridge?.executeShell("pm trim-caches 999G")
-                            success = true
-                        } else {
-                            try {
-                                val am = getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
-                                val packages = packageManager.getInstalledApplications(0)
-                                for (app in packages) {
-                                    if ((app.flags and ApplicationInfo.FLAG_SYSTEM) == 0 && app.packageName != packageName) {
-                                        am?.killBackgroundProcesses(app.packageName)
-                                    }
-                                }
-                                success = true
-                            } catch (e: Exception) {
-                                success = false
-                            }
-                        }
-                        System.gc()
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "cleanSystemCache" -> {
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            val res = shizukuBridge?.executeShell("pm trim-caches 999G")
-                            success = res?.first ?: false
-                        }
-                        // Also clear internal cache
-                        try {
-                            cacheDir?.deleteRecursively()
-                            externalCacheDir?.deleteRecursively()
-                            success = true
-                        } catch (e: Exception) {}
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "setPerformanceMode" -> {
-                    val enabled = call.argument<Boolean>("enabled") ?: true
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("cmd power set-fixed-performance-mode-enabled $enabled")
-                            if (enabled) {
-                                shizukuBridge?.executeShell("settings put global game_driver_all_apps 1")
-                            }
-                            success = true
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "getAnimationScales" -> {
-                    val resolver = contentResolver
-                    val window = try {
-                        Settings.Global.getFloat(resolver, Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f)
-                    } catch (e: Exception) { 1.0f }
-                    val transition = try {
-                        Settings.Global.getFloat(resolver, Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f)
-                    } catch (e: Exception) { 1.0f }
-                    val animator = try {
-                        Settings.Global.getFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)
-                    } catch (e: Exception) { 1.0f }
-
-                    result.success(
-                        mapOf(
-                            "window" to window.toDouble(),
-                            "transition" to transition.toDouble(),
-                            "animator" to animator.toDouble()
-                        )
-                    )
-                }
-
-                "setAnimationScales" -> {
-                    val scale = call.argument<Double>("scale")?.toFloat() ?: 1.0f
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("settings put global window_animation_scale $scale")
-                            shizukuBridge?.executeShell("settings put global transition_animation_scale $scale")
-                            shizukuBridge?.executeShell("settings put global animator_duration_scale $scale")
-                            success = true
-                        } else {
-                            try {
-                                val resolver = contentResolver
-                                Settings.Global.putFloat(resolver, Settings.Global.WINDOW_ANIMATION_SCALE, scale)
-                                Settings.Global.putFloat(resolver, Settings.Global.TRANSITION_ANIMATION_SCALE, scale)
-                                Settings.Global.putFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, scale)
-                                success = true
-                            } catch (e: Exception) {
-                                success = false
-                            }
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "getDndInterruptionFilter" -> {
-                    val nm = getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-                    val filter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        nm?.currentInterruptionFilter ?: NotificationManager.INTERRUPTION_FILTER_ALL
-                    } else {
-                        1
-                    }
-                    result.success(filter)
-                }
-
-                "setDndInterruptionFilter" -> {
-                    val filter = call.argument<Int>("filter") ?: 1
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            val zenMode = if (filter > 1) 1 else 0
-                            shizukuBridge?.executeShell("settings put global zen_mode $zenMode")
-                            success = true
-                        }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-                            if (nm?.isNotificationPolicyAccessGranted == true) {
-                                nm.setInterruptionFilter(filter)
-                                success = true
-                            }
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "getRefreshRates" -> {
-                    val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        display
-                    } else {
-                        @Suppress("DEPRECATION")
-                        (getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.defaultDisplay
-                    }
-                    val modes = display?.supportedModes
-                    val peak = modes?.maxOfOrNull { it.refreshRate } ?: 60.0f
-                    result.success(mapOf("min" to 60.0, "peak" to peak.toDouble()))
-                }
-
-                "setMinRefreshRate" -> {
-                    val rate = call.argument<Double>("rate")?.toFloat() ?: 60.0f
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("settings put system min_refresh_rate $rate")
-                            shizukuBridge?.executeShell("settings put system peak_refresh_rate $rate")
-                            success = true
-                        } else {
-                            try {
-                                Settings.System.putFloat(contentResolver, "min_refresh_rate", rate)
-                                success = true
-                            } catch (e: Exception) {
-                                success = false
-                            }
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "setFixedPerformanceMode" -> {
-                    val enabled = call.argument<Boolean>("enabled") ?: true
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("cmd power set-fixed-performance-mode-enabled $enabled")
-                            if (enabled) {
-                                shizukuBridge?.executeShell("settings put global game_driver_all_apps 1")
-                            }
-                            success = true
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "setAppGameMode" -> {
-                    val pkg = call.argument<String>("packageName") ?: ""
-                    val mode = call.argument<String>("mode") ?: "performance"
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true && isValidPackageName(pkg)) {
-                            val res = shizukuBridge?.executeShell("cmd game mode $mode $pkg")
-                            success = res?.first ?: false
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "setAppDownscale" -> {
-                    val pkg = call.argument<String>("packageName") ?: ""
-                    val scale = call.argument<Double>("scale") ?: 1.0
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true && isValidPackageName(pkg)) {
-                            val res = shizukuBridge?.executeShell("cmd game downscale $scale $pkg")
-                            success = res?.first ?: false
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "setTouchLatency" -> {
-                    val enabled = call.argument<Boolean>("enabled") ?: true
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            if (enabled) {
-                                shizukuBridge?.executeShell("settings put secure tap_duration_threshold 0.0")
-                                shizukuBridge?.executeShell("settings put secure touch_blocking_period 0.0")
-                                shizukuBridge?.executeShell("settings put secure long_press_timeout 250")
-                            } else {
-                                shizukuBridge?.executeShell("settings put secure tap_duration_threshold 0.1")
-                                shizukuBridge?.executeShell("settings put secure touch_blocking_period 0.1")
-                                shizukuBridge?.executeShell("settings put secure long_press_timeout 400")
-                            }
-                            success = true
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "setBlurDisabled" -> {
-                    val disabled = call.argument<Boolean>("disabled") ?: true
-                    val v = if (disabled) 1 else 0
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("settings put global disable_window_blurs $v")
-                            success = true
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "optimizeNetworkBuffers" -> {
-                    val enabled = call.argument<Boolean>("enabled") ?: true
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            if (enabled) {
-                                shizukuBridge?.executeShell("setprop net.tcp.buffersize.wifi 4096,87380,524288,4096,16384,110208")
-                                shizukuBridge?.executeShell("setprop net.tcp.buffersize.lte 524288,1048576,2097152,262144,524288,1048576")
-                            }
-                            success = true
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "setGpuRenderingProfile" -> {
-                    val enabled = call.argument<Boolean>("enabled") ?: true
-                    val v = if (enabled) 1 else 0
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("setprop debug.hwc.force_gpu_vsync $v")
-                            shizukuBridge?.executeShell("setprop debug.stagefright.omx_default_rank $v")
-                            success = true
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "deepRamClean" -> {
-                    Thread {
-                        var success = false
-                        if (shizukuBridge?.isReady() == true) {
-                            shizukuBridge?.executeShell("am kill-all")
-                            shizukuBridge?.executeShell("pm trim-caches 999G")
-                            success = true
-                        } else {
-                            try {
-                                val am = getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
-                                val packages = packageManager.getInstalledApplications(0)
-                                for (app in packages) {
-                                    if ((app.flags and ApplicationInfo.FLAG_SYSTEM) == 0 && app.packageName != packageName) {
-                                        am?.killBackgroundProcesses(app.packageName)
-                                    }
-                                }
-                                success = true
-                            } catch (e: Exception) {}
-                        }
-                        try {
-                            cacheDir?.deleteRecursively()
-                            externalCacheDir?.deleteRecursively()
-                        } catch (e: Exception) {}
-                        System.gc()
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                "bypassRenderPipelineFpsCap" -> {
-                    val enabled = call.argument<Boolean>("enabled") ?: true
-                    val targetArg = call.argument<Double>("targetHz")?.toFloat()
-                    Thread {
-                        var success = false
-                        val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            display
-                        } else {
-                            @Suppress("DEPRECATION")
-                            (getSystemService(Context.WINDOW_SERVICE) as? WindowManager)?.defaultDisplay
-                        }
-                        val modes = display?.supportedModes
-                        val peakHardwareHz = modes?.maxOfOrNull { it.refreshRate } ?: 144.0f
-                        val targetHz = if (targetArg != null && targetArg > 60.0f) targetArg else peakHardwareHz
-
-                        if (shizukuBridge?.isReady() == true) {
-                            if (enabled) {
-                                // 1. Lock system and global refresh rates to peak rate (144Hz/120Hz)
-                                shizukuBridge?.executeShell("settings put system min_refresh_rate $targetHz")
-                                shizukuBridge?.executeShell("settings put system peak_refresh_rate $targetHz")
-                                shizukuBridge?.executeShell("settings put global min_refresh_rate $targetHz")
-                                shizukuBridge?.executeShell("settings put global peak_refresh_rate $targetHz")
-                                shizukuBridge?.executeShell("settings put global force_refresh_rate $targetHz")
-                                shizukuBridge?.executeShell("settings put secure refresh_rate_mode 2")
-
-                                // 2. Bypass DisplayManager content-matching frame rate downclocking
-                                shizukuBridge?.executeShell("cmd display set-match-content-frame-rate-pref 0")
-                                shizukuBridge?.executeShell("device_config put display_manager peak_refresh_rate_default $targetHz")
-                                shizukuBridge?.executeShell("device_config put display_manager refresh_rate_in_high_zone $targetHz")
-                                shizukuBridge?.executeShell("device_config put display_manager refresh_rate_in_zone $targetHz")
-
-                                // 3. SurfaceFlinger Render Pipeline uncap: disable backpressure & fence waiting
-                                shizukuBridge?.executeShell("setprop debug.sf.disable_backpressure 1")
-                                shizukuBridge?.executeShell("setprop debug.sf.latch_unsignaled 1")
-                                shizukuBridge?.executeShell("setprop debug.graphics.game_default_frame_rate $targetHz")
-                                shizukuBridge?.executeShell("setprop ro.surface_flinger.use_content_detection_for_refresh_rate false")
-                                shizukuBridge?.executeShell("setprop debug.sf.early_phase_offset_ns 500000")
-                                shizukuBridge?.executeShell("setprop debug.sf.early_app_phase_offset_ns 500000")
-                            } else {
-                                // Restore adaptive frame pacing
-                                shizukuBridge?.executeShell("settings put system min_refresh_rate 60.0")
-                                shizukuBridge?.executeShell("settings put system peak_refresh_rate $targetHz")
-                                shizukuBridge?.executeShell("settings put global min_refresh_rate 60.0")
-                                shizukuBridge?.executeShell("settings put global peak_refresh_rate $targetHz")
-                                shizukuBridge?.executeShell("cmd display set-match-content-frame-rate-pref 1")
-                                shizukuBridge?.executeShell("setprop debug.sf.disable_backpressure 0")
-                                shizukuBridge?.executeShell("setprop debug.sf.latch_unsignaled 0")
-                                shizukuBridge?.executeShell("setprop ro.surface_flinger.use_content_detection_for_refresh_rate true")
-                            }
-                            success = true
-                        } else {
-                            try {
-                                val rate = if (enabled) targetHz else 60.0f
-                                Settings.System.putFloat(contentResolver, "min_refresh_rate", rate)
-                                Settings.System.putFloat(contentResolver, "peak_refresh_rate", targetHz)
-                                success = true
-                            } catch (e: Exception) {
-                                success = false
-                            }
-                        }
-                        runOnUiThread { result.success(success) }
-                    }.start()
-                }
-
-                else -> result.notImplemented()
-            }
+        ).also { engine ->
+            engine.register()
+            shizukuBridge?.onReady = { engine.onShizukuReady() }
+            if (shizukuBridge?.isReady() == true) engine.onShizukuReady()
+            engine.resumeRoot()
         }
     }
 
     override fun onDestroy() {
+        tweakEngine?.unregister()
+        tweakEngine = null
+        backgroundWork.shutdown()
         shizukuBridge?.unregister()
         shizukuBridge = null
         super.onDestroy()
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Live CPU clocks — /proc/stat is blocked for apps since Android 8,
+    // so load is expressed as current vs. max frequency per core.
+    // ─────────────────────────────────────────────────────────────
+    private fun getCpuFreqs(): List<Map<String, Long?>> {
+        val cores = Runtime.getRuntime().availableProcessors()
+        return (0 until cores).mapNotNull { core ->
+            val base = "/sys/devices/system/cpu/cpu$core/cpufreq"
+            val cur = runCatching { File("$base/scaling_cur_freq").readText().trim().toLong() }.getOrNull()
+            val max = runCatching { File("$base/cpuinfo_max_freq").readText().trim().toLong() }.getOrNull()
+            if (cur == null) null else mapOf("curKhz" to cur, "maxKhz" to max)
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Thermal status (API 29+) and headroom forecast (API 30+)
+    // ─────────────────────────────────────────────────────────────
+    private fun getThermal(): Map<String, Any?> {
+        val pm = getSystemService(Context.POWER_SERVICE) as? PowerManager
+        val status = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) pm?.currentThermalStatus else null
+        val headroom = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            pm?.getThermalHeadroom(10)?.takeIf { !it.isNaN() }?.toDouble()
+        } else null
+        return mapOf("status" to status, "headroom" to headroom)
     }
 
     // ─────────────────────────────────────────────────────────────

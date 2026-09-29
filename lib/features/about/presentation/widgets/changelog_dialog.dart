@@ -25,16 +25,35 @@ class ChangelogDialog extends StatelessWidget {
         date: 'September 2026',
         isLatest: true,
         changes: [
-          _ChangeItem(type: _ChangeType.feature, text: 'Quad-level Glassmorphism design system & tactile feedback'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Balanced, Extreme, and Battery Saver optimization profiles'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Real-time CPU waveform monitor and storage cleaner widget'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Thermal throttling warning and battery temperature metrics'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Custom per-game presets and performance session tracker'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Scheduled background auto-optimization via Workmanager'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Android home screen glanceable optimization widget'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Share performance certificate as PNG image'),
-          _ChangeItem(type: _ChangeType.improved, text: 'AMOLED pitch-black theme with zero battery penalty'),
-          _ChangeItem(type: _ChangeType.improved, text: 'Refined non-root and Shizuku safety validation pipeline'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Quad-level Glassmorphism design system & tactile feedback'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Balanced, Extreme, and Battery Saver optimization profiles'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Real-time CPU waveform monitor and storage cleaner widget'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Thermal throttling warning and battery temperature metrics'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Custom per-game presets and performance session tracker'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Scheduled background auto-optimization via Workmanager'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Android home screen glanceable optimization widget'),
+          _ChangeItem(
+              type: _ChangeType.feature, text: 'Share performance certificate as PNG image'),
+          _ChangeItem(
+              type: _ChangeType.improved,
+              text: 'AMOLED pitch-black theme with zero battery penalty'),
+          _ChangeItem(
+              type: _ChangeType.improved,
+              text: 'Refined non-root and Shizuku safety validation pipeline'),
         ],
       ),
       _ReleaseInfo(
@@ -42,10 +61,17 @@ class ChangelogDialog extends StatelessWidget {
         date: 'August 2026',
         isLatest: false,
         changes: [
-          _ChangeItem(type: _ChangeType.feature, text: 'Shizuku API integration for system-level memory trimming'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Network jitter and packet loss diagnostics'),
-          _ChangeItem(type: _ChangeType.improved, text: 'Dynamic game package detection and category classification'),
-          _ChangeItem(type: _ChangeType.security, text: 'Zero cloud telemetry: 100% on-device private processing'),
+          _ChangeItem(
+              type: _ChangeType.feature,
+              text: 'Shizuku API integration for system-level memory trimming'),
+          _ChangeItem(
+              type: _ChangeType.feature, text: 'Network jitter and packet loss diagnostics'),
+          _ChangeItem(
+              type: _ChangeType.improved,
+              text: 'Dynamic game package detection and category classification'),
+          _ChangeItem(
+              type: _ChangeType.security,
+              text: 'Zero cloud telemetry: 100% on-device private processing'),
         ],
       ),
       _ReleaseInfo(
@@ -53,8 +79,10 @@ class ChangelogDialog extends StatelessWidget {
         date: 'July 2026',
         isLatest: false,
         changes: [
-          _ChangeItem(type: _ChangeType.feature, text: 'Core Android device hardware identity inspector'),
-          _ChangeItem(type: _ChangeType.feature, text: 'Basic safe RAM cache flushing and game launcher'),
+          _ChangeItem(
+              type: _ChangeType.feature, text: 'Core Android device hardware identity inspector'),
+          _ChangeItem(
+              type: _ChangeType.feature, text: 'Basic safe RAM cache flushing and game launcher'),
         ],
       ),
     ];
@@ -82,7 +110,8 @@ class ChangelogDialog extends StatelessWidget {
                           color: const Color(0xFF1E56DE).withOpacity(0.18),
                           borderRadius: AppRadius.radiusSm,
                         ),
-                        child: const Icon(Icons.history_rounded, color: Color(0xFF5B93FF), size: 20),
+                        child:
+                            const Icon(Icons.history_rounded, color: Color(0xFF5B93FF), size: 20),
                       ),
                       const SizedBox(width: 10),
                       Text(

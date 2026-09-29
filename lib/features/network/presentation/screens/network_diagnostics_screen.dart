@@ -7,6 +7,7 @@ import '../../../../core/ads/ad_providers.dart';
 import '../../../../core/theme/tokens/app_radius.dart';
 import '../../../../core/theme/tokens/app_sizes.dart';
 import '../../../../core/theme/tokens/app_spacing.dart';
+import '../../../../shared/widgets/app_shell.dart';
 import '../../../../shared/widgets/ads/rewarded_ad_button.dart';
 import '../../../../shared/widgets/app_bars/moha_app_bar.dart';
 import '../../../../shared/widgets/section_header.dart';
@@ -58,7 +59,7 @@ class _NetworkDiagnosticsScreenState
         subtitle: 'Real-time gaming latency & packet health',
       ),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+        padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
         children: [
           // Safety & Transparency banner
           Padding(

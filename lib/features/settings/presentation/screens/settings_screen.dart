@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/ads/ad_providers.dart';
 import '../../../../core/routing/route_names.dart';
 import '../../../../core/theme/tokens/app_radius.dart';
 import '../../../../core/theme/tokens/app_sizes.dart';
@@ -9,6 +10,8 @@ import '../../../../core/theme/tokens/app_spacing.dart';
 import '../../../../core/services/moha_notification_service.dart';
 import '../../../../domain/entities/app_settings.dart';
 import '../../../../domain/entities/theme_preference.dart';
+import '../../../onboarding/presentation/tour/feature_tour.dart';
+import '../../../../shared/widgets/app_shell.dart';
 import '../../../../shared/widgets/app_bars/moha_app_bar.dart';
 import '../../../../shared/widgets/indicators/moha_status_badge.dart';
 import '../../../../shared/widgets/section_header.dart';
@@ -30,7 +33,7 @@ class SettingsScreen extends ConsumerWidget {
         subtitle: 'Preferences and data management',
       ),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+        padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
         children: [
           // ── Appearance ──────────────────────────────────────────────────────
           const SectionHeader(
@@ -316,9 +319,11 @@ class SettingsScreen extends ConsumerWidget {
                           Icon(Icons.verified_user_outlined,
                               color: theme.colorScheme.primary, size: AppSizes.iconMd),
                           const SizedBox(width: AppSpacing.sm),
-                          Text('Your Data, Your Device',
-                              style: theme.textTheme.titleSmall
-                                  ?.copyWith(fontWeight: FontWeight.w700)),
+                          Expanded(
+                            child: Text('Your Data, Your Device',
+                                style: theme.textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w700)),
+                          ),
                         ]),
                         const SizedBox(height: AppSpacing.sm),
                         const _PrivacyPoint(
@@ -333,14 +338,16 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         const _PrivacyPoint(
-                          icon: Icons.cloud_off_outlined,
+                          icon: Icons.campaign_outlined,
                           text:
-                              'This app does not connect to any external analytics or advertising service.',
+                              'Ads are served by Google AdMob, which may use your device\'s advertising ID. '
+                              'No analytics service is used.',
                         ),
                       ],
                     ),
                   ),
                 ),
+                const _AdPrivacyOptionsTile(),
                 const SizedBox(height: AppSpacing.sm),
                 // Crash reporting opt-in
                 Card(
@@ -437,9 +444,9 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   MohaSettingsTile(
                     title: 'Tutorial & Feature Walkthrough',
-                    subtitle: 'Replay the introductory onboarding tour',
+                    subtitle: 'Replay the hands-on guided tour of every feature',
                     leadingIcon: Icons.explore_outlined,
-                    onTap: () => context.push(RouteNames.onboarding),
+                    onTap: () => ref.read(featureTourProvider.notifier).start(),
                     showDivider: true,
                   ),
                   MohaSettingsTile(
@@ -536,6 +543,35 @@ class _PrivacyPoint extends StatelessWidget {
                   ?.copyWith(color: theme.colorScheme.onSurface, height: 1.4)),
         ),
       ],
+    );
+  }
+}
+
+/// Lets EEA / UK users reopen Google's ad-consent form (required by the UMP
+/// policy). Hidden everywhere Google says it isn't needed.
+class _AdPrivacyOptionsTile extends ConsumerWidget {
+  const _AdPrivacyOptionsTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ads = ref.watch(adServiceProvider);
+    return FutureBuilder<bool>(
+      future: ads.privacyOptionsRequired(),
+      builder: (context, snap) {
+        if (snap.data != true) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.only(top: AppSpacing.sm),
+          child: Card(
+            child: MohaSettingsTile(
+              title: 'Ad privacy options',
+              subtitle: 'Change your ad personalisation consent',
+              leadingIcon: Icons.privacy_tip_outlined,
+              onTap: ads.showPrivacyOptions,
+              showDivider: false,
+            ),
+          ),
+        );
+      },
     );
   }
 }

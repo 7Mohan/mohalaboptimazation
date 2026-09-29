@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../core/extensions/color_ext.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/config/about_config.dart';
@@ -26,9 +28,7 @@ class OwnershipNoticeCard extends ConsumerWidget {
           width: 1,
         ),
       ),
-      color: isDark
-          ? theme.colorScheme.surfaceContainer
-          : theme.colorScheme.surface,
+      color: isDark ? theme.colorScheme.surfaceContainer : theme.colorScheme.surface,
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
@@ -42,12 +42,16 @@ class OwnershipNoticeCard extends ConsumerWidget {
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'OWNERSHIP & COPYRIGHT',
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.2,
-                    color: theme.colorScheme.primary,
+                Expanded(
+                  child: Text(
+                    'OWNERSHIP & COPYRIGHT',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                 ),
               ],
@@ -72,7 +76,7 @@ class OwnershipNoticeCard extends ConsumerWidget {
               padding: const EdgeInsets.all(AppSpacing.xs),
               decoration: BoxDecoration(
                 color: isDark
-                    ? theme.colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                    ? theme.colorScheme.surfaceContainerHighest.fade(0.5)
                     : theme.colorScheme.surfaceContainerHighest,
                 borderRadius: AppRadius.radiusSm,
               ),

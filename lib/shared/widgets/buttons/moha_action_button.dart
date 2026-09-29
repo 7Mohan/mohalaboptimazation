@@ -54,11 +54,15 @@ class MohaActionButton extends StatelessWidget {
                 Icon(icon, size: AppSizes.iconSm),
                 const SizedBox(width: AppSpacing.xs),
               ],
-              Text(
-                label,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: foregroundColor ?? theme.colorScheme.onPrimary,
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: foregroundColor ?? theme.colorScheme.onPrimary,
+                  ),
                 ),
               ),
             ],

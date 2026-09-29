@@ -76,9 +76,7 @@ class LegalDocumentDialog extends ConsumerWidget {
                 child: Row(
                   children: [
                     Icon(
-                      isPrivacy
-                          ? Icons.privacy_tip_outlined
-                          : Icons.gavel_outlined,
+                      isPrivacy ? Icons.privacy_tip_outlined : Icons.gavel_outlined,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -173,8 +171,7 @@ class LegalDocumentDialog extends ConsumerWidget {
                         shape: const RoundedRectangleBorder(
                           borderRadius: AppRadius.radiusMd,
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       ),
                       onPressed: () => Navigator.of(context).pop(),
                       child: const Text('Close'),

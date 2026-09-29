@@ -6,6 +6,7 @@ import '../../../../core/services/url_launcher_service.dart';
 import '../../../../core/theme/tokens/app_radius.dart';
 import '../../../../core/theme/tokens/app_sizes.dart';
 import '../../../../core/theme/tokens/app_spacing.dart';
+import '../../../../shared/widgets/app_shell.dart';
 import '../../../../shared/widgets/app_bars/moha_app_bar.dart';
 import '../../../../shared/widgets/indicators/moha_status_badge.dart';
 import '../../../../shared/widgets/info_card.dart';
@@ -40,7 +41,8 @@ class AboutScreen extends ConsumerWidget {
         subtitle: 'Product details, community & legal notices',
       ),
       body: ListView(
-        padding: AppSpacing.screenContentPadding,
+        padding: EdgeInsets.fromLTRB(
+            AppSpacing.md, AppSpacing.md, AppSpacing.md, AppShell.bottomInset(context)),
         children: [
           // ── Brand Header ────────────────────────────────────────────────────
           Padding(
@@ -274,8 +276,8 @@ class AboutScreen extends ConsumerWidget {
                 const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.celebration_outlined),
-                  title: const Text('Welcome Dialog',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  title:
+                      const Text('Welcome Dialog', style: TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: const Text('Re-open first-launch community greeting'),
                   trailing: const Icon(Icons.chevron_right, size: 20),
                   onTap: () => StartupCommunityDialog.showExplicit(context),
@@ -283,8 +285,8 @@ class AboutScreen extends ConsumerWidget {
                 const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.privacy_tip_outlined),
-                  title: const Text('Privacy Policy',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  title:
+                      const Text('Privacy Policy', style: TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: const Text('Local-first storage & telemetry transparency'),
                   trailing: const Icon(Icons.chevron_right, size: 20),
                   onTap: () => LegalDocumentDialog.show(
@@ -295,8 +297,8 @@ class AboutScreen extends ConsumerWidget {
                 const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.gavel_outlined),
-                  title: const Text('Terms of Service',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  title:
+                      const Text('Terms of Service', style: TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: const Text('Personal use terms and safety disclosures'),
                   trailing: const Icon(Icons.chevron_right, size: 20),
                   onTap: () => LegalDocumentDialog.show(
@@ -381,24 +383,30 @@ class _QuickLinkButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      borderRadius: AppRadius.radiusMd,
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 16, color: theme.colorScheme.primary),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
+    return Flexible(
+      child: InkWell(
+        borderRadius: AppRadius.radiusMd,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 16, color: theme.colorScheme.primary),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -423,8 +431,7 @@ class _AcknowledgementRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.check_circle_outline,
-              size: 16, color: theme.colorScheme.primary),
+          Icon(Icons.check_circle_outline, size: 16, color: theme.colorScheme.primary),
           const SizedBox(width: 10),
           Expanded(
             child: RichText(

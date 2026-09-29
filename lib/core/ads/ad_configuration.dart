@@ -13,16 +13,16 @@ const _kTestInterstitialId = 'ca-app-pub-3940256099942544/1033173712';
 const _kTestRewardedId = 'ca-app-pub-3940256099942544/5224354917';
 
 // ---------------------------------------------------------------------------
-// Production Ad Unit IDs placeholder
+// Production AdMob IDs (account pub-9857418204934084)
 // ---------------------------------------------------------------------------
-const _kProductionAppId = 'TODO_REPLACE_WITH_REAL_ADMOB_APP_ID';
-const _kProductionHomeBannerId = 'TODO_REPLACE_WITH_REAL_BANNER_ID';
-const _kProductionGamesBannerId = 'TODO_REPLACE_WITH_REAL_BANNER_ID';
-const _kProductionOptimizationInterstitialId =
-    'TODO_REPLACE_WITH_REAL_INTERSTITIAL_ID';
-const _kProductionDiagnosticsInterstitialId =
-    'TODO_REPLACE_WITH_REAL_INTERSTITIAL_ID';
-const _kProductionRewardedId = 'TODO_REPLACE_WITH_REAL_REWARDED_ID';
+const _kProductionAppId = 'ca-app-pub-9857418204934084~7368098906';
+const _kProductionHomeBannerId = 'ca-app-pub-9857418204934084/1230065960';
+// Reuses the Home banner unit (AdMob allows one unit in several places).
+const _kProductionGamesBannerId = 'ca-app-pub-9857418204934084/1230065960';
+const _kProductionOptimizationInterstitialId = 'ca-app-pub-9857418204934084/9207350648';
+// Reuses the post-tweaks interstitial unit.
+const _kProductionDiagnosticsInterstitialId = 'ca-app-pub-9857418204934084/9207350648';
+const _kProductionRewardedId = 'ca-app-pub-9857418204934084/4066529590';
 
 /// Holds all AdMob application and ad unit configuration.
 class AdConfiguration {
@@ -79,7 +79,12 @@ class AdConfiguration {
   final bool isPro;
   final Map<AdPlacement, String> adUnitIds;
 
-  String? adUnitId(AdPlacement placement) => adUnitIds[placement];
+  /// Unit ID for [placement], or null while it is still a TODO placeholder
+  /// (unconfigured placements simply never request an ad).
+  String? adUnitId(AdPlacement placement) {
+    final id = adUnitIds[placement];
+    return id == null || id.startsWith('TODO') ? null : id;
+  }
 
   bool isProductionReady(AdPlacement placement) {
     if (isTestMode) return true;

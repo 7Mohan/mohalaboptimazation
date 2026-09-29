@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -88,7 +88,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final isLastPage = _currentPage == _pages.length - 1;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -203,9 +202,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           ),
                           const SizedBox(width: AppSpacing.xs),
                           Icon(
-                            isLastPage
-                                ? Icons.rocket_launch_rounded
-                                : Icons.arrow_forward_rounded,
+                            isLastPage ? Icons.rocket_launch_rounded : Icons.arrow_forward_rounded,
                             size: 18,
                             color: theme.colorScheme.onPrimary,
                           ),
@@ -250,109 +247,115 @@ class _OnboardingSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Graphic hero icon container
-          Container(
-            width: 110,
-            height: 110,
-            decoration: BoxDecoration(
-              color: page.accentColor.withAlpha(30),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: page.accentColor.withAlpha(60),
-                width: 2,
-              ),
-            ),
-            child: Icon(
-              page.icon,
-              size: 52,
-              color: page.accentColor,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-
-          // Category badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(AppRadius.xs),
-              border: Border.all(color: theme.colorScheme.outlineVariant),
-            ),
-            child: Text(
-              page.badge,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: page.accentColor,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.1,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-
-          // Title
-          Text(
-            page.title,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
-              height: 1.25,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // Description
-          Text(
-            page.description,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              height: 1.45,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-
-          // Bullet feature cards
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              border: Border.all(color: theme.colorScheme.outlineVariant),
-            ),
-            child: Column(
-              children: page.bulletPoints.map((point) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle_rounded,
-                        size: 16,
-                        color: page.accentColor,
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          point,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                    ],
+    // Scrolls on short screens / large text, stays centred when it fits.
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Graphic hero icon container
+              Container(
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  color: page.accentColor.withAlpha(30),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: page.accentColor.withAlpha(60),
+                    width: 2,
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+                child: Icon(
+                  page.icon,
+                  size: 52,
+                  color: page.accentColor,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.xl),
+
+              // Category badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHigh,
+                  borderRadius: BorderRadius.circular(AppRadius.xs),
+                  border: Border.all(color: theme.colorScheme.outlineVariant),
+                ),
+                child: Text(
+                  page.badge,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: page.accentColor,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+
+              // Title
+              Text(
+                page.title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.5,
+                  height: 1.25,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+
+              // Description
+              Text(
+                page.description,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.45,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+
+              // Bullet feature cards
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerLowest,
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  border: Border.all(color: theme.colorScheme.outlineVariant),
+                ),
+                child: Column(
+                  children: page.bulletPoints.map((point) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle_rounded,
+                            size: 16,
+                            color: page.accentColor,
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              point,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

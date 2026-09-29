@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../core/extensions/color_ext.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/tokens/app_glass.dart';
@@ -36,13 +38,16 @@ class LiveSystemSnapshot extends ConsumerWidget {
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'Live System Telemetry',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Text(
+                    'Live System Telemetry',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-                const Spacer(),
                 InkWell(
                   onTap: () {
                     ref.read(liveBatteryProvider.notifier).refresh();
@@ -201,8 +206,8 @@ class _TelemetryTile extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: isDark
-            ? theme.colorScheme.surfaceContainerHighest.withOpacity(0.5)
-            : theme.colorScheme.surfaceContainerHighest.withOpacity(0.4),
+            ? theme.colorScheme.surfaceContainerHighest.fade(0.5)
+            : theme.colorScheme.surfaceContainerHighest.fade(0.4),
         borderRadius: AppRadius.radiusMd,
         border: Border.all(
           color: theme.colorScheme.outlineVariant,
@@ -265,7 +270,7 @@ class _TelemetryLoadingTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.fade(0.3),
         borderRadius: AppRadius.radiusMd,
         border: Border.all(
           color: theme.colorScheme.outlineVariant,

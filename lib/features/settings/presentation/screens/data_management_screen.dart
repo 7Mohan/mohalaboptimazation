@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/tokens/app_radius.dart';
 import '../../../../core/theme/tokens/app_sizes.dart';
 import '../../../../core/theme/tokens/app_spacing.dart';
+import '../../../../shared/widgets/app_shell.dart';
 import '../../../../shared/widgets/app_bars/moha_app_bar.dart';
 import '../../../../shared/widgets/section_header.dart';
 import '../../../../shared/widgets/settings/moha_settings_tile.dart';
@@ -50,7 +51,7 @@ class DataManagementScreen extends ConsumerWidget {
         subtitle: 'Export, import, and manage stored data',
       ),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+        padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
         children: [
           // ── Privacy statement ───────────────────────────────────────────────
           Padding(
@@ -68,9 +69,11 @@ class DataManagementScreen extends ConsumerWidget {
                           color: theme.colorScheme.primary,
                           size: AppSizes.iconMd),
                       const SizedBox(width: AppSpacing.sm),
-                      Text('Stored Locally On Your Device',
-                          style: theme.textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w700)),
+                      Expanded(
+                        child: Text('Stored Locally On Your Device',
+                            style: theme.textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w700)),
+                      ),
                     ]),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
@@ -102,15 +105,21 @@ class DataManagementScreen extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _StatBox(
-                          label: 'Game\nProfiles',
-                          value: '${stats.gameProfileCount}'),
-                      _StatBox(
-                          label: 'Network\nHistory',
-                          value: '${stats.networkHistoryCount}'),
-                      _StatBox(
-                          label: 'Est. Size',
-                          value: stats.estimatedStorageDisplay),
+                      Expanded(
+                        child: _StatBox(
+                            label: 'Game\nProfiles',
+                            value: '${stats.gameProfileCount}'),
+                      ),
+                      Expanded(
+                        child: _StatBox(
+                            label: 'Network\nHistory',
+                            value: '${stats.networkHistoryCount}'),
+                      ),
+                      Expanded(
+                        child: _StatBox(
+                            label: 'Est. Size',
+                            value: stats.estimatedStorageDisplay),
+                      ),
                     ],
                   ),
                 ),
@@ -478,9 +487,12 @@ class _StatBox extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Text(value,
-            style: theme.textTheme.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w700)),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(value,
+              style: theme.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.w700)),
+        ),
         const SizedBox(height: 2),
         Text(label,
             textAlign: TextAlign.center,

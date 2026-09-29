@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/extensions/color_ext.dart';
+
 import '../../core/theme/tokens/app_glass.dart';
 import 'glass/glass_card.dart';
 
@@ -37,19 +39,23 @@ class InfoCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title!,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.8,
+                Expanded(
+                  child: Text(
+                    title!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                    ),
                   ),
                 ),
-                if (trailing != null) trailing!,
+                if (trailing != null) ...[const SizedBox(width: 8), trailing!],
               ],
             ),
             const SizedBox(height: 12),
-            Divider(height: 1, color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+            Divider(height: 1, color: theme.colorScheme.outlineVariant.fade(0.5)),
             const SizedBox(height: 12),
           ],
           ...children,

@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Required for external storage size reporting -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -8,6 +9,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Lets RAM Boost stop background processes without Shizuku (normal permission). -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <!-- "Pause Auto-Sync" tweak (normal permissions). -->
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <!-- Gaming Do Not Disturb without Shizuku (user grants in system settings). -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <!-- Optional: granted once via `adb shell pm grant com.mohalab.optimization
+         android.permission.WRITE_SECURE_SETTINGS` so settings tweaks work without Shizuku. -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <!-- Battery info is read via sticky broadcast; no permission needed -->
     <!-- READ_PHONE_STATE not required for Build.* constants -->
     <application
@@ -64,11 +76,7 @@
         -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
-        <!--
-            TODO (before release): replace the value above with your production AdMob App ID.
-            Format: ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
-        -->
+            android:value="${admobAppId}"/>
 
         <!-- Home Screen Widget Receiver -->
         <receiver

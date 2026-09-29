@@ -5,6 +5,15 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// Release signing: android/key.properties (never committed — see .gitignore)
+// holds storeFile, storePassword, keyAlias, keyPassword. Until it exists,
+// release builds fall back to the debug key so local builds keep working.
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
 android {
     namespace = "com.mohalab.optimization"
     compileSdk = flutter.compileSdkVersion
@@ -25,18 +34,32 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // AdMob App ID: Google test ID by default; real ID only in release builds.
+        manifestPlaceholders += [admobAppId: "ca-app-pub-3940256099942544~3347511713"]
+    }
+
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            release {
+                storeFile = file(keystoreProperties["storeFile"])
+                storePassword = keystoreProperties["storePassword"]
+                keyAlias = keystoreProperties["keyAlias"]
+                keyPassword = keystoreProperties["keyPassword"]
+            }
+        }
     }
 
     buildTypes {
         release {
+            manifestPlaceholders += [admobAppId: "ca-app-pub-9857418204934084~7368098906"]
             // Enable R8 code shrinking and obfuscation
             minifyEnabled true
             // Enable resource shrinking to remove unused XML, drawables, and strings
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            // Signing config: uses debug keys unless production keystore is configured
-            signingConfig = signingConfigs.debug
+            // Your upload key when key.properties exists, else the debug key.
+            signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
         }
     }
 }
@@ -45,12 +68,6 @@ flutter {
     source = "../.."
 }
 
-configurations.all {
-    resolutionStrategy {
-        force "androidx.work:work-runtime:2.8.1"
-        force "androidx.work:work-runtime-ktx:2.8.1"
-    }
-}
 
 dependencies {
     // Shizuku API — privileged Android system operations via binder IPC

@@ -283,7 +283,7 @@ void main() {
       versionName: '2.0.1',
     );
 
-    testWidgets('Renders complete UX hierarchy: Info -> Status -> Categories -> Config -> Actions',
+    testWidgets('Renders complete UX hierarchy: Info -> Status -> Config -> Actions',
         (tester) async {
       final inMemoryRepo = InMemoryGameProfileRepository();
 
@@ -309,18 +309,13 @@ void main() {
       expect(find.text('PROFILE STATUS'), findsOneWidget);
       expect(find.textContaining('Factory Default Profile'), findsOneWidget);
 
-      // 3. Available Categories
-      expect(find.text('AVAILABLE CATEGORIES'), findsOneWidget);
-      expect(find.text('Performance'), findsWidgets);
-      expect(find.text('Battery & Thermals'), findsOneWidget);
-      expect(find.text('Network Latency'), findsOneWidget);
-      expect(find.text('Touch & Input'), findsOneWidget);
-      expect(find.text('Display & Refresh'), findsOneWidget);
-
-      // 4. Current Configuration
+      // 3. Real Game Mode controls (no placebo network/touch options)
       expect(find.text('CURRENT CONFIGURATION'), findsOneWidget);
-      expect(find.text('Performance Target'), findsOneWidget);
-      expect(find.text('Display & Refresh Rate'), findsOneWidget);
+      expect(find.text('Game Mode'), findsOneWidget);
+      expect(find.text('Render Resolution'), findsOneWidget);
+      expect(find.text('Frame Rate'), findsOneWidget);
+      expect(find.text('Network Latency'), findsNothing);
+      expect(find.text('Touch Response & Polling'), findsNothing);
       expect(find.text('GAMING ENVIRONMENT TOGGLES'), findsOneWidget);
       expect(find.text('Prevent Notification Popups'), findsOneWidget);
 

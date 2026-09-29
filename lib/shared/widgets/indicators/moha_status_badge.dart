@@ -63,13 +63,17 @@ class MohaStatusBadge extends StatelessWidget {
               Icon(icon, size: 12, color: color),
               const SizedBox(width: AppSpacing.xxs),
             ],
-            Text(
-              displayLabel,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: color,
-                fontWeight: FontWeight.w700,
-                fontSize: 10.5,
-                letterSpacing: 0.3,
+            Flexible(
+              child: Text(
+                displayLabel,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 10.5,
+                  letterSpacing: 0.3,
+                ),
               ),
             ),
           ],

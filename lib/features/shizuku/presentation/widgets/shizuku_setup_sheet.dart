@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/widgets/glass/glass_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/shizuku_status.dart';
@@ -30,14 +31,7 @@ class _ShizukuSetupSheetState extends ConsumerState<ShizukuSetupSheet> {
       maxChildSize: 0.95,
       expand: false,
       builder: (_, controller) {
-        return Container(
-          decoration: BoxDecoration(
-            color: cs.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            border: Border(
-              top: BorderSide(color: cs.outlineVariant, width: 1),
-            ),
-          ),
+        return GlassSheetSurface(
           child: Column(
             children: [
               // Drag handle

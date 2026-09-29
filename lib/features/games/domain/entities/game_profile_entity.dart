@@ -15,18 +15,20 @@ enum OptimizationCategory {
   final String description;
 }
 
-/// Performance tuning profile modes.
+/// Android Game Mode for the game (GameManager, Android 13+). The mode is
+/// applied per app and only takes effect while that game runs.
 enum PerformancePreference {
-  balanced('Balanced', 'Adaptive performance managed by system policies'),
-  highPerformance('High Performance', 'Maximized CPU/GPU clock limits for sustained FPS'),
-  powerSaving('Power Saving', 'Optimized clocks to extend gaming session longevity');
+  balanced('Standard', 'No override — Android and the game decide'),
+  highPerformance('Performance', 'Game Mode: performance — game / OEM may raise clocks and effects'),
+  powerSaving('Battery', 'Game Mode: battery — game / OEM may lower load for longer sessions');
 
   const PerformancePreference(this.label, this.description);
   final String label;
   final String description;
 }
 
-/// Battery & thermal preference modes.
+/// Legacy (v1 data only). Android has no per-app thermal control, so this is
+/// kept for backward-compatible storage but no longer shown or applied.
 enum BatteryPreference {
   normal('Standard', 'Standard thermal throttling thresholds'),
   batterySaver('Thermal Guard', 'Proactive cooling curve to prevent severe throttling'),
@@ -37,7 +39,8 @@ enum BatteryPreference {
   final String description;
 }
 
-/// Network prioritization modes.
+/// Legacy (v1 data only). Android exposes no per-app packet priority to apps,
+/// so this is kept for storage compatibility but no longer shown or applied.
 enum NetworkPreference {
   normal('Normal', 'Standard network bandwidth sharing'),
   lowLatency('Low Latency', 'High-priority packet queue for multiplayer games'),
@@ -48,7 +51,8 @@ enum NetworkPreference {
   final String description;
 }
 
-/// Touch sensitivity & polling modes.
+/// Legacy (v1 data only). Touch sampling rate is OEM firmware, not an Android
+/// setting, so this is kept for storage compatibility but no longer shown.
 enum TouchPreference {
   standard('Standard', 'Default touch input sampling rate'),
   highSensitivity('High Sensitivity', 'Increased touch polling rate for responsive aiming'),
@@ -59,16 +63,25 @@ enum TouchPreference {
   final String description;
 }
 
-/// Display refresh rate targeting modes.
+/// Frame-rate override applied through Game Mode (Android 14+). Only used
+/// with the Performance or Battery mode.
 enum DisplayPreference {
-  auto('Dynamic Auto', 'Matches game request up to screen maximum'),
-  fps60('60 Hz Stable', 'Capped for maximum thermal consistency'),
-  fps90('90 Hz Smooth', 'Sweet spot for competitive titles'),
-  fps120('120 Hz Ultra', 'Maximum smoothness on supported high-refresh panels');
+  auto('No FPS override', 'The game picks its own frame rate'),
+  fps60('60 FPS', 'Caps the game at 60 FPS — cooler and steadier'),
+  fps90('90 FPS', 'Targets 90 FPS on high-refresh panels'),
+  fps120('120 FPS', 'Targets 120 FPS on 120 Hz+ panels');
 
   const DisplayPreference(this.label, this.description);
   final String label;
   final String description;
+
+  /// Frame rate passed to `cmd game set --fps`, or null for no override.
+  int? get fps => switch (this) {
+        DisplayPreference.auto => null,
+        DisplayPreference.fps60 => 60,
+        DisplayPreference.fps90 => 90,
+        DisplayPreference.fps120 => 120,
+      };
 }
 
 /// Safe whitelist keys for optional user settings.
@@ -102,6 +115,7 @@ class GameProfile {
     this.network = NetworkPreference.normal,
     this.touch = TouchPreference.standard,
     this.display = DisplayPreference.auto,
+    this.renderScale = 1.0,
     this.userSettings = const {
       SafeUserSettingsKeys.preventNotificationPopups: false,
       SafeUserSettingsKeys.lockBrightness: false,
@@ -123,6 +137,9 @@ class GameProfile {
   final NetworkPreference network;
   final TouchPreference touch;
   final DisplayPreference display;
+
+  /// Game Mode resolution downscale (1.0 = native). Android 13+.
+  final double renderScale;
   final Map<String, dynamic> userSettings;
   final bool isCustomized;
 
@@ -163,6 +180,7 @@ class GameProfile {
     NetworkPreference? network,
     TouchPreference? touch,
     DisplayPreference? display,
+    double? renderScale,
     Map<String, dynamic>? userSettings,
     bool? isCustomized,
   }) {
@@ -177,6 +195,7 @@ class GameProfile {
       network: network ?? this.network,
       touch: touch ?? this.touch,
       display: display ?? this.display,
+      renderScale: renderScale ?? this.renderScale,
       userSettings: userSettings ?? Map<String, dynamic>.from(this.userSettings),
       isCustomized: isCustomized ?? this.isCustomized,
     );
@@ -194,6 +213,7 @@ class GameProfile {
       'network': network.name,
       'touch': touch.name,
       'display': display.name,
+      'renderScale': renderScale,
       'userSettings': userSettings,
       'isCustomized': isCustomized,
     };
@@ -261,6 +281,7 @@ class GameProfile {
       network: network,
       touch: touch,
       display: display,
+      renderScale: ((map['renderScale'] as num?)?.toDouble() ?? 1.0).clamp(0.5, 1.0),
       userSettings: settings.isEmpty
           ? const {
               SafeUserSettingsKeys.preventNotificationPopups: false,
@@ -289,7 +310,8 @@ class GameProfile {
           battery == other.battery &&
           network == other.network &&
           touch == other.touch &&
-          display == other.display;
+          display == other.display &&
+          renderScale == other.renderScale;
 
   @override
   int get hashCode =>

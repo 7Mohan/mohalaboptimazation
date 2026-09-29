@@ -9,7 +9,7 @@ import '../../../../core/theme/tokens/app_spacing.dart';
 import '../../../../shared/widgets/glass/glass_button.dart';
 import '../../../../shared/widgets/glass/glass_card.dart';
 import '../../../../shared/widgets/indicators/moha_status_badge.dart';
-import '../../../onboarding/presentation/widgets/how_to_use_dialog.dart';
+import '../../../onboarding/presentation/tour/feature_tour.dart';
 import '../../../settings/presentation/providers/theme_provider.dart';
 
 const _kCommunityModalSeenKey = 'has_seen_community_modal_v2';
@@ -29,12 +29,14 @@ class StartupCommunityDialog extends ConsumerWidget {
       if (!hasSeen && context.mounted) {
         await prefs.setBool(_kCommunityModalSeenKey, true);
         if (context.mounted) {
-          showDialog<void>(
+          await showDialog<void>(
             context: context,
             barrierDismissible: true,
             barrierColor: Colors.black.withOpacity(0.65),
             builder: (ctx) => const StartupCommunityDialog(),
           );
+          // However the welcome is dismissed, continue into the guided tour.
+          ref.read(featureTourProvider.notifier).startIfFirstLaunch();
         }
       }
     } catch (_) {
@@ -108,7 +110,6 @@ class StartupCommunityDialog extends ConsumerWidget {
                     constraints: const BoxConstraints(),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      HowToUseDialog.showIfFirstLaunch(context, ref);
                     },
                   ),
                 ],
@@ -279,7 +280,6 @@ class StartupCommunityDialog extends ConsumerWidget {
                 variant: GlassButtonVariant.glass,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  HowToUseDialog.showIfFirstLaunch(context, ref);
                 },
               ),
             ],

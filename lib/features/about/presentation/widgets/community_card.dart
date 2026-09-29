@@ -156,7 +156,8 @@ class CommunityCard extends ConsumerWidget {
                             title: 'Telegram Community',
                           )
                       : null,
-                  child: const Text('Join', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                  child: const Text('Join',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                 ),
               ],
             ),
@@ -242,7 +243,8 @@ class CommunityCard extends ConsumerWidget {
                             title: 'TikTok Profile',
                           )
                       : null,
-                  child: const Text('Follow', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                  child: const Text('Follow',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                 ),
               ],
             ),

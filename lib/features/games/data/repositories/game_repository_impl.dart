@@ -21,7 +21,9 @@ class GameRepositoryImpl implements GameRepository {
       return _cachedGames!;
     }
 
-    final rawApps = await GameDiscoveryService.fetchInstalledApps(includeIcons: true);
+    // Metadata only: encoding an icon for every installed app is slow and
+    // wasted on non-games. Icons are fetched below for detected games only.
+    final rawApps = await GameDiscoveryService.fetchInstalledApps(includeIcons: false);
 
     final games = <GameEntity>[];
     final seenPackages = <String>{};
@@ -71,6 +73,13 @@ class GameRepositoryImpl implements GameRepository {
           ),
         );
       }
+    }
+
+    final icons = await Future.wait(
+      games.map((g) => GameDiscoveryService.fetchAppIcon(g.packageName)),
+    );
+    for (var i = 0; i < games.length; i++) {
+      if (icons[i] != null) games[i] = games[i].copyWith(iconBytes: icons[i]);
     }
 
     // Default sort: alphabetical by title

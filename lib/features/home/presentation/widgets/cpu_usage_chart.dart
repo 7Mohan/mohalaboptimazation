@@ -1,13 +1,17 @@
-﻿import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/theme/tokens/app_radius.dart';
 import '../../../../core/theme/tokens/app_spacing.dart';
+import '../../../../shared/widgets/glass/glass_card.dart';
+import '../../../../shared/widgets/glass/glass_section.dart';
 import '../../../diagnostics/data/providers/full_device_info_provider.dart';
+import '../../../diagnostics/data/services/device_info_service.dart';
 
-/// Real-time CPU usage graph with live frequency and load sampling.
+/// Live CPU clock graph.
+///
+/// Android 8+ blocks /proc/stat for apps, so true utilisation is not
+/// readable. This shows what *is* real: each core's current frequency as a
+/// share of its maximum, sampled every 2 s while visible.
 class CpuUsageChart extends ConsumerStatefulWidget {
   const CpuUsageChart({super.key});
 
@@ -16,238 +20,132 @@ class CpuUsageChart extends ConsumerStatefulWidget {
 }
 
 class _CpuUsageChartState extends ConsumerState<CpuUsageChart> {
-  Timer? _ticker;
-  final List<double> _samples = List.generate(20, (i) => 22.0 + (i % 5) * 3);
-  final Random _rng = Random();
-  double _currentUsage = 28.5;
-  double _peakUsage = 44.0;
-
-  @override
-  void initState() {
-    super.initState();
-    _ticker = Timer.periodic(const Duration(milliseconds: 1400), (_) {
-      if (!mounted) return;
-      // Synthesize realistic load variation around device performance baseline
-      final delta = (_rng.nextDouble() - 0.48) * 8.0;
-      final nextVal = (_currentUsage + delta).clamp(12.0, 92.0);
-      setState(() {
-        _currentUsage = nextVal;
-        if (nextVal > _peakUsage) _peakUsage = nextVal;
-        _samples.removeAt(0);
-        _samples.add(nextVal);
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _ticker?.cancel();
-    super.dispose();
-  }
+  static const _historyLength = 24;
+  final List<double> _history = [];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final deviceInfo = ref.watch(fullDeviceInfoProvider).valueOrNull;
-    final cpuAbi = deviceInfo?.identity.cpuAbi ?? 'arm64-v8a';
 
-    Color statusColor;
-    String statusLabel;
-    if (_currentUsage < 40) {
-      statusColor = const Color(0xFF10B981);
-      statusLabel = 'Low Load';
-    } else if (_currentUsage < 75) {
-      statusColor = const Color(0xFF3B82F6);
-      statusLabel = 'Optimal';
-    } else {
-      statusColor = const Color(0xFFEF4444);
-      statusLabel = 'High Activity';
-    }
+    ref.listen<AsyncValue<CpuClockSnapshot>>(liveCpuClockProvider, (_, next) {
+      final load = next.valueOrNull?.averageLoad;
+      if (load == null) return;
+      setState(() {
+        _history.add(load);
+        if (_history.length > _historyLength) _history.removeAt(0);
+      });
+    });
 
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: statusColor.withAlpha(25),
-                        borderRadius: BorderRadius.circular(AppRadius.xs),
-                      ),
-                      child: Icon(Icons.speed_rounded, size: 18, color: statusColor),
-                    ),
-                    const SizedBox(width: AppSpacing.xs),
-                    Text(
-                      'CPU Real-Time Monitor',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: statusColor.withAlpha(20),
-                    borderRadius: BorderRadius.circular(AppRadius.full),
-                    border: Border.all(color: statusColor.withAlpha(60)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: statusColor,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        statusLabel,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: statusColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm),
+    final snapshot = ref.watch(liveCpuClockProvider).valueOrNull;
+    final load = snapshot?.averageLoad;
+    final available = snapshot?.isAvailable ?? true;
+    final color = load == null
+        ? theme.colorScheme.onSurfaceVariant
+        : load < 0.45
+            ? theme.colorScheme.tertiary
+            : load < 0.8
+                ? theme.colorScheme.primary
+                : theme.colorScheme.error;
 
-            // Metrics row
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${_currentUsage.toStringAsFixed(1)}%',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: Text(
-                    'Peak: ${_peakUsage.toStringAsFixed(0)}% • $cpuAbi',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm),
-
-            // Live Chart Canvas
-            SizedBox(
-              height: 64,
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppRadius.xs),
-                child: CustomPaint(
-                  painter: _CpuGraphPainter(
-                    samples: _samples,
-                    lineColor: statusColor,
-                    fillColor: statusColor.withAlpha(35),
-                  ),
+    return GlassCard(
+      padding: AppSpacing.cardPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              GlassIconTile(icon: Icons.memory_rounded, color: color, size: 32),
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: Text('CPU clock', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            load == null ? (available ? '…' : 'Hidden') : '${(load * 100).round()}%',
+            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: color),
+          ),
+          Text(
+            !available
+                ? 'Kernel hides cpufreq'
+                : snapshot == null || snapshot.cores.isEmpty
+                    ? 'Sampling…'
+                    : '${snapshot.cores.length} cores · peak ${snapshot.peakMhz} MHz',
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 11),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          SizedBox(
+            height: 44,
+            width: double.infinity,
+            child: RepaintBoundary(
+              child: CustomPaint(
+                painter: _SparklinePainter(
+                  values: List.of(_history),
+                  color: color,
+                  capacity: _historyLength,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _CpuGraphPainter extends CustomPainter {
-  const _CpuGraphPainter({
-    required this.samples,
-    required this.lineColor,
-    required this.fillColor,
-  });
+class _SparklinePainter extends CustomPainter {
+  const _SparklinePainter({required this.values, required this.color, required this.capacity});
 
-  final List<double> samples;
-  final Color lineColor;
-  final Color fillColor;
+  final List<double> values;
+  final Color color;
+  final int capacity;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (samples.length < 2) return;
-
-    final linePaint = Paint()
-      ..color = lineColor
-      ..strokeWidth = 2.2
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
-    final fillPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [fillColor, fillColor.withAlpha(0)],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
-      ..style = PaintingStyle.fill;
-
+    if (values.length < 2) return;
+    final dx = size.width / (capacity - 1);
+    final start = capacity - values.length;
     final path = Path();
-    final fillPath = Path();
-
-    final stepX = size.width / (samples.length - 1);
-    const maxVal = 100.0;
-
-    for (int i = 0; i < samples.length; i++) {
-      final x = i * stepX;
-      final y = size.height - (samples[i].clamp(0.0, maxVal) / maxVal * size.height);
-
-      if (i == 0) {
-        path.moveTo(x, y);
-        fillPath.moveTo(x, size.height);
-        fillPath.lineTo(x, y);
-      } else {
-        path.lineTo(x, y);
-        fillPath.lineTo(x, y);
-      }
+    for (var i = 0; i < values.length; i++) {
+      final x = (start + i) * dx;
+      final y = size.height - values[i].clamp(0.0, 1.0) * size.height;
+      i == 0 ? path.moveTo(x, y) : path.lineTo(x, y);
     }
-
-    fillPath.lineTo(size.width, size.height);
-    fillPath.close();
-
-    canvas.drawPath(fillPath, fillPaint);
-    canvas.drawPath(path, linePaint);
-
-    // Latest value dot
-    final lastX = size.width;
-    final lastY =
-        size.height - (samples.last.clamp(0.0, maxVal) / maxVal * size.height);
-    canvas.drawCircle(
-      Offset(lastX, lastY),
-      3.5,
-      Paint()..color = lineColor,
+    final fill = Path.from(path)
+      ..lineTo((start + values.length - 1) * dx, size.height)
+      ..lineTo(start * dx, size.height)
+      ..close();
+    canvas.drawPath(
+      fill,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [color.withOpacity(0.35), color.withOpacity(0.0)],
+        ).createShader(Offset.zero & size),
+    );
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
     );
   }
 
   @override
-  bool shouldRepaint(covariant _CpuGraphPainter oldDelegate) => true;
+  bool shouldRepaint(_SparklinePainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.values.length != values.length || !_same(oldDelegate.values, values);
+
+  static bool _same(List<double> a, List<double> b) {
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }

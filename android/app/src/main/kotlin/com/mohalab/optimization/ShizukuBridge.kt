@@ -4,6 +4,18 @@ import android.app.Activity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import rikka.shizuku.Shizuku
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+
+/** Result of a privileged shell command. */
+internal data class ExecResult(val exitCode: Int, val stdout: String, val stderr: String) {
+    val ok: Boolean get() = exitCode == 0
+
+    /** Best human-readable failure reason, falling back to [default]. */
+    fun errorText(default: String): String =
+        stderr.trim().ifEmpty { stdout.trim() }.lineSequence().firstOrNull()?.take(160)
+            ?.takeIf { it.isNotBlank() } ?: default
+}
 
 /**
  * MethodChannel bridge between Flutter and the Shizuku native layer.
@@ -15,7 +27,10 @@ import rikka.shizuku.Shizuku
  *   checkPermission()    → Boolean
  *   isReady()            → Boolean
  *   requestPermission()  → Boolean (resolves after user interacts with dialog)
- *   execShellCommand(command) → Map { success: Boolean, exitCode: Int, stdout: String, stderr: String }
+ *
+ * There is deliberately no "run arbitrary command" method on the channel.
+ * Privileged commands are built only inside [TweakEngine] from whitelisted
+ * templates and validated arguments.
  */
 internal class ShizukuBridge(
     private val activity: Activity,
@@ -23,37 +38,61 @@ internal class ShizukuBridge(
 ) {
     companion object {
         const val CHANNEL = "com.mohalab.optimization/shizuku"
+        private const val TIMEOUT_MINUTES = 10L
     }
 
     private val detector = ShizukuStateDetector(activity)
     private val permissionHandler = ShizukuPermissionHandler()
     private val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
 
+    /** Invoked (on a binder thread) whenever Shizuku becomes usable. */
+    var onReady: (() -> Unit)? = null
+
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
-        // Binder connected
+        if (detector.isReady()) onReady?.invoke()
     }
 
     private val binderDeadListener = Shizuku.OnBinderDeadListener {
-        // Binder died
+        // State is re-queried by Flutter on resume; nothing to cache here.
     }
 
     fun isReady(): Boolean = detector.isReady()
 
+    /** Uid the Shizuku server runs as: 0 = root, 2000 = adb shell, -1 = unknown. */
+    fun serverUid(): Int = if (isReady()) runCatching { Shizuku.getUid() }.getOrDefault(-1) else -1
+
     /**
      * Executes a shell command synchronously with Shizuku privileges.
-     * Must be called from a background thread.
+     * Must be called from a background thread. stdout and stderr are drained
+     * concurrently so a chatty command can never dead-lock on a full pipe.
      */
-    fun executeShell(command: String): Pair<Boolean, String> {
-        if (!detector.isReady()) return Pair(false, "Shizuku not ready")
+    fun exec(command: String): ExecResult {
+        if (!detector.isReady()) return ExecResult(-1, "", "Shizuku not ready")
         return try {
             @Suppress("DEPRECATION")
             val process = Shizuku.newProcess(arrayOf("sh", "-c", command), null, null)
-            val stdout = process.inputStream.bufferedReader().use { it.readText() }
-            val exitCode = process.waitFor()
-            process.destroy()
-            Pair(exitCode == 0, stdout)
+            // Shizuku's remote process only reliably supports the blocking
+            // waitFor() — waitFor(timeout)/exitValue() can misreport success
+            // as failure. A watchdog enforces the timeout instead.
+            val finished = CountDownLatch(1)
+            var timedOut = false
+            Thread {
+                if (!finished.await(TIMEOUT_MINUTES, TimeUnit.MINUTES)) {
+                    timedOut = true
+                    runCatching { process.destroy() }
+                }
+            }.apply { isDaemon = true }.start()
+
+            var stderr = ""
+            val errThread = Thread { stderr = runCatching { process.errorStream.bufferedReader().use { it.readText() } }.getOrDefault("") }
+            errThread.start()
+            val stdout = runCatching { process.inputStream.bufferedReader().use { it.readText() } }.getOrDefault("")
+            val code = process.waitFor()
+            finished.countDown()
+            errThread.join(2000)
+            if (timedOut) ExecResult(-1, stdout, "Timed out") else ExecResult(code, stdout, stderr)
         } catch (e: Exception) {
-            Pair(false, e.message ?: "Execution failed")
+            ExecResult(-1, "", e.message ?: "Execution failed")
         }
     }
 
@@ -70,18 +109,9 @@ internal class ShizukuBridge(
 
         channel.setMethodCallHandler { call, result ->
             when (call.method) {
-                "getStatus" -> {
-                    result.success(detector.detectState())
-                }
-
-                "checkPermission" -> {
-                    result.success(detector.hasPermission())
-                }
-
-                "isReady" -> {
-                    result.success(detector.isReady())
-                }
-
+                "getStatus" -> result.success(detector.detectState())
+                "checkPermission" -> result.success(detector.hasPermission())
+                "isReady" -> result.success(detector.isReady())
                 "requestPermission" -> {
                     val binderAlive = try { Shizuku.pingBinder() } catch (e: Exception) { false }
                     if (!binderAlive) {
@@ -89,6 +119,7 @@ internal class ShizukuBridge(
                         return@setMethodCallHandler
                     }
                     permissionHandler.requestPermission { granted ->
+                        if (granted) onReady?.invoke()
                         activity.runOnUiThread {
                             try {
                                 result.success(granted)
@@ -98,52 +129,6 @@ internal class ShizukuBridge(
                         }
                     }
                 }
-
-                "execShellCommand" -> {
-                    val command = call.argument<String>("command")
-                    if (command.isNullOrBlank()) {
-                        result.error("INVALID_COMMAND", "Command cannot be empty", null)
-                        return@setMethodCallHandler
-                    }
-
-                    if (!detector.isReady()) {
-                        result.error(
-                            "SHIZUKU_NOT_READY",
-                            "Shizuku service is not active or permission not granted",
-                            null
-                        )
-                        return@setMethodCallHandler
-                    }
-
-                    Thread {
-                        try {
-                            @Suppress("DEPRECATION")
-                            val process = Shizuku.newProcess(
-                                arrayOf("sh", "-c", command), null, null
-                            )
-                            val stdout = process.inputStream.bufferedReader().use { it.readText() }
-                            val stderr = process.errorStream.bufferedReader().use { it.readText() }
-                            val exitCode = process.waitFor()
-                            process.destroy()
-
-                            activity.runOnUiThread {
-                                result.success(
-                                    mapOf(
-                                        "success" to (exitCode == 0),
-                                        "exitCode" to exitCode,
-                                        "stdout" to stdout,
-                                        "stderr" to stderr,
-                                    )
-                                )
-                            }
-                        } catch (e: Exception) {
-                            activity.runOnUiThread {
-                                result.error("EXEC_FAILED", e.message, null)
-                            }
-                        }
-                    }.start()
-                }
-
                 else -> result.notImplemented()
             }
         }

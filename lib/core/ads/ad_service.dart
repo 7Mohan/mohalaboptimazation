@@ -20,6 +20,13 @@ abstract class AdServiceBase {
   /// load/show methods.
   Future<void> initialize();
 
+  /// True when the user must be able to change their ad-consent choice
+  /// (EEA / UK users). Settings shows a "Privacy options" entry then.
+  Future<bool> privacyOptionsRequired();
+
+  /// Re-opens Google's consent form so the user can change their choice.
+  Future<void> showPrivacyOptions();
+
   /// Returns the loaded [BannerAd] for [placement], or null if not ready.
   BannerAd? getBanner(AdPlacement placement);
 
@@ -80,6 +87,16 @@ class AdService implements AdServiceBase {
       return;
     }
     try {
+      // Google's UMP consent flow must run before any ad request. The form
+      // only appears where the law requires it (EEA / UK); elsewhere this is
+      // a single quick network check. Ads load only if consent allows it.
+      await _gatherConsent();
+      if (!await ConsentInformation.instance.canRequestAds()) {
+        for (final p in AdPlacement.values) {
+          _states[p] = AdState.disabled;
+        }
+        return;
+      }
       await MobileAds.instance.initialize();
       _initialized = true;
       if (kDebugMode) {
@@ -88,6 +105,41 @@ class AdService implements AdServiceBase {
     } catch (e) {
       if (kDebugMode) debugPrint('[AdService] Initialization error: $e');
     }
+  }
+
+  Future<void> _gatherConsent() {
+    final done = Completer<void>();
+    void finish([Object? _]) {
+      if (!done.isCompleted) done.complete();
+    }
+
+    ConsentInformation.instance.requestConsentInfoUpdate(
+      ConsentRequestParameters(),
+      () => ConsentForm.loadAndShowConsentFormIfRequired(finish),
+      finish,
+    );
+    // Never block app start on a slow network; canRequestAds() then falls
+    // back to the consent stored from the previous launch.
+    return done.future.timeout(const Duration(seconds: 6), onTimeout: () {});
+  }
+
+  @override
+  Future<bool> privacyOptionsRequired() async {
+    try {
+      return await ConsentInformation.instance.getPrivacyOptionsRequirementStatus() ==
+          PrivacyOptionsRequirementStatus.required;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<void> showPrivacyOptions() async {
+    final done = Completer<void>();
+    ConsentForm.showPrivacyOptionsForm((_) {
+      if (!done.isCompleted) done.complete();
+    });
+    return done.future;
   }
 
   @override
@@ -323,6 +375,15 @@ class FakeAdService implements AdServiceBase {
   Future<void> initialize() async {
     initialized = true;
   }
+
+  bool privacyRequired = false;
+  int privacyOptionsShown = 0;
+
+  @override
+  Future<bool> privacyOptionsRequired() async => privacyRequired;
+
+  @override
+  Future<void> showPrivacyOptions() async => privacyOptionsShown++;
 
   @override
   BannerAd? getBanner(AdPlacement placement) => null;

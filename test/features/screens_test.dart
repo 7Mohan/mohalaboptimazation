@@ -8,11 +8,14 @@ import 'package:mohalab_optimization/features/about/presentation/screens/about_s
 import 'package:mohalab_optimization/features/diagnostics/presentation/screens/diagnostics_screen.dart';
 import 'package:mohalab_optimization/features/games/presentation/screens/games_screen.dart';
 import 'package:mohalab_optimization/features/home/presentation/screens/home_screen.dart';
+import 'package:mohalab_optimization/features/optimization/domain/device_advisor.dart';
+import 'package:mohalab_optimization/features/optimization/presentation/providers/device_advice_provider.dart';
 import 'package:mohalab_optimization/features/optimization/presentation/screens/optimization_screen.dart';
 import 'package:mohalab_optimization/features/settings/presentation/screens/settings_screen.dart';
 
-Widget _buildTestApp(Widget child) {
+Widget _buildTestApp(Widget child, {List<Override> overrides = const []}) {
   return ProviderScope(
+    overrides: overrides,
     child: MaterialApp(
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
@@ -39,7 +42,8 @@ void main() {
 
       expect(find.text('MOHA LAB'), findsOneWidget);
       expect(find.text('Optimization'), findsOneWidget);
-      expect(find.text('Quick Actions'), findsOneWidget);
+      expect(find.text('QUICK ACTIONS'), findsOneWidget);
+      expect(find.text('Boost'), findsOneWidget);
     });
 
     testWidgets('GamesScreen renders with header and empty state', (tester) async {
@@ -55,17 +59,28 @@ void main() {
     });
 
     testWidgets('OptimizationScreen renders categories and safe banners', (tester) async {
-      await tester.pumpWidget(_buildTestApp(const OptimizationScreen()));
+      await tester.pumpWidget(_buildTestApp(
+        const OptimizationScreen(),
+        overrides: [
+          deviceAdviceProvider.overrideWith((ref) async => DeviceAdvisor.analyze(const DeviceSignals(maxRefreshHz: 120))),
+        ],
+      ));
       await tester.pumpAndSettle();
 
-      expect(find.text('Optimization'), findsOneWidget);
-      expect(find.text('Safe Optimization Tools'), findsOneWidget);
-      await tester.scrollUntilVisible(find.text('Memory Management'), 300);
+      expect(find.text('Tweaks'), findsOneWidget);
+      expect(find.text('Recommended for your device'), findsOneWidget);
+      expect(find.text('Lock Max Refresh Rate'), findsWidgets);
+      await tester.scrollUntilVisible(find.text('PRESETS'), 200);
+      expect(find.text('PRESETS'), findsOneWidget);
+      expect(find.text('Competitive'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('RAM Boost'), 200);
+      expect(find.text('RAM Boost'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Lock Max Refresh Rate'), 300);
       await tester.pumpAndSettle();
-      expect(find.text('Memory Management'), findsOneWidget);
-      expect(find.text('Thermal Control'), findsOneWidget);
-      expect(find.text('Battery Optimization'), findsOneWidget);
-      expect(find.text('Safe (No Root)'), findsWidgets);
+      expect(find.text('Lock Max Refresh Rate'), findsOneWidget);
+      // Removed placebo tweaks must never come back.
+      expect(find.textContaining('TCP'), findsNothing);
+      expect(find.textContaining('Zero Touch'), findsNothing);
     });
 
     testWidgets('DiagnosticsScreen renders system information sections', (tester) async {

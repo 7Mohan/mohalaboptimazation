@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/color_ext.dart';
+
 import '../../../core/theme/app_typography.dart';
 import '../../../core/theme/tokens/app_glass.dart';
 import '../../../core/theme/tokens/app_radius.dart';
@@ -46,11 +48,11 @@ class MohaGameCard extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: isDark
-                  ? theme.colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                  ? theme.colorScheme.surfaceContainerHighest.fade(0.5)
                   : theme.colorScheme.surfaceContainerHighest,
               borderRadius: AppRadius.radiusMd,
               border: Border.all(
-                color: theme.colorScheme.outlineVariant.withOpacity(0.6),
+                color: theme.colorScheme.outlineVariant.fade(0.6),
                 width: 1,
               ),
             ),

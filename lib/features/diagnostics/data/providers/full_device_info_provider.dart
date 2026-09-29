@@ -21,7 +21,7 @@ final fullDeviceInfoProvider = FutureProvider<FullDeviceInfo>(
 // ---------------------------------------------------------------------------
 
 /// Live battery state, refreshed every 30 s.
-class BatteryNotifier extends AsyncNotifier<BatteryInfo> {
+class BatteryNotifier extends AutoDisposeAsyncNotifier<BatteryInfo> {
   Timer? _timer;
 
   @override
@@ -35,7 +35,6 @@ class BatteryNotifier extends AsyncNotifier<BatteryInfo> {
     _timer?.cancel();
     if (WidgetsBinding.instance is! WidgetsFlutterBinding) return;
     _timer = Timer.periodic(const Duration(seconds: 30), (_) async {
-      state = const AsyncLoading<BatteryInfo>().copyWithPrevious(state);
       state = await AsyncValue.guard(DeviceInfoService.fetchBattery);
     });
   }
@@ -47,10 +46,10 @@ class BatteryNotifier extends AsyncNotifier<BatteryInfo> {
 }
 
 final liveBatteryProvider =
-    AsyncNotifierProvider<BatteryNotifier, BatteryInfo>(BatteryNotifier.new);
+    AsyncNotifierProvider.autoDispose<BatteryNotifier, BatteryInfo>(BatteryNotifier.new);
 
 /// Live memory state, refreshed every 15 s.
-class MemoryNotifier extends AsyncNotifier<MemoryInfo> {
+class MemoryNotifier extends AutoDisposeAsyncNotifier<MemoryInfo> {
   Timer? _timer;
 
   @override
@@ -64,7 +63,6 @@ class MemoryNotifier extends AsyncNotifier<MemoryInfo> {
     _timer?.cancel();
     if (WidgetsBinding.instance is! WidgetsFlutterBinding) return;
     _timer = Timer.periodic(const Duration(seconds: 15), (_) async {
-      state = const AsyncLoading<MemoryInfo>().copyWithPrevious(state);
       state = await AsyncValue.guard(DeviceInfoService.fetchMemory);
     });
   }
@@ -76,4 +74,22 @@ class MemoryNotifier extends AsyncNotifier<MemoryInfo> {
 }
 
 final liveMemoryProvider =
-    AsyncNotifierProvider<MemoryNotifier, MemoryInfo>(MemoryNotifier.new);
+    AsyncNotifierProvider.autoDispose<MemoryNotifier, MemoryInfo>(MemoryNotifier.new);
+/// Live CPU clocks, sampled every 2 s only while a widget is watching.
+final liveCpuClockProvider = StreamProvider.autoDispose<CpuClockSnapshot>((ref) async* {
+  yield await DeviceInfoService.fetchCpuClocks();
+  if (WidgetsBinding.instance is! WidgetsFlutterBinding) return;
+  await for (final _ in Stream<void>.periodic(const Duration(seconds: 2))) {
+    yield await DeviceInfoService.fetchCpuClocks();
+  }
+});
+
+/// Thermal status + headroom, sampled every 5 s while watched (the headroom
+/// API is rate-limited to about once per second).
+final liveThermalProvider = StreamProvider.autoDispose<ThermalSnapshot>((ref) async* {
+  yield await DeviceInfoService.fetchThermal();
+  if (WidgetsBinding.instance is! WidgetsFlutterBinding) return;
+  await for (final _ in Stream<void>.periodic(const Duration(seconds: 5))) {
+    yield await DeviceInfoService.fetchThermal();
+  }
+});
