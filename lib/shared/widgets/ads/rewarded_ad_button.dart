@@ -65,9 +65,7 @@ class _RewardedAdButtonState extends ConsumerState<RewardedAdButton> {
       style: OutlinedButton.styleFrom(
         foregroundColor: theme.colorScheme.primary,
         side: BorderSide(
-          color: isReady
-              ? theme.colorScheme.primary
-              : theme.colorScheme.outline.fade(0.4),
+          color: isReady ? theme.colorScheme.primary : theme.colorScheme.outline.fade(0.4),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

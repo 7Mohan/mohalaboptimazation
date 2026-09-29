@@ -9,8 +9,7 @@ class NetworkHistoryRepositoryImpl implements NetworkHistoryRepository {
   final NetworkHistoryLocalDataSource _dataSource;
 
   @override
-  Future<void> saveSession(NetworkDiagnosticSession session) =>
-      _dataSource.saveSession(session);
+  Future<void> saveSession(NetworkDiagnosticSession session) => _dataSource.saveSession(session);
 
   @override
   Future<List<NetworkDiagnosticSession>> getHistory({int limit = 20}) =>

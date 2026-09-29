@@ -19,9 +19,7 @@ abstract final class AppTheme {
   static ThemeData get dark => _buildTheme(_darkColorScheme, Brightness.dark);
   static ThemeData get amoled => _buildTheme(_amoledColorScheme, Brightness.dark);
 
-  // ---------------------------------------------------------------------------
   // Color schemes
-  // ---------------------------------------------------------------------------
 
   static const ColorScheme _lightColorScheme = ColorScheme(
     brightness: Brightness.light,
@@ -128,9 +126,7 @@ abstract final class AppTheme {
     inversePrimary: AppColors.primary,
   );
 
-  // ---------------------------------------------------------------------------
   // Theme factory
-  // ---------------------------------------------------------------------------
 
   static ThemeData _buildTheme(ColorScheme colorScheme, Brightness brightness) {
     final textTheme = AppTypography.textTheme;
@@ -150,14 +146,12 @@ abstract final class AppTheme {
       brightness: brightness,
       scaffoldBackgroundColor: Colors.transparent,
       canvasColor: floating,
-
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
           TargetPlatform.android: GlassPageTransitionsBuilder(),
           TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
         },
       ),
-
       appBarTheme: AppBarTheme(
         elevation: AppElevation.level0,
         scrolledUnderElevation: 0,
@@ -166,7 +160,8 @@ abstract final class AppTheme {
         backgroundColor: Colors.transparent,
         foregroundColor: colorScheme.onSurface,
         surfaceTintColor: Colors.transparent,
-        systemOverlayStyle: (isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(
+        systemOverlayStyle:
+            (isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.transparent,
           systemNavigationBarContrastEnforced: false,
@@ -176,7 +171,6 @@ abstract final class AppTheme {
           fontWeight: FontWeight.w700,
         ),
       ),
-
       navigationBarTheme: NavigationBarThemeData(
         elevation: 0,
         height: AppSizes.navigationBarHeight,
@@ -200,11 +194,11 @@ abstract final class AppTheme {
           );
         }),
       ),
-
       navigationRailTheme: NavigationRailThemeData(
         backgroundColor: Colors.transparent,
         selectedIconTheme: IconThemeData(color: colorScheme.primary, size: AppSizes.iconMd),
-        unselectedIconTheme: IconThemeData(color: colorScheme.onSurfaceVariant, size: AppSizes.iconMd),
+        unselectedIconTheme:
+            IconThemeData(color: colorScheme.onSurfaceVariant, size: AppSizes.iconMd),
         indicatorColor: colorScheme.primary.withOpacity(isDark ? 0.20 : 0.14),
         indicatorShape: const StadiumBorder(),
         labelType: NavigationRailLabelType.all,
@@ -217,7 +211,6 @@ abstract final class AppTheme {
           color: colorScheme.onSurfaceVariant,
         ),
       ),
-
       cardTheme: CardTheme(
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -229,7 +222,6 @@ abstract final class AppTheme {
         shadowColor: Colors.transparent,
         margin: EdgeInsets.zero,
       ),
-
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size(AppSizes.minTouchTarget, AppSizes.buttonHeightMd),
@@ -238,7 +230,6 @@ abstract final class AppTheme {
           elevation: 0,
         ),
       ),
-
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(AppSizes.minTouchTarget, AppSizes.buttonHeightMd),
@@ -248,7 +239,6 @@ abstract final class AppTheme {
           textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
-
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           minimumSize: const Size(AppSizes.minTouchTarget, AppSizes.buttonHeightMd),
@@ -256,13 +246,11 @@ abstract final class AppTheme {
           textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
-
       iconButtonTheme: IconButtonThemeData(
         style: IconButton.styleFrom(
           minimumSize: const Size(AppSizes.minTouchTarget, AppSizes.minTouchTarget),
         ),
       ),
-
       listTileTheme: ListTileThemeData(
         minVerticalPadding: 12,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
@@ -270,9 +258,7 @@ abstract final class AppTheme {
         iconColor: colorScheme.onSurfaceVariant,
         tileColor: Colors.transparent,
       ),
-
       dividerTheme: DividerThemeData(space: 1, thickness: 1, color: hairline),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: colorScheme.surfaceContainerHigh,
@@ -290,7 +276,6 @@ abstract final class AppTheme {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-
       chipTheme: ChipThemeData(
         shape: const StadiumBorder(),
         backgroundColor: colorScheme.surfaceContainer,
@@ -298,7 +283,6 @@ abstract final class AppTheme {
         side: BorderSide(color: hairline, width: 1),
         labelStyle: textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600),
       ),
-
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           side: WidgetStatePropertyAll(BorderSide(color: hairline)),
@@ -308,7 +292,6 @@ abstract final class AppTheme {
                   : colorScheme.surfaceContainerLow),
         ),
       ),
-
       dialogTheme: DialogTheme(
         elevation: AppElevation.level3,
         shape: RoundedRectangleBorder(
@@ -318,7 +301,6 @@ abstract final class AppTheme {
         backgroundColor: floating,
         surfaceTintColor: Colors.transparent,
       ),
-
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0,
         shape: const RoundedRectangleBorder(
@@ -329,7 +311,6 @@ abstract final class AppTheme {
         surfaceTintColor: Colors.transparent,
         showDragHandle: false,
       ),
-
       popupMenuTheme: PopupMenuThemeData(
         color: floating,
         surfaceTintColor: Colors.transparent,
@@ -338,13 +319,14 @@ abstract final class AppTheme {
           side: BorderSide(color: hairline),
         ),
       ),
-
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.disabled)) {
             return colorScheme.onSurfaceVariant.withOpacity(0.4);
           }
-          return states.contains(WidgetState.selected) ? Colors.white : colorScheme.onSurfaceVariant;
+          return states.contains(WidgetState.selected)
+              ? Colors.white
+              : colorScheme.onSurfaceVariant;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -356,13 +338,11 @@ abstract final class AppTheme {
           return states.contains(WidgetState.selected) ? Colors.transparent : hairline;
         }),
       ),
-
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: colorScheme.primary,
         linearTrackColor: colorScheme.surfaceContainerHighest,
         circularTrackColor: Colors.transparent,
       ),
-
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         elevation: 0,
@@ -374,7 +354,6 @@ abstract final class AppTheme {
         contentTextStyle: textTheme.bodyMedium?.copyWith(color: const Color(0xFFEFF3FF)),
         actionTextColor: AppColors.primaryDark,
       ),
-
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xF21A2342) : const Color(0xF2151D33),
@@ -382,7 +361,6 @@ abstract final class AppTheme {
         ),
         textStyle: textTheme.labelSmall?.copyWith(color: const Color(0xFFEFF3FF)),
       ),
-
       splashFactory: InkRipple.splashFactory,
       splashColor: colorScheme.primary.withAlpha(28),
       highlightColor: colorScheme.primary.withAlpha(10),

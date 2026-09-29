@@ -1,4 +1,4 @@
-﻿import 'package:home_widget/home_widget.dart';
+import 'package:home_widget/home_widget.dart';
 
 class MohaHomeWidgetUpdater {
   static Future<void> update({

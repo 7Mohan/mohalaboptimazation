@@ -21,7 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // ── Helpers ─────────────────────────────────────────────────────────────────
+  // Helpers
 
   Future<SharedPreferences> freshPrefs() async {
     SharedPreferences.setMockInitialValues({});
@@ -40,7 +40,7 @@ void main() {
     );
   }
 
-  // ── AppSettings serialization ───────────────────────────────────────────────
+  // AppSettings serialization
 
   group('AppSettings round-trip', () {
     test('toMap / fromMap preserves all fields', () {
@@ -60,12 +60,10 @@ void main() {
       expect(revived.theme, equals(ThemePreference.dark));
       expect(revived.language, equals(LanguagePreference.english));
       expect(revived.notificationsEnabled, isFalse);
-      expect(revived.defaultOptimizationBehaviour,
-          equals(DefaultOptimizationBehaviour.skipToReview));
-      expect(revived.performanceMonitoringMode,
-          equals(PerformanceMonitoringMode.detailed));
-      expect(revived.networkTestAutoRun,
-          equals(NetworkTestAutoRun.onWifiOnly));
+      expect(
+          revived.defaultOptimizationBehaviour, equals(DefaultOptimizationBehaviour.skipToReview));
+      expect(revived.performanceMonitoringMode, equals(PerformanceMonitoringMode.detailed));
+      expect(revived.networkTestAutoRun, equals(NetworkTestAutoRun.onWifiOnly));
       expect(revived.crashReportingOptIn, isFalse);
     });
 
@@ -86,7 +84,7 @@ void main() {
     });
   });
 
-  // ── SettingsLocalDataSource ─────────────────────────────────────────────────
+  // SettingsLocalDataSource
 
   group('SettingsLocalDataSource persistence', () {
     test('saves and reloads AppSettings correctly', () async {
@@ -119,7 +117,7 @@ void main() {
     });
   });
 
-  // ── ImportValidator ─────────────────────────────────────────────────────────
+  // ImportValidator
 
   group('ImportValidator security and validation', () {
     const validator = ImportValidator();
@@ -152,8 +150,7 @@ void main() {
     });
 
     test('rejects missing or invalid schemaVersion', () {
-      const json =
-          '{"appId":"com.mohalab.optimization","schemaVersion":"notanint"}';
+      const json = '{"appId":"com.mohalab.optimization","schemaVersion":"notanint"}';
       final result = validator.validate(json);
       expect(result.isValid, isFalse);
     });
@@ -168,9 +165,7 @@ void main() {
     });
 
     test('rejects too many profiles', () {
-      final profiles = List.generate(
-          501,
-          (i) => '{"gamePackage":"pkg.$i","gameName":"Game $i"}');
+      final profiles = List.generate(501, (i) => '{"gamePackage":"pkg.$i","gameName":"Game $i"}');
       final json =
           '{"appId":"com.mohalab.optimization","schemaVersion":1,"exportedAt":"2024-01-01T00:00:00.000Z",'
           '"profiles":[${profiles.join(",")}]}';
@@ -180,8 +175,7 @@ void main() {
     });
 
     test('accepts a valid minimal export bundle', () {
-      const json =
-          '{"appId":"com.mohalab.optimization","schemaVersion":1,'
+      const json = '{"appId":"com.mohalab.optimization","schemaVersion":1,'
           '"exportedAt":"2024-01-01T00:00:00.000Z","settings":{},"profiles":[],"networkHistory":[]}';
       final result = validator.validate(json);
       expect(result.isValid, isTrue);
@@ -189,7 +183,7 @@ void main() {
     });
   });
 
-  // ── DataManager operations ─────────────────────────────────────────────────
+  // DataManager operations
 
   group('DataManager clear operations', () {
     test('clearNetworkHistory removes all stored sessions', () async {
@@ -222,8 +216,7 @@ void main() {
       final prefs = await freshPrefs();
       final profileDs = GameProfileLocalDataSource(prefs);
 
-      await profileDs.saveProfile(
-          GameProfile.defaultForGame('com.test.game', 'Test Game'));
+      await profileDs.saveProfile(GameProfile.defaultForGame('com.test.game', 'Test Game'));
       expect((await profileDs.getAllProfiles()).length, equals(1));
 
       final manager = buildManager(prefs);
@@ -253,10 +246,8 @@ void main() {
       final settingsDs = SettingsLocalDataSource(prefs);
 
       // Seed data
-      await settingsDs
-          .saveSettings(const AppSettings(theme: ThemePreference.dark));
-      await profileDs.saveProfile(
-          GameProfile.defaultForGame('com.round.trip', 'Round Trip Game'));
+      await settingsDs.saveSettings(const AppSettings(theme: ThemePreference.dark));
+      await profileDs.saveProfile(GameProfile.defaultForGame('com.round.trip', 'Round Trip Game'));
 
       final manager = buildManager(prefs);
       final json = await manager.exportAllData();
@@ -283,15 +274,13 @@ void main() {
       final settingsDs = SettingsLocalDataSource(prefs);
 
       // Export with crash reporting enabled
-      await settingsDs.saveSettings(
-          const AppSettings(crashReportingOptIn: true));
+      await settingsDs.saveSettings(const AppSettings(crashReportingOptIn: true));
       final manager = buildManager(prefs);
       final json = await manager.exportAllData();
 
       // Reset with crash reporting disabled
       await prefs.clear();
-      await settingsDs.saveSettings(
-          const AppSettings(crashReportingOptIn: false));
+      await settingsDs.saveSettings(const AppSettings(crashReportingOptIn: false));
 
       final freshManager = buildManager(prefs);
       await freshManager.importData(json);
@@ -324,7 +313,7 @@ void main() {
     });
   });
 
-  // ── Widget: SettingsScreen ─────────────────────────────────────────────────
+  // Widget: SettingsScreen
 
   group('SettingsScreen widget', () {
     Widget buildApp(SharedPreferences prefs) {
@@ -357,22 +346,19 @@ void main() {
       expect(find.text('Privacy'), findsOneWidget);
     });
 
-    testWidgets('privacy section has factual no-account statement',
-        (tester) async {
+    testWidgets('privacy section has factual no-account statement', (tester) async {
       final prefs = await freshPrefs();
       await tester.pumpWidget(buildApp(prefs));
       await tester.pumpAndSettle();
 
       // Scroll to find the privacy text
-      await tester.scrollUntilVisible(
-          find.text('No account is required to use this app.'), 300.0,
+      await tester.scrollUntilVisible(find.text('No account is required to use this app.'), 300.0,
           scrollable: find.byType(Scrollable).first);
-      expect(find.text('No account is required to use this app.'),
-          findsOneWidget);
+      expect(find.text('No account is required to use this app.'), findsOneWidget);
     });
   });
 
-  // ── Widget: DataManagementScreen ───────────────────────────────────────────
+  // Widget: DataManagementScreen
 
   group('DataManagementScreen widget', () {
     Widget buildApp(SharedPreferences prefs) {
@@ -393,8 +379,7 @@ void main() {
       expect(find.text('Stored Locally On Your Device'), findsOneWidget);
       expect(find.text('Export Data'), findsOneWidget);
 
-      await tester.scrollUntilVisible(
-          find.text('Import Data'), 300.0,
+      await tester.scrollUntilVisible(find.text('Import Data'), 300.0,
           scrollable: find.byType(Scrollable).first);
       expect(find.text('Import Data'), findsOneWidget);
     });
@@ -404,8 +389,7 @@ void main() {
       await tester.pumpWidget(buildApp(prefs));
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(
-          find.byKey(const Key('import_data_button')), 300.0,
+      await tester.scrollUntilVisible(find.byKey(const Key('import_data_button')), 300.0,
           scrollable: find.byType(Scrollable).first);
       await tester.tap(find.byKey(const Key('import_data_button')));
       await tester.pumpAndSettle();

@@ -24,12 +24,10 @@ class NetworkDiagnosticsScreen extends ConsumerStatefulWidget {
   const NetworkDiagnosticsScreen({super.key});
 
   @override
-  ConsumerState<NetworkDiagnosticsScreen> createState() =>
-      _NetworkDiagnosticsScreenState();
+  ConsumerState<NetworkDiagnosticsScreen> createState() => _NetworkDiagnosticsScreenState();
 }
 
-class _NetworkDiagnosticsScreenState
-    extends ConsumerState<NetworkDiagnosticsScreen> {
+class _NetworkDiagnosticsScreenState extends ConsumerState<NetworkDiagnosticsScreen> {
   bool _wasRunning = false;
   bool _bandwidthUnlocked = false;
 
@@ -170,9 +168,7 @@ class _NetworkDiagnosticsScreenState
                 : FilledButton.icon(
                     key: const Key('run_network_diagnostics_button'),
                     onPressed: () {
-                      ref
-                          .read(networkDiagnosticsControllerProvider.notifier)
-                          .runDiagnostics();
+                      ref.read(networkDiagnosticsControllerProvider.notifier).runDiagnostics();
                     },
                     icon: const Icon(Icons.network_check_rounded),
                     label: Text(
@@ -210,8 +206,7 @@ class _NetworkDiagnosticsScreenState
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.error_outline_rounded,
-                        size: 18, color: theme.colorScheme.error),
+                    Icon(Icons.error_outline_rounded, size: 18, color: theme.colorScheme.error),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: Text(
@@ -240,7 +235,6 @@ class _NetworkDiagnosticsScreenState
                 secondaryVerdicts: session.secondaryVerdicts,
               ),
             ),
-
             const SectionHeader(
               title: 'Telemetry Metrics',
               subtitle: 'Discrete packet probe timing measurements.',
@@ -250,7 +244,6 @@ class _NetworkDiagnosticsScreenState
               padding: AppSpacing.screenPadding,
               child: NetworkMetricsGrid(metrics: session.metrics),
             ),
-
             if (session.recommendations.isNotEmpty) ...[
               const SectionHeader(
                 title: 'Factual Recommendations',
@@ -300,8 +293,7 @@ class _BandwidthTestUnlocked extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.speed_rounded,
-              size: 20, color: theme.colorScheme.primary),
+          Icon(Icons.speed_rounded, size: 20, color: theme.colorScheme.primary),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Column(

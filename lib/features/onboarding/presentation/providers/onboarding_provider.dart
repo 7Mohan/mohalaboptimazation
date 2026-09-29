@@ -1,4 +1,4 @@
-﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../settings/presentation/providers/theme_provider.dart';
@@ -6,8 +6,7 @@ import '../../../settings/presentation/providers/theme_provider.dart';
 const _kOnboardingCompletedKey = 'has_completed_onboarding_v1';
 
 class OnboardingNotifier extends StateNotifier<bool> {
-  OnboardingNotifier(this._prefs)
-      : super(_prefs.getBool(_kOnboardingCompletedKey) ?? false);
+  OnboardingNotifier(this._prefs) : super(_prefs.getBool(_kOnboardingCompletedKey) ?? false);
 
   final SharedPreferences _prefs;
 
@@ -22,8 +21,7 @@ class OnboardingNotifier extends StateNotifier<bool> {
   }
 }
 
-final onboardingProvider =
-    StateNotifierProvider<OnboardingNotifier, bool>((ref) {
+final onboardingProvider = StateNotifierProvider<OnboardingNotifier, bool>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
   return OnboardingNotifier(prefs);
 });

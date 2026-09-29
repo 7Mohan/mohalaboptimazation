@@ -345,9 +345,7 @@ class _HowToUseDialogState extends ConsumerState<HowToUseDialog> {
                     width: isActive ? 24 : 7,
                     height: 7,
                     decoration: BoxDecoration(
-                      color: isActive
-                          ? currentStep.accentColor
-                          : theme.colorScheme.outlineVariant,
+                      color: isActive ? currentStep.accentColor : theme.colorScheme.outlineVariant,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   );
@@ -376,7 +374,9 @@ class _HowToUseDialogState extends ConsumerState<HowToUseDialog> {
 
               // Next / Close Step button
               GlassButton.label(
-                label: isLastStep ? 'Ready! Explore Lab' : 'Next Step (${_currentIndex + 2}/${_steps.length})',
+                label: isLastStep
+                    ? 'Ready! Explore Lab'
+                    : 'Next Step (${_currentIndex + 2}/${_steps.length})',
                 variant: GlassButtonVariant.glass,
                 onPressed: _onNext,
               ),

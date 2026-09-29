@@ -7,9 +7,7 @@ import 'ad_configuration.dart';
 import 'ad_placement.dart';
 import 'ad_state.dart';
 
-// ---------------------------------------------------------------------------
 // Abstract interface -- allows FakeAdService in tests.
-// ---------------------------------------------------------------------------
 
 /// Callback type for rewarded ad reward delivery.
 typedef OnRewardCallback = void Function(AdWithoutView ad, RewardItem reward);
@@ -60,14 +58,11 @@ abstract class AdServiceBase {
   void dispose();
 }
 
-// ---------------------------------------------------------------------------
 // Real implementation -- uses Google Mobile Ads SDK.
-// ---------------------------------------------------------------------------
 
 /// Production [AdServiceBase] backed by the Google Mobile Ads SDK.
 class AdService implements AdServiceBase {
-  AdService({required AdConfiguration configuration})
-      : _config = configuration;
+  AdService({required AdConfiguration configuration}) : _config = configuration;
 
   final AdConfiguration _config;
   final Map<AdPlacement, BannerAd?> _banners = {};
@@ -146,8 +141,7 @@ class AdService implements AdServiceBase {
   BannerAd? getBanner(AdPlacement placement) => _banners[placement];
 
   @override
-  AdState getState(AdPlacement placement) =>
-      _states[placement] ?? AdState.idle;
+  AdState getState(AdPlacement placement) => _states[placement] ?? AdState.idle;
 
   @override
   Future<void> loadBanner(AdPlacement placement) async {
@@ -253,13 +247,11 @@ class AdService implements AdServiceBase {
   }
 
   @override
-  Future<void> preloadInterstitial(AdPlacement placement) =>
-      _loadInterstitial(placement);
+  Future<void> preloadInterstitial(AdPlacement placement) => _loadInterstitial(placement);
 
   Future<void> _loadInterstitial(AdPlacement placement) async {
     if (_config.isPro || !_initialized) return;
-    if (getState(placement) == AdState.loading ||
-        getState(placement) == AdState.ready) {
+    if (getState(placement) == AdState.loading || getState(placement) == AdState.ready) {
       return;
     }
 
@@ -296,8 +288,7 @@ class AdService implements AdServiceBase {
 
   Future<void> _loadRewarded(AdPlacement placement) async {
     if (_config.isPro || !_initialized) return;
-    if (getState(placement) == AdState.loading ||
-        getState(placement) == AdState.ready) {
+    if (getState(placement) == AdState.loading || getState(placement) == AdState.ready) {
       return;
     }
 
@@ -351,9 +342,7 @@ class AdService implements AdServiceBase {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Fake implementation -- used in unit and widget tests.
-// ---------------------------------------------------------------------------
 
 /// Test double for [AdServiceBase].
 class FakeAdService implements AdServiceBase {
@@ -389,8 +378,7 @@ class FakeAdService implements AdServiceBase {
   BannerAd? getBanner(AdPlacement placement) => null;
 
   @override
-  AdState getState(AdPlacement placement) =>
-      _states[placement] ?? AdState.idle;
+  AdState getState(AdPlacement placement) => _states[placement] ?? AdState.idle;
 
   @override
   Future<void> loadBanner(AdPlacement placement) async {

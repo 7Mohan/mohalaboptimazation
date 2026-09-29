@@ -120,9 +120,7 @@ class _ShizukuSetupSheetState extends ConsumerState<ShizukuSetupSheet> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Header
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _SheetHeader extends StatelessWidget {
   const _SheetHeader({required this.theme, required this.cs});
@@ -167,9 +165,7 @@ class _SheetHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Status card
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _StatusCard extends StatelessWidget {
   const _StatusCard({
@@ -232,16 +228,22 @@ class _StatusCard extends StatelessWidget {
   (Color, Color, Color) _colors() => switch (status) {
         ShizukuStatus.notInstalled => (cs.errorContainer, cs.onErrorContainer, cs.error),
         ShizukuStatus.notRunning => (cs.errorContainer, cs.onErrorContainer, cs.error),
-        ShizukuStatus.binderConnected => (cs.tertiaryContainer, cs.onTertiaryContainer, cs.tertiary),
-        ShizukuStatus.permissionDenied => (cs.secondaryContainer, cs.onSecondaryContainer, cs.secondary),
+        ShizukuStatus.binderConnected => (
+            cs.tertiaryContainer,
+            cs.onTertiaryContainer,
+            cs.tertiary
+          ),
+        ShizukuStatus.permissionDenied => (
+            cs.secondaryContainer,
+            cs.onSecondaryContainer,
+            cs.secondary
+          ),
         ShizukuStatus.permissionGranted => (cs.primaryContainer, cs.onPrimaryContainer, cs.primary),
         ShizukuStatus.ready => (cs.primaryContainer, cs.onPrimaryContainer, cs.primary),
       };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Actions section
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _ActionsSection extends StatelessWidget {
   const _ActionsSection({
@@ -312,9 +314,7 @@ class _ActionsSection extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Troubleshooting
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _TroubleshootingSection extends StatelessWidget {
   const _TroubleshootingSection({
@@ -449,9 +449,7 @@ class _TroubleshootingStep extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Android version notes
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _AndroidVersionNotes extends StatelessWidget {
   const _AndroidVersionNotes({required this.theme, required this.cs});
@@ -519,9 +517,7 @@ class _AndroidVersionNotes extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Loading / error states
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _StatusCardShimmer extends StatelessWidget {
   const _StatusCardShimmer();

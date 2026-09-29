@@ -16,7 +16,7 @@ enum MohaStatusType {
   comingSoon,
 }
 
-/// A compact, high-precision status badge indicating optimization tier or hardware state.
+/// Small badge showing an optimization tier or hardware state.
 ///
 /// Ensures clear visual hierarchy without distracting glows or neon cliches.
 class MohaStatusBadge extends StatelessWidget {

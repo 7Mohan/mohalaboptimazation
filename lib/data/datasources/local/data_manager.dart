@@ -49,15 +49,13 @@ class DataManager {
   final GameProfileLocalDataSource _profileDs;
   final NetworkHistoryLocalDataSource _networkDs;
 
-  // ── Export ─────────────────────────────────────────────────────────────────
+  // Export
 
   /// Builds a complete local export bundle as JSON string.
   Future<String> exportAllData() async {
     final settings = _settingsDs.exportSettingsMap();
-    final profiles =
-        (await _profileDs.getAllProfiles()).map((p) => p.toMap()).toList();
-    final history =
-        (await _networkDs.getHistory(limit: 200)).map((s) => s.toMap()).toList();
+    final profiles = (await _profileDs.getAllProfiles()).map((p) => p.toMap()).toList();
+    final history = (await _networkDs.getHistory(limit: 200)).map((s) => s.toMap()).toList();
 
     final bundle = DataExportBundle(
       settings: settings,
@@ -69,7 +67,7 @@ class DataManager {
     return bundle.toJson();
   }
 
-  // ── Import ─────────────────────────────────────────────────────────────────
+  // Import
 
   /// Validates and applies an import bundle. Returns a result with user-readable
   /// outcome text. Never runs code from the imported file.
@@ -127,7 +125,7 @@ class DataManager {
     }
   }
 
-  // ── Clear operations ───────────────────────────────────────────────────────
+  // Clear operations
 
   Future<DataOperationResult> clearNetworkHistory() async {
     try {
@@ -158,7 +156,7 @@ class DataManager {
     }
   }
 
-  // ── Storage stats ──────────────────────────────────────────────────────────
+  // Storage stats
 
   Future<DataStorageStats> getStorageStats() async {
     final profileCount = (await _profileDs.getAllProfiles()).length;

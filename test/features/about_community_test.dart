@@ -46,13 +46,11 @@ void main() {
   }
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       SystemChannels.platform,
       (call) async => null,
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       const MethodChannel('com.mohalab.optimization/device_info'),
       (call) async {
         if (call.method == 'openUrl') return false; // Trigger clipboard fallback
@@ -136,7 +134,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('launchOrCopy with valid URL copies to clipboard in test environment', (tester) async {
+    testWidgets('launchOrCopy with valid URL copies to clipboard in test environment',
+        (tester) async {
       const service = UrlLauncherService(enablePlatformChannel: false);
       late BuildContext buildContext;
 
@@ -278,7 +277,8 @@ void main() {
       expect(find.text('View Full License Texts'), findsOneWidget);
     });
 
-    testWidgets('OwnershipNoticeCard renders copyright and original content notice', (tester) async {
+    testWidgets('OwnershipNoticeCard renders copyright and original content notice',
+        (tester) async {
       await tester.pumpWidget(
         buildTestApp(
           const Scaffold(body: OwnershipNoticeCard()),

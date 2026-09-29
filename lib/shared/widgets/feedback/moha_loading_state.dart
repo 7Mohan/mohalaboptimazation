@@ -63,8 +63,7 @@ class MohaSkeleton extends StatefulWidget {
   State<MohaSkeleton> createState() => _MohaSkeletonState();
 }
 
-class _MohaSkeletonState extends State<MohaSkeleton>
-    with SingleTickerProviderStateMixin {
+class _MohaSkeletonState extends State<MohaSkeleton> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
 

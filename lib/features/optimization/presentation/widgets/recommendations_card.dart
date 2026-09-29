@@ -32,15 +32,18 @@ class _RecommendationsCardState extends ConsumerState<RecommendationsCard> {
   Future<void> _applyAll(DeviceAdvice advice) async {
     HapticFeedback.mediumImpact();
     setState(() => _applying = true);
-    final (ok, attempted) =
-        await ref.read(tweaksControllerProvider.notifier).applyRecommended(advice.recommendedTweakIds);
+    final (ok, attempted) = await ref
+        .read(tweaksControllerProvider.notifier)
+        .applyRecommended(advice.recommendedTweakIds);
     if (!mounted) return;
     setState(() => _applying = false);
     showTweakResult(
       context,
       TweakResult(
         success: ok == attempted,
-        message: attempted == 0 ? 'All recommended tweaks are already on' : '$ok of $attempted recommended tweaks applied',
+        message: attempted == 0
+            ? 'All recommended tweaks are already on'
+            : '$ok of $attempted recommended tweaks applied',
       ),
     );
   }
@@ -54,7 +57,8 @@ class _RecommendationsCardState extends ConsumerState<RecommendationsCard> {
 
     return GlassCard(
       level: AppGlassLevel.level3,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.sm),
+      padding:
+          const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.sm),
       child: AnimatedSize(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOutCubic,
@@ -94,10 +98,12 @@ class _RecommendationsCardState extends ConsumerState<RecommendationsCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Recommended for your device',
-                              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800)),
+                              style: theme.textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.w800)),
                           Text(
                             '${advice.signals.tier.label} · ${signalsSummary(advice.signals)}',
-                            style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant, fontSize: 11),
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: scheme.onSurfaceVariant, fontSize: 11),
                             maxLines: 2,
                           ),
                         ],
@@ -168,7 +174,8 @@ class _Scanning extends StatelessWidget {
           Expanded(
             child: Text(
               'Analysing RAM, CPU, display, thermals, battery and network…',
-              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style:
+                  theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
           ),
         ],
@@ -188,17 +195,20 @@ class _AdviceRow extends ConsumerWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final def = TweakCatalog.byId(advice.id);
-    final action = advice.isAction ? TweakCatalog.actions.firstWhere((a) => a.id == advice.id) : null;
+    final action =
+        advice.isAction ? TweakCatalog.actions.firstWhere((a) => a.id == advice.id) : null;
     final avoid = advice.kind == AdviceKind.avoid;
     final active = def != null && snapshot.isActive(def.id);
-    final locked = def != null ? !snapshot.canRun(def) : !snapshot.capabilities.allows(action!.access);
+    final locked =
+        def != null ? !snapshot.canRun(def) : !snapshot.capabilities.allows(action!.access);
     final busy = snapshot.isBusy(advice.id);
 
     final Widget trailing;
     if (avoid) {
       trailing = const Icon(Icons.do_not_disturb_on_outlined, color: AppColors.warning, size: 20);
     } else if (busy) {
-      trailing = const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2));
+      trailing =
+          const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2));
     } else if (active) {
       trailing = Icon(Icons.check_circle_rounded, color: scheme.tertiary, size: 22);
     } else if (locked) {
@@ -240,11 +250,15 @@ class _AdviceRow extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(advice.title, style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
+                Text(advice.title,
+                    style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 1),
                 Text(
-                  locked && !avoid && !active ? '${advice.reason} (needs ${(def?.access ?? action!.access).label})' : advice.reason,
-                  style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant, height: 1.3),
+                  locked && !avoid && !active
+                      ? '${advice.reason} (needs ${(def?.access ?? action!.access).label})'
+                      : advice.reason,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: scheme.onSurfaceVariant, height: 1.3),
                 ),
               ],
             ),
@@ -291,7 +305,10 @@ class _ApplyButton extends StatelessWidget {
             minimumSize: const Size.fromHeight(48),
           ),
           icon: busy
-              ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
               : Icon(enabled ? Icons.auto_fix_high_rounded : Icons.check_rounded),
           label: Text(label, style: const TextStyle(fontWeight: FontWeight.w800)),
         ),

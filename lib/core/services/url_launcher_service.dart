@@ -23,8 +23,7 @@ class UrlLaunchResult {
   final String? url;
 
   bool get isSuccessful =>
-      status == UrlLaunchStatus.success ||
-      status == UrlLaunchStatus.copiedToClipboard;
+      status == UrlLaunchStatus.success || status == UrlLaunchStatus.copiedToClipboard;
 }
 
 /// Service handling link launches, validations, and graceful fallbacks.

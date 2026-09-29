@@ -6,11 +6,9 @@ import '../../domain/classifier/game_classifier.dart';
 
 /// Platform channel service communicating with native Android [MainActivity].
 class GameDiscoveryService {
-  static const _channel =
-      MethodChannel('com.mohalab.optimization/game_discovery');
+  static const _channel = MethodChannel('com.mohalab.optimization/game_discovery');
 
-  static bool get _isTesting =>
-      WidgetsBinding.instance is! WidgetsFlutterBinding;
+  static bool get _isTesting => WidgetsBinding.instance is! WidgetsFlutterBinding;
 
   /// Fetches raw metadata for all installed applications on the device.
   static Future<List<RawAppMetadata>> fetchInstalledApps({

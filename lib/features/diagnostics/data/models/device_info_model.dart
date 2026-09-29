@@ -1,9 +1,7 @@
 /// Rich device hardware information collected from Android system APIs.
 library;
 
-// -----------------------------------------------------------------------------
 // Helper
-// -----------------------------------------------------------------------------
 
 String _s(Map<String, dynamic> m, String k, [String fallback = 'Unavailable']) =>
     (m[k] as String?)?.trim().isNotEmpty == true ? m[k] as String : fallback;
@@ -12,9 +10,7 @@ int? _i(Map<String, dynamic> m, String k) => (m[k] as num?)?.toInt();
 double? _d(Map<String, dynamic> m, String k) => (m[k] as num?)?.toDouble();
 bool? _b(Map<String, dynamic> m, String k) => m[k] as bool?;
 
-// -----------------------------------------------------------------------------
 // Basic device identity
-// -----------------------------------------------------------------------------
 
 class DeviceIdentity {
   const DeviceIdentity({
@@ -76,9 +72,7 @@ class DeviceIdentity {
   );
 }
 
-// -----------------------------------------------------------------------------
 // Memory (RAM)
-// -----------------------------------------------------------------------------
 
 class MemoryInfo {
   const MemoryInfo({
@@ -93,18 +87,15 @@ class MemoryInfo {
   final bool? lowMemory;
   final int? lowMemThresholdBytes;
 
-  double? get totalRamGb =>
-      totalRamBytes != null ? totalRamBytes! / (1024 * 1024 * 1024) : null;
+  double? get totalRamGb => totalRamBytes != null ? totalRamBytes! / (1024 * 1024 * 1024) : null;
   double? get availableRamGb =>
       availableRamBytes != null ? availableRamBytes! / (1024 * 1024 * 1024) : null;
-  double? get usedRamGb =>
-      (totalRamBytes != null && availableRamBytes != null)
-          ? (totalRamBytes! - availableRamBytes!) / (1024 * 1024 * 1024)
-          : null;
-  int? get usedPercent =>
-      (totalRamBytes != null && availableRamBytes != null && totalRamBytes! > 0)
-          ? (((totalRamBytes! - availableRamBytes!) / totalRamBytes!) * 100).round()
-          : null;
+  double? get usedRamGb => (totalRamBytes != null && availableRamBytes != null)
+      ? (totalRamBytes! - availableRamBytes!) / (1024 * 1024 * 1024)
+      : null;
+  int? get usedPercent => (totalRamBytes != null && availableRamBytes != null && totalRamBytes! > 0)
+      ? (((totalRamBytes! - availableRamBytes!) / totalRamBytes!) * 100).round()
+      : null;
 
   factory MemoryInfo.fromMap(Map<String, dynamic> m) => MemoryInfo(
         totalRamBytes: _i(m, 'totalRamBytes'),
@@ -121,9 +112,7 @@ class MemoryInfo {
   );
 }
 
-// -----------------------------------------------------------------------------
 // Storage
-// -----------------------------------------------------------------------------
 
 class StorageInfo {
   const StorageInfo({
@@ -160,9 +149,7 @@ class StorageInfo {
   );
 }
 
-// -----------------------------------------------------------------------------
 // Battery
-// -----------------------------------------------------------------------------
 
 class BatteryInfo {
   const BatteryInfo({
@@ -206,9 +193,7 @@ class BatteryInfo {
   );
 }
 
-// -----------------------------------------------------------------------------
 // Display
-// -----------------------------------------------------------------------------
 
 class DisplayInfo {
   const DisplayInfo({
@@ -246,9 +231,7 @@ class DisplayInfo {
   );
 }
 
-// -----------------------------------------------------------------------------
 // CPU
-// -----------------------------------------------------------------------------
 
 class CoreFrequency {
   const CoreFrequency({
@@ -312,9 +295,7 @@ class CpuInfo {
   );
 }
 
-// -----------------------------------------------------------------------------
 // Aggregate
-// -----------------------------------------------------------------------------
 
 class FullDeviceInfo {
   const FullDeviceInfo({

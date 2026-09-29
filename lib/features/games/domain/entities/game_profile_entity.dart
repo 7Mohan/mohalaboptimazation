@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 /// Supported optimization categories that can be toggled per game.
 enum OptimizationCategory {
   performance('Performance', Icons.speed_rounded, 'CPU & GPU resource prioritization'),
-  battery('Battery & Thermals', Icons.battery_charging_full_rounded, 'Power curves and thermal limits'),
+  battery(
+      'Battery & Thermals', Icons.battery_charging_full_rounded, 'Power curves and thermal limits'),
   network('Network Latency', Icons.wifi_tethering_rounded, 'Gaming packet prioritization'),
   touch('Touch & Input', Icons.touch_app_rounded, 'Sampling rate and touch response'),
   display('Display & Refresh', Icons.tv_rounded, 'Target FPS and refresh rate stability');
@@ -19,7 +20,8 @@ enum OptimizationCategory {
 /// applied per app and only takes effect while that game runs.
 enum PerformancePreference {
   balanced('Standard', 'No override — Android and the game decide'),
-  highPerformance('Performance', 'Game Mode: performance — game / OEM may raise clocks and effects'),
+  highPerformance(
+      'Performance', 'Game Mode: performance — game / OEM may raise clocks and effects'),
   powerSaving('Battery', 'Game Mode: battery — game / OEM may lower load for longer sessions');
 
   const PerformancePreference(this.label, this.description);
@@ -315,8 +317,5 @@ class GameProfile {
 
   @override
   int get hashCode =>
-      gamePackage.hashCode ^
-      profileVersion.hashCode ^
-      performance.hashCode ^
-      battery.hashCode;
+      gamePackage.hashCode ^ profileVersion.hashCode ^ performance.hashCode ^ battery.hashCode;
 }

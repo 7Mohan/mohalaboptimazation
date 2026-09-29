@@ -126,9 +126,7 @@ internal class TweakEngine(
         io.execute { reapplyVolatile(force = false) }
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Capabilities
-    // ─────────────────────────────────────────────────────────────────────
 
     private fun hasSecureSettings(): Boolean =
         context.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) ==
@@ -174,9 +172,7 @@ internal class TweakEngine(
         )
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Settings I/O
-    // ─────────────────────────────────────────────────────────────────────
 
     /** A settings read; [readable] is false when Android refused to reveal the value. */
     private data class Read(val readable: Boolean, val value: String?)
@@ -280,9 +276,7 @@ internal class TweakEngine(
         return kotlin.math.abs(fa - fb) < 0.01f
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Tweak definitions
-    // ─────────────────────────────────────────────────────────────────────
 
     /** Returns the settings a tweak writes, or null when [id] is not a settings tweak. */
     private fun settingsWrites(id: String, args: Map<*, *>): List<Write>? = when (id) {
@@ -341,9 +335,7 @@ internal class TweakEngine(
     /** Kernel tweaks: sysfs/procfs writes that need a root shell. */
     private val rootIds: Set<String> get() = setOf("cpu_governor_perf", "gpu_perf", "tcp_bbr", "swappiness_low")
 
-    // ─────────────────────────────────────────────────────────────────────
     // State
-    // ─────────────────────────────────────────────────────────────────────
 
     private fun states(): Map<String, Any?> {
         val keys = mutableListOf<Pair<String, String>>()
@@ -408,9 +400,7 @@ internal class TweakEngine(
         else -> null
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Apply / revert
-    // ─────────────────────────────────────────────────────────────────────
 
     private fun outcome(ok: Boolean, message: String, extra: Map<String, Any?> = emptyMap()) =
         mapOf("success" to ok, "message" to message) + extra
@@ -587,9 +577,7 @@ internal class TweakEngine(
         return outcome(true, "Restored $count tweak(s)", mapOf("count" to count))
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // One-shot actions — every result is measured, not estimated.
-    // ─────────────────────────────────────────────────────────────────────
 
     private fun availRam(): Long {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -687,9 +675,7 @@ internal class TweakEngine(
         else -> outcome(false, "Unknown action")
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Per-game tuning (Android 13+ GameManager)
-    // ─────────────────────────────────────────────────────────────────────
 
     private fun validPackage(pkg: String?): Boolean =
         !pkg.isNullOrBlank() && pkg.length <= 128 && PACKAGE_NAME.matcher(pkg).matches()
@@ -755,9 +741,7 @@ internal class TweakEngine(
         false
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Long tasks with live progress (Dart listens for "taskProgress").
-    // ─────────────────────────────────────────────────────────────────────
 
     @Volatile private var cancelRequested = false
     @Volatile private var runningTask: String? = null
@@ -860,14 +844,12 @@ internal class TweakEngine(
         Log.w(TAG, "$id failed [$what] exit=${r.exitCode} out=${r.stdout.trim().take(200)} err=${r.stderr.trim().take(200)}")
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Transsion XOS (Infinix / Tecno / itel) refresh rate.
     // XOS ignores AOSP peak_refresh_rate and resets min_refresh_rate within
     // seconds; its own `tran_refresh_mode` drives DisplayModeDirector's
     // user peak vote. Not every panel mode is accepted (e.g. 144 may be
     // reserved for XOS game handling), so each candidate is verified against
     // the live vote and we step down until XOS honours it.
-    // ─────────────────────────────────────────────────────────────────────
 
     private fun isTranssion(): Boolean = readSetting("system", "tran_refresh_mode") != null
 
@@ -903,9 +885,7 @@ internal class TweakEngine(
         return outcome(false, "XOS didn't accept any high refresh mode")
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Root session
-    // ─────────────────────────────────────────────────────────────────────
 
     /** Silently resumes a previously granted root session (managers remember the grant). */
     fun resumeRoot() {
@@ -933,11 +913,9 @@ internal class TweakEngine(
         return outcome(true, "Root mode turned off — using Shizuku")
     }
 
-    // ─────────────────────────────────────────────────────────────────────
     // Kernel tweaks (root). Every target file's original value is saved
     // before the first write and restored on revert. Values reset on reboot,
     // so active ones are re-applied when the root session resumes.
-    // ─────────────────────────────────────────────────────────────────────
 
     private val safePath = Pattern.compile("^/(sys|proc/sys)/[A-Za-z0-9_./:-]+$")
 

@@ -28,4 +28,3 @@ enum ThemePreference {
         ThemePreference.amoled => 'Pure black — saves battery on OLED screens',
       };
 }
-

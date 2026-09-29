@@ -35,7 +35,7 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
         children: [
-          // ── Appearance ──────────────────────────────────────────────────────
+          // Appearance
           const SectionHeader(
             title: 'Appearance',
             subtitle: 'Choose how the app looks on your device.',
@@ -53,8 +53,8 @@ class SettingsScreen extends ConsumerWidget {
                           groupValue: settings.theme,
                           title: Text(
                             entry.value.label,
-                            style: theme.textTheme.bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.w600),
+                            style:
+                                theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                           ),
                           secondary: _IconBox(
                             icon: _iconForTheme(entry.value),
@@ -68,8 +68,7 @@ class SettingsScreen extends ConsumerWidget {
                                   .update((s) => s.copyWith(theme: v));
                             }
                           },
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: AppRadius.radiusMd),
+                          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
                         ))
                     .toList(),
               ),
@@ -77,7 +76,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Language ────────────────────────────────────────────────────────
+          // Language
           const SectionHeader(
             title: 'Language',
             subtitle: 'UI language selection.',
@@ -94,8 +93,8 @@ class SettingsScreen extends ConsumerWidget {
                           value: entry.value,
                           groupValue: settings.language,
                           title: Text(entry.value.label,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600)),
+                              style: theme.textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600)),
                           activeColor: theme.colorScheme.primary,
                           onChanged: (v) {
                             if (v != null) {
@@ -104,8 +103,7 @@ class SettingsScreen extends ConsumerWidget {
                                   .update((s) => s.copyWith(language: v));
                             }
                           },
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: AppRadius.radiusMd),
+                          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
                         ))
                     .toList(),
               ),
@@ -113,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Notifications ───────────────────────────────────────────────────
+          // Notifications
           const SectionHeader(
             title: 'Notifications',
             subtitle: 'Control in-app banners and alerts.',
@@ -133,11 +131,10 @@ class SettingsScreen extends ConsumerWidget {
                         style: TextStyle(fontWeight: FontWeight.w600)),
                     subtitle: const Text(
                         'Show banners when optimizations complete or diagnostics finish'),
-                    secondary: const _IconBox(
-                        icon: Icons.notifications_active_outlined, isActive: true),
+                    secondary:
+                        const _IconBox(icon: Icons.notifications_active_outlined, isActive: true),
                     activeColor: Theme.of(context).colorScheme.primary,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: AppRadius.radiusMd),
+                    shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
                   ),
                   const Divider(height: 1),
                   ListTile(
@@ -154,9 +151,7 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     trailing: const Icon(Icons.send_rounded, size: 20),
                     onTap: () async {
-                      await ref
-                          .read(notificationServiceProvider)
-                          .showOptimizationReminder(
+                      await ref.read(notificationServiceProvider).showOptimizationReminder(
                             title: 'Moha Lab Tuning Reminder',
                             body:
                                 'RAM cache is above 75%. Run a quick optimization before your next gaming session.',
@@ -164,7 +159,8 @@ class SettingsScreen extends ConsumerWidget {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Test notification dispatched! Check your notification shade.'),
+                            content: Text(
+                                'Test notification dispatched! Check your notification shade.'),
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
@@ -177,7 +173,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Optimization Behaviour ──────────────────────────────────────────
+          // Optimization Behaviour
           const SectionHeader(
             title: 'Default Optimization Behaviour',
             subtitle: 'What happens when you start an optimization session.',
@@ -194,22 +190,20 @@ class SettingsScreen extends ConsumerWidget {
                           value: entry.value,
                           groupValue: settings.defaultOptimizationBehaviour,
                           title: Text(entry.value.label,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600)),
+                              style: theme.textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600)),
                           subtitle: Text(entry.value.description,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant)),
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                           activeColor: theme.colorScheme.primary,
                           onChanged: (v) {
                             if (v != null) {
                               ref
                                   .read(appSettingsProvider.notifier)
-                                  .update((s) => s.copyWith(
-                                      defaultOptimizationBehaviour: v));
+                                  .update((s) => s.copyWith(defaultOptimizationBehaviour: v));
                             }
                           },
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: AppRadius.radiusMd),
+                          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
                         ))
                     .toList(),
               ),
@@ -217,7 +211,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Performance Monitoring ──────────────────────────────────────────
+          // Performance Monitoring
           const SectionHeader(
             title: 'Performance Monitoring',
             subtitle: 'Controls background metric sampling frequency.',
@@ -234,22 +228,20 @@ class SettingsScreen extends ConsumerWidget {
                           value: entry.value,
                           groupValue: settings.performanceMonitoringMode,
                           title: Text(entry.value.label,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600)),
+                              style: theme.textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600)),
                           subtitle: Text(entry.value.description,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant)),
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                           activeColor: theme.colorScheme.primary,
                           onChanged: (v) {
                             if (v != null) {
                               ref
                                   .read(appSettingsProvider.notifier)
-                                  .update((s) => s.copyWith(
-                                      performanceMonitoringMode: v));
+                                  .update((s) => s.copyWith(performanceMonitoringMode: v));
                             }
                           },
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: AppRadius.radiusMd),
+                          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
                         ))
                     .toList(),
               ),
@@ -257,7 +249,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Network Test ────────────────────────────────────────────────────
+          // Network Test
           const SectionHeader(
             title: 'Network Diagnostics',
             subtitle: 'When to automatically run a network test.',
@@ -274,22 +266,20 @@ class SettingsScreen extends ConsumerWidget {
                           value: entry.value,
                           groupValue: settings.networkTestAutoRun,
                           title: Text(entry.value.label,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600)),
+                              style: theme.textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600)),
                           subtitle: Text(entry.value.description,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant)),
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                           activeColor: theme.colorScheme.primary,
                           onChanged: (v) {
                             if (v != null) {
                               ref
                                   .read(appSettingsProvider.notifier)
-                                  .update((s) =>
-                                      s.copyWith(networkTestAutoRun: v));
+                                  .update((s) => s.copyWith(networkTestAutoRun: v));
                             }
                           },
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: AppRadius.radiusMd),
+                          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
                         ))
                     .toList(),
               ),
@@ -297,7 +287,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Privacy ─────────────────────────────────────────────────────────
+          // Privacy
           const SectionHeader(
             title: 'Privacy',
             subtitle: 'Your data, explained clearly.',
@@ -361,11 +351,9 @@ class SettingsScreen extends ConsumerWidget {
                     subtitle: const Text(
                         'If enabled in a future update, anonymous crash logs may be collected. '
                         'Currently disabled — no data is sent.'),
-                    secondary: const _IconBox(
-                        icon: Icons.bug_report_outlined, isActive: false),
+                    secondary: const _IconBox(icon: Icons.bug_report_outlined, isActive: false),
                     activeColor: theme.colorScheme.primary,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: AppRadius.radiusMd),
+                    shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
                   ),
                 ),
               ],
@@ -373,7 +361,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Safety ──────────────────────────────────────────────────────────
+          // Safety
           const SectionHeader(
             title: 'Safety',
             subtitle: 'Immutable safety guarantees.',
@@ -386,11 +374,9 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   const MohaSettingsTile(
                     title: 'Safe Mode Enforcement',
-                    subtitle:
-                        'Elevated system changes always require explicit confirmation',
+                    subtitle: 'Elevated system changes always require explicit confirmation',
                     leadingIcon: Icons.verified_user_outlined,
-                    trailing: MohaStatusBadge(
-                        type: MohaStatusType.safe, customLabel: 'Enforced'),
+                    trailing: MohaStatusBadge(type: MohaStatusType.safe, customLabel: 'Enforced'),
                     onTap: null,
                     showDivider: true,
                   ),
@@ -407,7 +393,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Data Management ─────────────────────────────────────────────────
+          // Data Management
           const SectionHeader(
             title: 'Data Management',
             subtitle: 'Export, import, or clear your local data.',
@@ -431,7 +417,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Application ─────────────────────────────────────────────────────
+          // Application
           const SectionHeader(
             title: 'Application',
             subtitle: 'Product info and build details.',
@@ -470,13 +456,10 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Reset Settings?'),
-        content: const Text(
-            'All preferences will return to their defaults. '
+        content: const Text('All preferences will return to their defaults. '
             'Your game profiles and history will not be affected.'),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           FilledButton(
             onPressed: () {
               Navigator.pop(context);
@@ -516,9 +499,7 @@ class _IconBox extends StatelessWidget {
       child: Icon(
         icon,
         size: AppSizes.iconSm,
-        color: isActive
-            ? theme.colorScheme.primary
-            : theme.colorScheme.onSurfaceVariant,
+        color: isActive ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
       ),
     );
   }

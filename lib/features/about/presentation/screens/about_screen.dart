@@ -44,7 +44,7 @@ class AboutScreen extends ConsumerWidget {
         padding: EdgeInsets.fromLTRB(
             AppSpacing.md, AppSpacing.md, AppSpacing.md, AppShell.bottomInset(context)),
         children: [
-          // ── Brand Header ────────────────────────────────────────────────────
+          // Brand Header
           Padding(
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
             child: Column(
@@ -109,7 +109,7 @@ class AboutScreen extends ConsumerWidget {
             ),
           ),
 
-          // ── Quick Links Bar ─────────────────────────────────────────────────
+          // Quick Links Bar
           Card(
             elevation: 0,
             shape: const RoundedRectangleBorder(
@@ -178,12 +178,12 @@ class AboutScreen extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.md),
 
-          // ── Announcements & Telegram Feed ────────────────────────────────────
+          // Announcements & Telegram Feed
           const AnnouncementsFeedWidget(),
 
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Community Section ───────────────────────────────────────────────
+          // Community Section
           const SectionHeader(
             title: 'Community',
             subtitle: 'Connect with fellow gamers and project contributors.',
@@ -193,7 +193,7 @@ class AboutScreen extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Application Telemetry & Build Info ──────────────────────────────
+          // Application Telemetry & Build Info
           appInfoAsync.when(
             loading: () => const InfoCard(
               title: 'APP INFO',
@@ -227,7 +227,7 @@ class AboutScreen extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.md),
 
-          // ── Developer Information ───────────────────────────────────────────
+          // Developer Information
           InfoCard(
             title: 'DEVELOPER & CONTACT',
             children: [
@@ -248,7 +248,7 @@ class AboutScreen extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.md),
 
-          // ── Legal & Transparency ────────────────────────────────────────────
+          // Legal & Transparency
           Card(
             elevation: 0,
             shape: const RoundedRectangleBorder(
@@ -321,7 +321,7 @@ class AboutScreen extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.md),
 
-          // ── Acknowledgements (Retained for test compliance) ─────────────────
+          // Acknowledgements (Retained for test compliance)
           const InfoCard(
             title: 'ACKNOWLEDGEMENTS',
             children: [
@@ -346,12 +346,12 @@ class AboutScreen extends ConsumerWidget {
 
           const SizedBox(height: AppSpacing.md),
 
-          // ── Ownership Notice Card ───────────────────────────────────────────
+          // Ownership Notice Card
           const OwnershipNoticeCard(),
 
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Footer Copyright ────────────────────────────────────────────────
+          // Footer Copyright
           Center(
             child: Text(
               config.copyrightDisplay,

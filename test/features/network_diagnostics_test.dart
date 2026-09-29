@@ -234,7 +234,8 @@ void main() {
       expect(find.text('No past test runs recorded'), findsOneWidget);
     });
 
-    testWidgets('Tapping Run Network Diagnostics runs test and displays results grid', (tester) async {
+    testWidgets('Tapping Run Network Diagnostics runs test and displays results grid',
+        (tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
 

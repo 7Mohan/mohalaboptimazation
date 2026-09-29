@@ -12,12 +12,10 @@ enum LanguagePreference {
 
 /// Default behaviour when entering the optimization workflow.
 enum DefaultOptimizationBehaviour {
-  askEveryTime('Ask Every Time',
-      'Show the full optimization wizard each session'),
-  useLastProfile('Use Last Profile',
-      'Re-apply the most recently used profile without confirmation'),
-  skipToReview('Skip to Review',
-      'Jump straight to the proposed-changes review step');
+  askEveryTime('Ask Every Time', 'Show the full optimization wizard each session'),
+  useLastProfile(
+      'Use Last Profile', 'Re-apply the most recently used profile without confirmation'),
+  skipToReview('Skip to Review', 'Jump straight to the proposed-changes review step');
 
   const DefaultOptimizationBehaviour(this.label, this.description);
   final String label;
@@ -53,8 +51,7 @@ class AppSettings {
     this.theme = ThemePreference.system,
     this.language = LanguagePreference.systemDefault,
     this.notificationsEnabled = true,
-    this.defaultOptimizationBehaviour =
-        DefaultOptimizationBehaviour.askEveryTime,
+    this.defaultOptimizationBehaviour = DefaultOptimizationBehaviour.askEveryTime,
     this.performanceMonitoringMode = PerformanceMonitoringMode.balanced,
     this.networkTestAutoRun = NetworkTestAutoRun.never,
     this.crashReportingOptIn = false,
@@ -88,8 +85,7 @@ class AppSettings {
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       defaultOptimizationBehaviour:
           defaultOptimizationBehaviour ?? this.defaultOptimizationBehaviour,
-      performanceMonitoringMode:
-          performanceMonitoringMode ?? this.performanceMonitoringMode,
+      performanceMonitoringMode: performanceMonitoringMode ?? this.performanceMonitoringMode,
       networkTestAutoRun: networkTestAutoRun ?? this.networkTestAutoRun,
       crashReportingOptIn: crashReportingOptIn ?? this.crashReportingOptIn,
     );
@@ -107,31 +103,23 @@ class AppSettings {
 
   factory AppSettings.fromMap(Map<String, dynamic> map) {
     return AppSettings(
-      theme: _enumFrom(ThemePreference.values, map['theme'],
-          ThemePreference.system),
-      language: _enumFrom(LanguagePreference.values, map['language'],
-          LanguagePreference.systemDefault),
-      notificationsEnabled: map['notificationsEnabled'] is bool
-          ? map['notificationsEnabled'] as bool
-          : true,
-      defaultOptimizationBehaviour: _enumFrom(
-          DefaultOptimizationBehaviour.values,
-          map['defaultOptimizationBehaviour'],
-          DefaultOptimizationBehaviour.askEveryTime),
-      performanceMonitoringMode: _enumFrom(
-          PerformanceMonitoringMode.values,
-          map['performanceMonitoringMode'],
-          PerformanceMonitoringMode.balanced),
-      networkTestAutoRun: _enumFrom(NetworkTestAutoRun.values,
-          map['networkTestAutoRun'], NetworkTestAutoRun.never),
-      crashReportingOptIn: map['crashReportingOptIn'] is bool
-          ? map['crashReportingOptIn'] as bool
-          : false,
+      theme: _enumFrom(ThemePreference.values, map['theme'], ThemePreference.system),
+      language:
+          _enumFrom(LanguagePreference.values, map['language'], LanguagePreference.systemDefault),
+      notificationsEnabled:
+          map['notificationsEnabled'] is bool ? map['notificationsEnabled'] as bool : true,
+      defaultOptimizationBehaviour: _enumFrom(DefaultOptimizationBehaviour.values,
+          map['defaultOptimizationBehaviour'], DefaultOptimizationBehaviour.askEveryTime),
+      performanceMonitoringMode: _enumFrom(PerformanceMonitoringMode.values,
+          map['performanceMonitoringMode'], PerformanceMonitoringMode.balanced),
+      networkTestAutoRun:
+          _enumFrom(NetworkTestAutoRun.values, map['networkTestAutoRun'], NetworkTestAutoRun.never),
+      crashReportingOptIn:
+          map['crashReportingOptIn'] is bool ? map['crashReportingOptIn'] as bool : false,
     );
   }
 
-  static T _enumFrom<T extends Enum>(
-      List<T> values, dynamic raw, T fallback) {
+  static T _enumFrom<T extends Enum>(List<T> values, dynamic raw, T fallback) {
     if (raw is! String) return fallback;
     return values.firstWhere((e) => e.name == raw, orElse: () => fallback);
   }
@@ -149,7 +137,12 @@ class AppSettings {
           crashReportingOptIn == other.crashReportingOptIn;
 
   @override
-  int get hashCode => Object.hash(theme, language, notificationsEnabled,
-      defaultOptimizationBehaviour, performanceMonitoringMode,
-      networkTestAutoRun, crashReportingOptIn);
+  int get hashCode => Object.hash(
+      theme,
+      language,
+      notificationsEnabled,
+      defaultOptimizationBehaviour,
+      performanceMonitoringMode,
+      networkTestAutoRun,
+      crashReportingOptIn);
 }

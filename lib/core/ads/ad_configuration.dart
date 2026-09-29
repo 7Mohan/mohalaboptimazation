@@ -2,19 +2,15 @@ import 'package:flutter/foundation.dart';
 
 import 'ad_placement.dart';
 
-// ---------------------------------------------------------------------------
 // Google Official Test Ad Unit IDs
 // These are safe to commit and will never show real ads.
 // https://developers.google.com/admob/android/test-ads
-// ---------------------------------------------------------------------------
 const _kTestAppId = 'ca-app-pub-3940256099942544~3347511713';
 const _kTestBannerId = 'ca-app-pub-3940256099942544/6300978111';
 const _kTestInterstitialId = 'ca-app-pub-3940256099942544/1033173712';
 const _kTestRewardedId = 'ca-app-pub-3940256099942544/5224354917';
 
-// ---------------------------------------------------------------------------
 // Production AdMob IDs (account pub-9857418204934084)
-// ---------------------------------------------------------------------------
 const _kProductionAppId = 'ca-app-pub-9857418204934084~7368098906';
 const _kProductionHomeBannerId = 'ca-app-pub-9857418204934084/1230065960';
 // Reuses the Home banner unit (AdMob allows one unit in several places).
@@ -65,10 +61,8 @@ class AdConfiguration {
       adUnitIds: const {
         AdPlacement.homeBanner: _kProductionHomeBannerId,
         AdPlacement.gameDetailBanner: _kProductionGamesBannerId,
-        AdPlacement.postOptimizationInterstitial:
-            _kProductionOptimizationInterstitialId,
-        AdPlacement.postDiagnosticsInterstitial:
-            _kProductionDiagnosticsInterstitialId,
+        AdPlacement.postOptimizationInterstitial: _kProductionOptimizationInterstitialId,
+        AdPlacement.postDiagnosticsInterstitial: _kProductionDiagnosticsInterstitialId,
         AdPlacement.rewardedBandwidthTest: _kProductionRewardedId,
       },
     );

@@ -109,7 +109,8 @@ void main() {
     test('toggle state is read from the device, not memory — survives a restart', () async {
       final first = ProviderContainer();
       await first.read(tweaksControllerProvider.future);
-      final res = await first.read(tweaksControllerProvider.notifier).setEnabled('disable_blurs', true);
+      final res =
+          await first.read(tweaksControllerProvider.notifier).setEnabled('disable_blurs', true);
       expect(res.success, isTrue);
       expect(first.read(tweaksControllerProvider).value!.isActive('disable_blurs'), isTrue);
       first.dispose();
@@ -126,7 +127,8 @@ void main() {
       final c = ProviderContainer();
       addTearDown(c.dispose);
       await c.read(tweaksControllerProvider.future);
-      final res = await c.read(tweaksControllerProvider.notifier).setEnabled('fixed_performance', true);
+      final res =
+          await c.read(tweaksControllerProvider.notifier).setEnabled('fixed_performance', true);
       expect(res.success, isFalse);
       expect(c.read(tweaksControllerProvider).value!.isActive('fixed_performance'), isFalse);
     });
@@ -165,11 +167,18 @@ void main() {
         if (call.method != 'compileApps') return device.handle(call);
         expect((call.arguments as Map)['mode'], 'speed-profile');
         for (var i = 0; i < 3; i++) {
-          await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+          await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .handlePlatformMessage(
             channel.name,
             channel.codec.encodeMethodCall(MethodCall('taskProgress', {
-              'task': 'compile_apps', 'done': i, 'total': 3, 'packageName': 'com.game.$i',
-              'label': 'Game $i', 'ok': i, 'failed': 0, 'finished': false,
+              'task': 'compile_apps',
+              'done': i,
+              'total': 3,
+              'packageName': 'com.game.$i',
+              'label': 'Game $i',
+              'ok': i,
+              'failed': 0,
+              'finished': false,
             })),
             (_) {},
           );
@@ -178,7 +187,9 @@ void main() {
         return {'success': true, 'message': 'Compiled 3 apps (speed-profile)'};
       });
       addTearDown(c.dispose);
-      final res = await c.read(longTaskProvider.notifier).compileApps(maxSpeed: false, includeSystem: false);
+      final res = await c
+          .read(longTaskProvider.notifier)
+          .compileApps(maxSpeed: false, includeSystem: false);
       expect(res.success, isTrue);
       expect(seen, [0.0, 1 / 3, 2 / 3]);
       final done = c.read(longTaskProvider)!;

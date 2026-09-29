@@ -99,7 +99,8 @@ class AppIntegrityService {
 
       // 3. Sideload / Unknown source check (informational)
       if (installer == null || !trustedInstallers.contains(installer)) {
-        warnings.add('Application was sideloaded or installed from an unrecognized installer: ${installer ?? 'direct APK install'}');
+        warnings.add(
+            'Application was sideloaded or installed from an unrecognized installer: ${installer ?? 'direct APK install'}');
       }
 
       if (tamperSuspected) {

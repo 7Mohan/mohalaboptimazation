@@ -121,9 +121,7 @@ class _GameDetailSheetState extends ConsumerState<GameDetailSheet> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   // Game information
-  // ─────────────────────────────────────────────────────────────────────────
   Widget _buildGameInformation(ThemeData theme) {
     final launches =
         ref.watch(gameStatsServiceProvider).getStats(widget.game.packageName).launchCount;
@@ -201,9 +199,7 @@ class _GameDetailSheetState extends ConsumerState<GameDetailSheet> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   // Profile status
-  // ─────────────────────────────────────────────────────────────────────────
   Widget _buildProfileStatus(ThemeData theme, GameProfile profile) {
     return GlassCard(
       padding:
@@ -258,9 +254,7 @@ class _GameDetailSheetState extends ConsumerState<GameDetailSheet> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   // Tuning controls
-  // ─────────────────────────────────────────────────────────────────────────
   Widget _buildCurrentConfiguration(ThemeData theme, GameProfile profile, TweakCapabilities caps) {
     final sdk = caps.sdkInt;
     final gameModeOk = sdk == 0 || sdk >= 33;
@@ -364,9 +358,7 @@ class _GameDetailSheetState extends ConsumerState<GameDetailSheet> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   // Save / reset / launch
-  // ─────────────────────────────────────────────────────────────────────────
   Widget _buildActionRow(ThemeData theme, GameProfile profile, TweakCapabilities caps) {
     final compileBusy =
         ref.watch(tweaksControllerProvider).valueOrNull?.isBusy('compile_game') ?? false;

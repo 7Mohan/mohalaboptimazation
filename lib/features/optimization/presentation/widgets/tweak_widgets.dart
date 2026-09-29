@@ -67,7 +67,8 @@ class TweakTile extends ConsumerWidget {
 
     Future<void> toggle(bool value) async {
       HapticFeedback.lightImpact();
-      final res = await ref.read(tweaksControllerProvider.notifier).setEnabled(definition.id, value);
+      final res =
+          await ref.read(tweaksControllerProvider.notifier).setEnabled(definition.id, value);
       if (context.mounted && !res.success) showTweakResult(context, res);
     }
 
@@ -93,7 +94,10 @@ class TweakTile extends ConsumerWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    blocker ?? (active && state.detail != null ? 'Active · ${state.detail}' : definition.summary),
+                    blocker ??
+                        (active && state.detail != null
+                            ? 'Active · ${state.detail}'
+                            : definition.summary),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: blocker != null
                           ? theme.colorScheme.error.withOpacity(0.85)
@@ -114,7 +118,8 @@ class TweakTile extends ConsumerWidget {
               height: 40,
               child: Center(
                 child: busy
-                    ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4))
+                    ? const SizedBox(
+                        width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4))
                     : Switch(
                         value: active,
                         onChanged: canRun || active ? toggle : null,
@@ -200,7 +205,8 @@ class _DetailBlock extends StatelessWidget {
             children: [
               Icon(icon, size: 16, color: theme.colorScheme.primary),
               const SizedBox(width: 6),
-              Text(title, style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
+              Text(title,
+                  style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 6),

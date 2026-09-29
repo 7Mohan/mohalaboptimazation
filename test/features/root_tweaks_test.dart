@@ -14,7 +14,10 @@ void main() {
 
     test('kernel tweaks and Wi-Fi low-latency are root-only', () {
       final root = TweakCatalog.rootOnly.map((t) => t.id).toSet();
-      expect(root, containsAll(['cpu_governor_perf', 'gpu_perf', 'tcp_bbr', 'swappiness_low', 'wifi_low_latency']));
+      expect(
+          root,
+          containsAll(
+              ['cpu_governor_perf', 'gpu_perf', 'tcp_bbr', 'swappiness_low', 'wifi_low_latency']));
       expect(TweakCatalog.rootActions.every((a) => a.access.isRoot), isTrue);
     });
 
@@ -45,19 +48,23 @@ void main() {
   });
 
   group('Root advice', () {
-    const base = DeviceSignals(sdkInt: 34, ramGb: 8, maxCpuGhz: 2.4, cpuCores: 8, availableRamPercent: 20);
+    const base =
+        DeviceSignals(sdkInt: 34, ramGb: 8, maxCpuGhz: 2.4, cpuCores: 8, availableRamPercent: 20);
 
     test('non-rooted phones never get kernel recommendations', () {
       final ids = DeviceAdvisor.analyze(base).items.map((a) => a.id).toSet();
-      expect(ids.intersection({'cpu_governor_perf', 'gpu_perf', 'tcp_bbr', 'drop_caches'}), isEmpty);
+      expect(
+          ids.intersection({'cpu_governor_perf', 'gpu_perf', 'tcp_bbr', 'drop_caches'}), isEmpty);
     });
 
     test('cool rooted mid-range phone gets CPU/GPU governors, BBR and drop caches', () {
-      const s = DeviceSignals(sdkInt: 34, ramGb: 8, maxCpuGhz: 2.4, cpuCores: 8, availableRamPercent: 20, rooted: true);
+      const s = DeviceSignals(
+          sdkInt: 34, ramGb: 8, maxCpuGhz: 2.4, cpuCores: 8, availableRamPercent: 20, rooted: true);
       final a = DeviceAdvisor.analyze(s);
       final rec = a.recommended.map((e) => e.id).toSet();
       expect(rec, containsAll(['cpu_governor_perf', 'gpu_perf', 'tcp_bbr', 'drop_caches']));
-      expect(a.recommended.firstWhere((e) => e.id == 'gpu_perf').reason, startsWith('Mid-range GPU'));
+      expect(
+          a.recommended.firstWhere((e) => e.id == 'gpu_perf').reason, startsWith('Mid-range GPU'));
       expect(a.recommended.firstWhere((e) => e.id == 'drop_caches').reason, contains('20%'));
     });
 

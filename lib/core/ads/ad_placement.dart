@@ -24,8 +24,7 @@ enum AdPlacement {
 
 /// Returns true if [placement] is a banner ad.
 bool isBannerPlacement(AdPlacement placement) {
-  return placement == AdPlacement.homeBanner ||
-      placement == AdPlacement.gameDetailBanner;
+  return placement == AdPlacement.homeBanner || placement == AdPlacement.gameDetailBanner;
 }
 
 /// Returns true if [placement] is an interstitial ad.

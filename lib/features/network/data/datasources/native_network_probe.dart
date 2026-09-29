@@ -62,8 +62,7 @@ class NativeNetworkProbe implements NetworkProbeDataSource {
   Future<double?> measureDnsResolution(String hostname) async {
     final sw = Stopwatch()..start();
     try {
-      final addresses = await InternetAddress.lookup(hostname)
-          .timeout(const Duration(seconds: 3));
+      final addresses = await InternetAddress.lookup(hostname).timeout(const Duration(seconds: 3));
       sw.stop();
       if (addresses.isEmpty) return null;
       return sw.elapsedMicroseconds / 1000.0;

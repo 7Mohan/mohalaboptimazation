@@ -57,14 +57,16 @@ class _CpuUsageChartState extends ConsumerState<CpuUsageChart> {
               GlassIconTile(icon: Icons.memory_rounded, color: color, size: 32),
               const SizedBox(width: AppSpacing.xs),
               Expanded(
-                child: Text('CPU clock', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                child: Text('CPU clock',
+                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
             load == null ? (available ? '…' : 'Hidden') : '${(load * 100).round()}%',
-            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: color),
+            style:
+                theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: color),
           ),
           Text(
             !available
@@ -72,7 +74,8 @@ class _CpuUsageChartState extends ConsumerState<CpuUsageChart> {
                 : snapshot == null || snapshot.cores.isEmpty
                     ? 'Sampling…'
                     : '${snapshot.cores.length} cores · peak ${snapshot.peakMhz} MHz',
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 11),
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 11),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -140,7 +143,9 @@ class _SparklinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_SparklinePainter oldDelegate) =>
-      oldDelegate.color != color || oldDelegate.values.length != values.length || !_same(oldDelegate.values, values);
+      oldDelegate.color != color ||
+      oldDelegate.values.length != values.length ||
+      !_same(oldDelegate.values, values);
 
   static bool _same(List<double> a, List<double> b) {
     for (var i = 0; i < a.length; i++) {

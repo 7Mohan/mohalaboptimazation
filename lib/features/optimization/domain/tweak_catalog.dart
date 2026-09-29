@@ -125,46 +125,52 @@ abstract final class TweakCatalog {
   static const wifiLowLatency = TweakDefinition(
     id: 'wifi_low_latency',
     title: 'Wi-Fi Low-Latency Mode',
-    summary: 'Holds Android\'s Wi-Fi low-latency and high-performance locks: no power-save naps, fewer ping spikes.',
+    summary:
+        'Holds Android\'s Wi-Fi low-latency and high-performance locks: no power-save naps, fewer ping spikes.',
     category: TweakCategory.network,
     access: TweakAccess.root,
     impact: TweakImpact.high,
     minSdk: 31,
     persistsReboot: false,
     changes: 'cmd wifi force-low-latency-mode enabled + force-hi-perf-mode enabled',
-    tradeoff: 'Android allows these Wi-Fi commands only as root. Higher Wi-Fi power draw; effect depends on the Wi-Fi driver.',
+    tradeoff:
+        'Android allows these Wi-Fi commands only as root. Higher Wi-Fi power draw; effect depends on the Wi-Fi driver.',
   );
 
   static const autoSyncOff = TweakDefinition(
     id: 'auto_sync_off',
     title: 'Pause Account Auto-Sync',
-    summary: 'Stops background syncing of mail, contacts, photos and other accounts while you play.',
+    summary:
+        'Stops background syncing of mail, contacts, photos and other accounts while you play.',
     category: TweakCategory.focus,
     access: TweakAccess.none,
     changes: 'ContentResolver.setMasterSyncAutomatically(false)',
     tradeoff: 'New mail and cloud changes arrive only after you switch it back on.',
   );
 
-  // ── Root-only kernel tweaks ──────────────────────────────
+  // Root-only kernel tweaks
   // Kernel values reset on reboot; the app re-applies active ones when the
   // root session resumes. Originals are saved per node and restored on off.
 
   static const cpuGovernorPerf = TweakDefinition(
     id: 'cpu_governor_perf',
     title: 'CPU Performance Governor',
-    summary: 'Sets every CPU cluster to the `performance` governor: cores stay at top clock, no ramp-up lag.',
+    summary:
+        'Sets every CPU cluster to the `performance` governor: cores stay at top clock, no ramp-up lag.',
     category: TweakCategory.kernel,
     access: TweakAccess.root,
     impact: TweakImpact.high,
     persistsReboot: false,
     changes: 'echo performance > /sys/devices/system/cpu/cpufreq/policy*/scaling_governor',
-    tradeoff: 'Much more heat and battery drain. Thermal limits still apply — use while playing, not all day.',
+    tradeoff:
+        'Much more heat and battery drain. Thermal limits still apply — use while playing, not all day.',
   );
 
   static const gpuPerf = TweakDefinition(
     id: 'gpu_perf',
     title: 'GPU Performance Governor',
-    summary: 'Switches the GPU devfreq governor (Adreno / Mali) to `performance` so it never down-clocks mid-frame.',
+    summary:
+        'Switches the GPU devfreq governor (Adreno / Mali) to `performance` so it never down-clocks mid-frame.',
     category: TweakCategory.kernel,
     access: TweakAccess.root,
     impact: TweakImpact.high,
@@ -176,24 +182,28 @@ abstract final class TweakCatalog {
   static const tcpBbr = TweakDefinition(
     id: 'tcp_bbr',
     title: 'TCP BBR Congestion Control',
-    summary: 'Google\'s BBR algorithm keeps latency low on lossy Wi-Fi / mobile links instead of filling buffers.',
+    summary:
+        'Google\'s BBR algorithm keeps latency low on lossy Wi-Fi / mobile links instead of filling buffers.',
     category: TweakCategory.kernel,
     access: TweakAccess.root,
     persistsReboot: false,
     changes: 'echo bbr > /proc/sys/net/ipv4/tcp_congestion_control',
-    tradeoff: 'Affects TCP only (downloads, some game lobbies); most real-time game traffic is UDP. Needs a kernel built with BBR.',
+    tradeoff:
+        'Affects TCP only (downloads, some game lobbies); most real-time game traffic is UDP. Needs a kernel built with BBR.',
   );
 
   static const swappinessLow = TweakDefinition(
     id: 'swappiness_low',
     title: 'Reduce Memory Swapping',
-    summary: 'Lowers vm.swappiness to 40 so the kernel compresses less memory into zRAM while you play.',
+    summary:
+        'Lowers vm.swappiness to 40 so the kernel compresses less memory into zRAM while you play.',
     category: TweakCategory.kernel,
     access: TweakAccess.root,
     impact: TweakImpact.low,
     persistsReboot: false,
     changes: 'echo 40 > /proc/sys/vm/swappiness',
-    tradeoff: 'Less CPU spent on compression, but background apps get closed sooner on low-RAM phones.',
+    tradeoff:
+        'Less CPU spent on compression, but background apps get closed sooner on low-RAM phones.',
   );
 
   static const List<TweakDefinition> all = [
@@ -292,8 +302,16 @@ enum TweakPreset {
     Icons.sports_esports_rounded,
     'Max refresh, stable clocks, zero interruptions.',
     {
-      'refresh_rate_lock', 'fixed_performance', 'gaming_dnd', 'heads_up_off', 'disable_blurs',
-      'animation_scale', 'touch_hold_fast', 'wifi_low_latency', 'auto_sync_off', 'auto_brightness_off',
+      'refresh_rate_lock',
+      'fixed_performance',
+      'gaming_dnd',
+      'heads_up_off',
+      'disable_blurs',
+      'animation_scale',
+      'touch_hold_fast',
+      'wifi_low_latency',
+      'auto_sync_off',
+      'auto_brightness_off',
     },
   ),
   balanced(

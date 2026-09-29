@@ -109,8 +109,7 @@ class GameEntity {
       lastUpdatedAt: lastUpdatedAt ?? this.lastUpdatedAt,
       confidence: confidence ?? this.confidence,
       confidenceScore: confidenceScore ?? this.confidenceScore,
-      classificationReasons:
-          classificationReasons ?? this.classificationReasons,
+      classificationReasons: classificationReasons ?? this.classificationReasons,
       isInstalled: isInstalled ?? this.isInstalled,
       statusLabel: statusLabel ?? this.statusLabel,
       statusType: statusType ?? this.statusType,

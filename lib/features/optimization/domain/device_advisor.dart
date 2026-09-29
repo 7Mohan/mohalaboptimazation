@@ -131,28 +131,33 @@ abstract final class DeviceAdvisor {
         items.add(Advice(id: id, kind: AdviceKind.avoid, reason: reason));
     bool sdk(int min) => s.sdkInt == 0 || s.sdkInt >= min;
 
-    // ── Display ────────────────────────────────────────────────────────────
+    // Display
     if (s.maxRefreshHz > 61 && sdk(TweakCatalog.refreshRateLock.minSdk)) {
       final hz = s.maxRefreshHz.round();
       if (s.batteryLow) {
-        avoid(TweakCatalog.refreshRateLock.id, 'Battery is at ${s.batteryPercent}% — $hz Hz would drain it faster.');
+        avoid(TweakCatalog.refreshRateLock.id,
+            'Battery is at ${s.batteryPercent}% — $hz Hz would drain it faster.');
       } else {
-        rec(TweakCatalog.refreshRateLock.id, 'Your panel runs up to $hz Hz; this stops it dropping to 60 Hz in games.', 5);
+        rec(TweakCatalog.refreshRateLock.id,
+            'Your panel runs up to $hz Hz; this stops it dropping to 60 Hz in games.', 5);
       }
     }
     if (tier != DeviceTier.flagship && sdk(TweakCatalog.disableBlurs.minSdk)) {
-      rec(TweakCatalog.disableBlurs.id, '${tier.label} GPU: skipping compositor blur leaves more GPU time for the game.', 3);
+      rec(TweakCatalog.disableBlurs.id,
+          '${tier.label} GPU: skipping compositor blur leaves more GPU time for the game.', 3);
     }
     if (tier == DeviceTier.entry) {
-      rec(TweakCatalog.animationScale.id, 'Shorter animations make an entry-level phone feel noticeably snappier.', 2);
+      rec(TweakCatalog.animationScale.id,
+          'Shorter animations make an entry-level phone feel noticeably snappier.', 2);
     }
     rec(TweakCatalog.autoBrightnessOff.id, 'Stops the screen dimming during dark game scenes.', 1);
 
-    // ── Performance ────────────────────────────────────────────────────────
+    // Performance
     if (sdk(TweakCatalog.fixedPerformance.minSdk)) {
       if (s.isHot) {
         final t = s.batteryTempC != null ? ' (${s.batteryTempC!.toStringAsFixed(1)}°C)' : '';
-        avoid(TweakCatalog.fixedPerformance.id, 'Phone is already warm$t — sustained clocks would make it throttle harder.');
+        avoid(TweakCatalog.fixedPerformance.id,
+            'Phone is already warm$t — sustained clocks would make it throttle harder.');
       } else if (s.batteryLow) {
         avoid(TweakCatalog.fixedPerformance.id, 'Battery is low — fixed clocks increase drain.');
       } else {
@@ -166,55 +171,71 @@ abstract final class DeviceAdvisor {
       }
     }
 
-    // ── Focus ──────────────────────────────────────────────────────────────
-    rec(TweakCatalog.gamingDnd.id, 'Keeps calls from priority contacts while silencing everything else.', 3);
+    // Focus
+    rec(TweakCatalog.gamingDnd.id,
+        'Keeps calls from priority contacts while silencing everything else.', 3);
     rec(TweakCatalog.headsUpOff.id, 'No notification banners covering your controls.', 3);
     if ((s.ramGb ?? 8) <= 6.5 || (s.availableRamPercent ?? 100) < 30) {
-      rec(TweakCatalog.autoSyncOff.id, 'With ${s.ramGb?.toStringAsFixed(0) ?? 'limited'} GB RAM, background sync competes with the game for memory and CPU.', 2);
+      rec(
+          TweakCatalog.autoSyncOff.id,
+          'With ${s.ramGb?.toStringAsFixed(0) ?? 'limited'} GB RAM, background sync competes with the game for memory and CPU.',
+          2);
     } else {
       rec(TweakCatalog.autoSyncOff.id, 'Background sync can cause network spikes mid-match.', 1);
     }
 
-    // ── Network ────────────────────────────────────────────────────────────
+    // Network
     if (s.onWifi && sdk(TweakCatalog.wifiLowLatency.minSdk)) {
-      rec(TweakCatalog.wifiLowLatency.id, 'You\'re on Wi-Fi: disabling Wi-Fi power-save removes periodic ping spikes.', 4);
+      rec(TweakCatalog.wifiLowLatency.id,
+          'You\'re on Wi-Fi: disabling Wi-Fi power-save removes periodic ping spikes.', 4);
     }
     if (s.batteryLow || ((s.batteryPercent ?? 100) < 50 && !s.charging)) {
-      rec(TweakCatalog.scanOff.id, 'Battery at ${s.batteryPercent}% — background radio scans are wasted energy.', 1);
+      rec(TweakCatalog.scanOff.id,
+          'Battery at ${s.batteryPercent}% — background radio scans are wasted energy.', 1);
     }
 
-    // ── Maintenance ────────────────────────────────────────────────────────
+    // Maintenance
     final freeRam = s.availableRamPercent;
     if ((freeRam != null && freeRam < 30) || (s.ramGb ?? 8) <= 4.5) {
-      rec(TweakCatalog.ramBoost.id, freeRam != null
-          ? 'Only $freeRam% RAM free — stop cached apps before launching a game.'
-          : 'Low total RAM — free memory before launching a game.', 4);
+      rec(
+          TweakCatalog.ramBoost.id,
+          freeRam != null
+              ? 'Only $freeRam% RAM free — stop cached apps before launching a game.'
+              : 'Low total RAM — free memory before launching a game.',
+          4);
     }
     final freeDisk = s.storageFreePercent;
     if (freeDisk != null && freeDisk < 15) {
-      rec(TweakCatalog.trimCaches.id, 'Only $freeDisk% storage free — low storage slows installs and game asset loading.', 3);
+      rec(TweakCatalog.trimCaches.id,
+          'Only $freeDisk% storage free — low storage slows installs and game asset loading.', 3);
     }
 
-    // ── Root (kernel) ────────────────────────────
+    // Root (kernel)
     if (s.rooted) {
-      rec(TweakCatalog.tcpBbr.id, 'Rooted: BBR keeps TCP latency low when Wi-Fi or mobile signal drops packets.', 2);
+      rec(TweakCatalog.tcpBbr.id,
+          'Rooted: BBR keeps TCP latency low when Wi-Fi or mobile signal drops packets.', 2);
       if (s.isHot || s.batteryLow) {
-        avoid(TweakCatalog.cpuGovernorPerf.id, s.isHot
-            ? 'Phone is warm — pinning CPU clocks would trigger harder throttling.'
-            : 'Battery is low — max CPU clocks drain it fast.');
+        avoid(
+            TweakCatalog.cpuGovernorPerf.id,
+            s.isHot
+                ? 'Phone is warm — pinning CPU clocks would trigger harder throttling.'
+                : 'Battery is low — max CPU clocks drain it fast.');
       } else {
-        rec(TweakCatalog.cpuGovernorPerf.id, 'Cool and charged: max CPU clocks while you play. Turn it off afterwards.', 3);
+        rec(TweakCatalog.cpuGovernorPerf.id,
+            'Cool and charged: max CPU clocks while you play. Turn it off afterwards.', 3);
         if (tier != DeviceTier.flagship) {
           rec(TweakCatalog.gpuPerf.id, '${tier.label} GPU: stop it down-clocking mid-match.', 3);
         }
       }
       if (freeRam != null && freeRam < 30) {
-        rec(TweakCatalog.dropCaches.id, 'Only $freeRam% RAM free — drop the kernel page cache before launching.', 2);
+        rec(TweakCatalog.dropCaches.id,
+            'Only $freeRam% RAM free — drop the kernel page cache before launching.', 2);
       }
     }
 
     final compile = _compileAdvice(s);
-    rec(TweakCatalog.compileApps.id, 'Compile your games with ${compile.modeLabel}. ${compile.reason}', 2);
+    rec(TweakCatalog.compileApps.id,
+        'Compile your games with ${compile.modeLabel}. ${compile.reason}', 2);
 
     items.sort((a, b) => b.priority.compareTo(a.priority));
     return DeviceAdvice(signals: s, items: items, compile: compile);
@@ -232,7 +253,8 @@ abstract final class DeviceAdvisor {
     return const CompileAdvice(
       gamesOnly: true,
       maxSpeed: true,
-      reason: 'Games run heavy Java/Kotlin code (engine launchers, SDKs). Full `speed` compilation removes '
+      reason:
+          'Games run heavy Java/Kotlin code (engine launchers, SDKs). Full `speed` compilation removes '
           'JIT warm-up stutter, and a handful of games costs little storage.',
     );
   }

@@ -38,8 +38,7 @@ class GameProfileArg {
 }
 
 /// Provides the current [GameProfile] for a specific game, defaulting to balanced if not saved.
-final gameProfileFamily =
-    FutureProvider.family<GameProfile, GameProfileArg>((ref, arg) async {
+final gameProfileFamily = FutureProvider.family<GameProfile, GameProfileArg>((ref, arg) async {
   final repo = ref.watch(gameProfileRepositoryProvider);
   final profile = await repo.getProfile(arg.packageName);
   return profile ?? GameProfile.defaultForGame(arg.packageName, arg.gameName);

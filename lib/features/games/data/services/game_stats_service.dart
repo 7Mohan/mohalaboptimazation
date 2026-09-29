@@ -35,8 +35,7 @@ class GamePlayStats {
             ? DateTime.tryParse(map['lastLaunchedAt'] as String)
             : null,
         customFpsTarget: (map['customFpsTarget'] as num?)?.toInt(),
-        customResolutionScale:
-            (map['customResolutionScale'] as num?)?.toDouble(),
+        customResolutionScale: (map['customResolutionScale'] as num?)?.toDouble(),
       );
 
   GamePlayStats copyWith({
@@ -50,8 +49,7 @@ class GamePlayStats {
       launchCount: launchCount ?? this.launchCount,
       lastLaunchedAt: lastLaunchedAt ?? this.lastLaunchedAt,
       customFpsTarget: customFpsTarget ?? this.customFpsTarget,
-      customResolutionScale:
-          customResolutionScale ?? this.customResolutionScale,
+      customResolutionScale: customResolutionScale ?? this.customResolutionScale,
     );
   }
 }
@@ -80,8 +78,7 @@ class GameStatsService {
       launchCount: current.launchCount + 1,
       lastLaunchedAt: DateTime.now(),
     );
-    await _prefs?.setString(
-        '$_kPrefix$packageName', jsonEncode(updated.toMap()));
+    await _prefs?.setString('$_kPrefix$packageName', jsonEncode(updated.toMap()));
   }
 
   Future<void> updatePreset({
@@ -94,8 +91,7 @@ class GameStatsService {
       customFpsTarget: customFpsTarget,
       customResolutionScale: customResolutionScale,
     );
-    await _prefs?.setString(
-        '$_kPrefix$packageName', jsonEncode(updated.toMap()));
+    await _prefs?.setString('$_kPrefix$packageName', jsonEncode(updated.toMap()));
   }
 }
 
@@ -106,4 +102,3 @@ final gameStatsServiceProvider = Provider<GameStatsService>((ref) {
   } catch (_) {}
   return GameStatsService(prefs);
 });
-

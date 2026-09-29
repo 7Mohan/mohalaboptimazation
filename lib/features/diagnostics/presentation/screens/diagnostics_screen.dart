@@ -13,9 +13,7 @@ import '../../../../shared/widgets/section_header.dart';
 import '../../data/models/device_info_model.dart';
 import '../../data/providers/full_device_info_provider.dart';
 
-// -----------------------------------------------------------------------------
 // Screen
-// -----------------------------------------------------------------------------
 
 class DiagnosticsScreen extends ConsumerWidget {
   const DiagnosticsScreen({super.key});
@@ -46,7 +44,8 @@ class DiagnosticsScreen extends ConsumerWidget {
         loading: () => const MohaLoadingState(message: 'Reading hardware telemetry…'),
         error: (e, _) => MohaErrorState(
           title: 'Hardware Telemetry Unavailable',
-          message: 'Could not read device information. Ensure the app has the required permissions and retry.',
+          message:
+              'Could not read device information. Ensure the app has the required permissions and retry.',
           onRetry: () => ref.invalidate(fullDeviceInfoProvider),
         ),
         data: (info) => _DeviceDashboard(
@@ -59,9 +58,7 @@ class DiagnosticsScreen extends ConsumerWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
 // Main dashboard
-// -----------------------------------------------------------------------------
 
 class _DeviceDashboard extends StatelessWidget {
   const _DeviceDashboard({
@@ -79,7 +76,7 @@ class _DeviceDashboard extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
       children: [
-        // -- Device Identity ----------------------------------------------
+        // Device Identity
         const SectionHeader(
           title: 'Device Identity',
           subtitle: 'Hardware and software identification.',
@@ -106,7 +103,7 @@ class _DeviceDashboard extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
 
-        // -- Advanced Diagnostics ----------------------------------------
+        // Advanced Diagnostics
         const SectionHeader(
           title: 'Advanced Diagnostics',
           subtitle: 'CPU architecture and core information.',
@@ -118,8 +115,7 @@ class _DeviceDashboard extends StatelessWidget {
             title: 'CPU',
             children: [
               InfoRow(label: 'Hardware', value: info.cpu.hardware),
-              if (info.cpu.model != null)
-                InfoRow(label: 'Processor', value: info.cpu.model!),
+              if (info.cpu.model != null) InfoRow(label: 'Processor', value: info.cpu.model!),
               InfoRow(label: 'Cores', value: info.cpu.numCores?.toString() ?? 'Unavailable'),
               InfoRow(label: 'Architecture', value: info.cpu.primaryAbi),
               InfoRow(label: 'Supported ABIs', value: info.cpu.abis.join(', ')),
@@ -135,7 +131,7 @@ class _DeviceDashboard extends StatelessWidget {
         ],
         const SizedBox(height: AppSpacing.md),
 
-        // -- Memory ------------------------------------------------------
+        // Memory
         const SectionHeader(
           title: 'Memory',
           subtitle: 'RAM usage refreshed every 15 s.',
@@ -157,7 +153,7 @@ class _DeviceDashboard extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
 
-        // -- Storage -----------------------------------------------------
+        // Storage
         const SectionHeader(
           title: 'Storage',
           subtitle: 'Internal and external storage capacity.',
@@ -169,7 +165,7 @@ class _DeviceDashboard extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
 
-        // -- Battery -----------------------------------------------------
+        // Battery
         const SectionHeader(
           title: 'Battery',
           subtitle: 'Power state refreshed every 30 s.',
@@ -191,7 +187,7 @@ class _DeviceDashboard extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
 
-        // -- Display -----------------------------------------------------
+        // Display
         const SectionHeader(
           title: 'Display',
           subtitle: 'Screen hardware characteristics.',
@@ -206,9 +202,7 @@ class _DeviceDashboard extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
 // Specialised cards
-// -----------------------------------------------------------------------------
 
 class _MemoryCard extends StatelessWidget {
   const _MemoryCard({required this.memory});
@@ -272,8 +266,7 @@ class _StorageCard extends StatelessWidget {
               ? '${avail.toStringAsFixed(1)} GB${usedPct != null ? ' (${100 - usedPct}% free)' : ''}'
               : 'Unavailable',
         ),
-        if (usedPct != null)
-          _UsageBar(percent: usedPct / 100, isWarning: usedPct > 85),
+        if (usedPct != null) _UsageBar(percent: usedPct / 100, isWarning: usedPct > 85),
         if (storage.externalTotalBytes != null)
           InfoRow(
             label: 'SD Card Total',
@@ -284,7 +277,8 @@ class _StorageCard extends StatelessWidget {
         if (storage.externalAvailableBytes != null)
           InfoRow(
             label: 'SD Card Free',
-            value: '${(storage.externalAvailableBytes! / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB',
+            value:
+                '${(storage.externalAvailableBytes! / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB',
           ),
       ],
     );
@@ -306,8 +300,7 @@ class _BatteryCard extends StatelessWidget {
 
     return InfoCard(
       title: 'BATTERY',
-      trailing: MohaStatusBadge(
-        customLabel: battery.status, type: statusType),
+      trailing: MohaStatusBadge(customLabel: battery.status, type: statusType),
       children: [
         InfoRow(
           label: 'Level',
@@ -326,8 +319,7 @@ class _BatteryCard extends StatelessWidget {
           label: 'Voltage',
           value: battery.voltageMv != null ? '${battery.voltageMv} mV' : 'Unavailable',
         ),
-        if (battery.plugged != null)
-          InfoRow(label: 'Charging via', value: battery.plugged!),
+        if (battery.plugged != null) InfoRow(label: 'Charging via', value: battery.plugged!),
       ],
     );
   }
@@ -339,9 +331,7 @@ class _DisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rates = display.supportedRatesHz
-        .map((r) => '${r.toStringAsFixed(0)} Hz')
-        .join(' / ');
+    final rates = display.supportedRatesHz.map((r) => '${r.toStringAsFixed(0)} Hz').join(' / ');
 
     return InfoCard(
       title: 'DISPLAY',
@@ -357,8 +347,7 @@ class _DisplayCard extends StatelessWidget {
               ? '${display.refreshRateHz!.toStringAsFixed(1)} Hz'
               : 'Unavailable',
         ),
-        if (rates.isNotEmpty)
-          InfoRow(label: 'Supported Rates', value: rates),
+        if (rates.isNotEmpty) InfoRow(label: 'Supported Rates', value: rates),
       ],
     );
   }
@@ -387,9 +376,7 @@ class _CpuCoresCard extends StatelessWidget {
   }
 }
 
-// -----------------------------------------------------------------------------
 // Shared usage bar widget
-// -----------------------------------------------------------------------------
 
 class _UsageBar extends StatelessWidget {
   const _UsageBar({
@@ -433,4 +420,3 @@ class _UsageBar extends StatelessWidget {
     );
   }
 }
-

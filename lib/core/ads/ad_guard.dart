@@ -1,12 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ---------------------------------------------------------------------------
 // AdGuard -- prevents ads from showing during sensitive operations.
 //
 // Each predicate reads the relevant Riverpod provider state synchronously.
 // If the provider is not yet available (e.g., during first frame), it
 // defaults to "active" (conservative -- suppresses the ad).
-// ---------------------------------------------------------------------------
 
 /// Returns true when an optimization workflow is actively running.
 bool isOptimizationActive(WidgetRef ref) {

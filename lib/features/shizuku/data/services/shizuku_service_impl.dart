@@ -76,7 +76,12 @@ final class ShizukuServiceImpl implements ShizukuService {
       );
       return res ?? {'success': false, 'exitCode': -1, 'stdout': '', 'stderr': 'Null response'};
     } on PlatformException catch (e) {
-      return {'success': false, 'exitCode': -1, 'stdout': '', 'stderr': e.message ?? 'Platform error'};
+      return {
+        'success': false,
+        'exitCode': -1,
+        'stdout': '',
+        'stderr': e.message ?? 'Platform error'
+      };
     } catch (e) {
       return {'success': false, 'exitCode': -1, 'stdout': '', 'stderr': e.toString()};
     }

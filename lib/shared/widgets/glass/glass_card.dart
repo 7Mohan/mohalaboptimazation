@@ -187,7 +187,10 @@ class GlassBorderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(GlassBorderPainter oldDelegate) =>
-      oldDelegate.radius != radius || oldDelegate.gradient != gradient || oldDelegate.color != color || oldDelegate.width != width;
+      oldDelegate.radius != radius ||
+      oldDelegate.gradient != gradient ||
+      oldDelegate.color != color ||
+      oldDelegate.width != width;
 }
 
 /// Frosted surface for bottom sheets: the one place besides the tab bar

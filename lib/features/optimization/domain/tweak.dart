@@ -136,18 +136,15 @@ class TweakCapabilities {
     this.rootManager,
   });
 
-  factory TweakCapabilities.fromMap(Map<dynamic, dynamic> map) =>
-      TweakCapabilities(
+  factory TweakCapabilities.fromMap(Map<dynamic, dynamic> map) => TweakCapabilities(
         sdkInt: map['sdkInt'] as int? ?? 0,
         manufacturer: map['manufacturer'] as String? ?? '',
         shizukuReady: map['shizukuReady'] as bool? ?? false,
         secureSettingsGranted: map['secureSettingsGranted'] as bool? ?? false,
-        notificationPolicyGranted:
-            map['notificationPolicyGranted'] as bool? ?? false,
-        refreshRates: (map['refreshRates'] as List<dynamic>?)
-                ?.map((e) => (e as num).toDouble())
-                .toList() ??
-            const [60.0],
+        notificationPolicyGranted: map['notificationPolicyGranted'] as bool? ?? false,
+        refreshRates:
+            (map['refreshRates'] as List<dynamic>?)?.map((e) => (e as num).toDouble()).toList() ??
+                const [60.0],
         rootAvailable: map['rootAvailable'] as bool? ?? false,
         rootGranted: map['rootGranted'] as bool? ?? false,
         shizukuRoot: map['shizukuRoot'] as bool? ?? false,

@@ -18,10 +18,8 @@ class MohaLabApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
-    final themePref =
-        ref.watch(themeNotifierProvider).valueOrNull ?? ThemePreference.system;
-    final darkTheme =
-        themePref == ThemePreference.amoled ? AppTheme.amoled : AppTheme.dark;
+    final themePref = ref.watch(themeNotifierProvider).valueOrNull ?? ThemePreference.system;
+    final darkTheme = themePref == ThemePreference.amoled ? AppTheme.amoled : AppTheme.dark;
 
     return MaterialApp.router(
       title: 'Moha Lab Optimization',

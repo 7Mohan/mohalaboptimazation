@@ -47,7 +47,8 @@ void main() {
       final result = ProfileValidator.validate(profile);
       expect(result.isValid, isFalse);
       expect(
-        result.errors.any((e) => e.contains('forbidden shell') || e.contains('Invalid package name')),
+        result.errors
+            .any((e) => e.contains('forbidden shell') || e.contains('Invalid package name')),
         isTrue,
       );
     });

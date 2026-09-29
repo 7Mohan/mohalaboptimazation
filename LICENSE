@@ -1,0 +1,33 @@
+Moha Lab Optimization — Source-Available License (View Only)
+
+Copyright (c) 2026 Mohamed Bashir Ali (@7Mohan). All rights reserved.
+
+This source code is published so that users can inspect and verify what the
+Moha Lab Optimization app does on their devices. It is NOT open source.
+
+You MAY:
+  - view and read this source code on GitHub for the purpose of reviewing the
+    app's behaviour, security and privacy;
+  - discuss it and quote short excerpts when reporting a security or privacy
+    issue to the author.
+
+You may NOT, without prior written permission from the copyright holder:
+  - copy, fork for redistribution, download for reuse, modify, or create
+    derivative works of this code or any part of it;
+  - build, publish or distribute the app or any app based on this code, in any
+    app store, website or other channel;
+  - reuse its design, assets, text, or the "Moha Lab" name and branding;
+  - sell, sublicense or otherwise commercially exploit this code.
+
+Forking on GitHub is permitted solely as required by GitHub's Terms of Service
+for viewing; it grants no additional rights.
+
+Official releases are signed with the author's private key and are published
+only at https://github.com/7Mohan/mohalab-optimization-app and in official app
+stores. Any other build is unofficial.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+Contact: https://t.me/Mohagaminglab

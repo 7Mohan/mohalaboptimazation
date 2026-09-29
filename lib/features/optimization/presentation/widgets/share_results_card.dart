@@ -9,8 +9,7 @@ import '../../../../core/theme/tokens/app_radius.dart';
 /// Renders a shareable Moha Lab performance certificate card
 /// and captures it as a PNG image for sharing.
 class ShareResultsHelper {
-  static final ScreenshotController _screenshotController =
-      ScreenshotController();
+  static final ScreenshotController _screenshotController = ScreenshotController();
 
   static Future<void> captureAndShare({
     required BuildContext context,
@@ -93,8 +92,7 @@ class _ShareCardGraphic extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1E56DE),
                       borderRadius: BorderRadius.circular(4),

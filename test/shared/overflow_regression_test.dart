@@ -33,9 +33,19 @@ final screens = <String, Widget Function()>{
   'network': () => const NetworkDiagnosticsScreen(),
   'data': () => const DataManagementScreen(),
   'onboarding': () => const OnboardingScreen(),
-  'compileSheet': () => const Scaffold(body: Align(alignment: Alignment.bottomCenter, child: LongTaskSheet(action: TweakCatalog.compileApps))),
-  'dexoptSheet': () => const Scaffold(body: Align(alignment: Alignment.bottomCenter, child: LongTaskSheet(action: TweakCatalog.compileAll))),
-  'gameSheet': () => Scaffold(body: GameDetailSheet(game: const GameEntity(packageName: 'com.tencent.ig', appName: 'PUBG MOBILE with a very long title'), onLaunch: () {})),
+  'compileSheet': () => const Scaffold(
+      body: Align(
+          alignment: Alignment.bottomCenter,
+          child: LongTaskSheet(action: TweakCatalog.compileApps))),
+  'dexoptSheet': () => const Scaffold(
+      body: Align(
+          alignment: Alignment.bottomCenter,
+          child: LongTaskSheet(action: TweakCatalog.compileAll))),
+  'gameSheet': () => Scaffold(
+      body: GameDetailSheet(
+          game: const GameEntity(
+              packageName: 'com.tencent.ig', appName: 'PUBG MOBILE with a very long title'),
+          onLaunch: () {})),
 };
 
 void main() {
@@ -43,7 +53,8 @@ void main() {
   for (final size in const [Size(393, 860), Size(360, 740)]) {
     for (final scale in const [1.0, 1.3]) {
       for (final e in screens.entries) {
-        testWidgets('${e.key} @ ${size.width.toInt()}x${size.height.toInt()} text x$scale', (tester) async {
+        testWidgets('${e.key} @ ${size.width.toInt()}x${size.height.toInt()} text x$scale',
+            (tester) async {
           SharedPreferences.setMockInitialValues({'has_seen_community_modal_v2': true});
           final prefs = await SharedPreferences.getInstance();
           await tester.binding.setSurfaceSize(size);
@@ -60,10 +71,19 @@ void main() {
           await tester.pumpWidget(ProviderScope(
             overrides: [
               sharedPreferencesProvider.overrideWithValue(prefs),
-              deviceAdviceProvider.overrideWith((ref) async => DeviceAdvisor.analyze(const DeviceSignals(sdkInt: 36, maxRefreshHz: 120, onWifi: true, batteryTempC: 44, thermalStatus: 2))),
+              deviceAdviceProvider.overrideWith((ref) async => DeviceAdvisor.analyze(
+                  const DeviceSignals(
+                      sdkInt: 36,
+                      maxRefreshHz: 120,
+                      onWifi: true,
+                      batteryTempC: 44,
+                      thermalStatus: 2))),
             ],
             child: MediaQuery(
-              data: MediaQueryData(size: size, textScaler: TextScaler.linear(scale), padding: const EdgeInsets.only(top: 32, bottom: 24)),
+              data: MediaQueryData(
+                  size: size,
+                  textScaler: TextScaler.linear(scale),
+                  padding: const EdgeInsets.only(top: 32, bottom: 24)),
               child: MaterialApp(theme: AppTheme.dark, home: e.value()),
             ),
           ));

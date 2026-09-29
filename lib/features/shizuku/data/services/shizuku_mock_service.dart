@@ -26,16 +26,14 @@ final class ShizukuMockService implements ShizukuService {
 
   @override
   Future<bool> checkPermission() async =>
-      _status == ShizukuStatus.permissionGranted ||
-      _status == ShizukuStatus.ready;
+      _status == ShizukuStatus.permissionGranted || _status == ShizukuStatus.ready;
 
   @override
   Future<bool> isReady() async => _status == ShizukuStatus.ready;
 
   @override
   Future<bool> requestPermission() async {
-    if (_status == ShizukuStatus.notInstalled ||
-        _status == ShizukuStatus.notRunning) {
+    if (_status == ShizukuStatus.notInstalled || _status == ShizukuStatus.notRunning) {
       return false;
     }
     if (permissionGrantOnRequest) {
@@ -49,6 +47,11 @@ final class ShizukuMockService implements ShizukuService {
 
   @override
   Future<Map<String, dynamic>> execShellCommand(String command) async {
-    return {'success': _status == ShizukuStatus.ready, 'exitCode': 0, 'stdout': 'Mock execution: $command', 'stderr': ''};
+    return {
+      'success': _status == ShizukuStatus.ready,
+      'exitCode': 0,
+      'stdout': 'Mock execution: $command',
+      'stderr': ''
+    };
   }
 }

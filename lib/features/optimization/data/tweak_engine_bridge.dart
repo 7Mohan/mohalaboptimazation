@@ -40,7 +40,8 @@ class TweakEngineBridge {
 
   Future<TweakResult> revert(String id) => _call('revert', {'id': id});
 
-  Future<TweakResult> runAction(String id, {String? packageName, String? mode}) => _call('runAction', {
+  Future<TweakResult> runAction(String id, {String? packageName, String? mode}) =>
+      _call('runAction', {
         'id': id,
         if (packageName != null) 'packageName': packageName,
         if (mode != null) 'mode': mode,

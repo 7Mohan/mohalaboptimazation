@@ -17,7 +17,8 @@ class GlassSectionLabel extends StatelessWidget {
     final theme = Theme.of(context);
     final color = theme.colorScheme.onSurfaceVariant;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md + 4, AppSpacing.lg, AppSpacing.md, AppSpacing.xs),
+      padding:
+          const EdgeInsets.fromLTRB(AppSpacing.md + 4, AppSpacing.lg, AppSpacing.md, AppSpacing.xs),
       child: Row(
         children: [
           if (icon != null) ...[

@@ -35,10 +35,8 @@ class RawAppMetadata {
       hasLauncherIntent: map['hasLauncherIntent'] as bool? ?? false,
       firstInstallTime: (map['firstInstallTime'] as num?)?.toInt(),
       lastUpdateTime: (map['lastUpdateTime'] as num?)?.toInt(),
-      metaDataKeys: (map['metaDataKeys'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          const [],
+      metaDataKeys:
+          (map['metaDataKeys'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
       iconBytes: map['iconBytes'] as Uint8List?,
     );
   }
@@ -138,11 +136,15 @@ class DefaultGameClassifier implements GameClassifier {
 
     if (matchingEngineKeys.isNotEmpty) {
       score += 0.60;
-      signals.add('Game engine / Play Games service metadata detected (${matchingEngineKeys.length} markers)');
+      signals.add(
+          'Game engine / Play Games service metadata detected (${matchingEngineKeys.length} markers)');
     }
 
     // Negative heuristic: System packages with no game declarations
-    if (metadata.isSystemApp && !metadata.isGameCategory && !metadata.isGameFlag && !metadata.hasGameIntent) {
+    if (metadata.isSystemApp &&
+        !metadata.isGameCategory &&
+        !metadata.isGameFlag &&
+        !metadata.hasGameIntent) {
       score -= 0.50;
     }
 

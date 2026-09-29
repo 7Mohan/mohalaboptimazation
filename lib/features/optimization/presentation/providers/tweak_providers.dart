@@ -100,9 +100,7 @@ class TweaksController extends AsyncNotifier<TweaksSnapshot> {
   /// Turns a tweak on or off and returns the device's verdict.
   Future<TweakResult> setEnabled(String id, bool enabled) async {
     _setBusy(id, true);
-    final result = enabled
-        ? await _bridge.apply(id, _paramsFor(id))
-        : await _bridge.revert(id);
+    final result = enabled ? await _bridge.apply(id, _paramsFor(id)) : await _bridge.revert(id);
     final states = await _bridge.states();
     final current = state.valueOrNull ?? const TweaksSnapshot();
     final busy = Set<String>.from(current.busy)..remove(id);

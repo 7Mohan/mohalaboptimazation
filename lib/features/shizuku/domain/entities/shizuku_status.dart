@@ -47,17 +47,13 @@ extension ShizukuStatusExtension on ShizukuStatus {
         ShizukuStatus.notRunning =>
           'Shizuku is installed but its service is not currently running. '
               'Start it using ADB or Wireless Debugging in Developer Options.',
-        ShizukuStatus.binderConnected =>
-          'Shizuku service is running. Grant permission to enable '
-              'advanced optimization features.',
-        ShizukuStatus.permissionDenied =>
-          'Moha Lab Optimization was denied access to Shizuku. '
-              'Tap "Request Permission" to try again.',
-        ShizukuStatus.permissionGranted =>
-          'Permission granted. Verifying service availability…',
-        ShizukuStatus.ready =>
-          'Shizuku is connected and ready. Advanced system optimization '
-              'features are now available.',
+        ShizukuStatus.binderConnected => 'Shizuku service is running. Grant permission to enable '
+            'advanced optimization features.',
+        ShizukuStatus.permissionDenied => 'Moha Lab Optimization was denied access to Shizuku. '
+            'Tap "Request Permission" to try again.',
+        ShizukuStatus.permissionGranted => 'Permission granted. Verifying service availability…',
+        ShizukuStatus.ready => 'Shizuku is connected and ready. Advanced system optimization '
+            'features are now available.',
       };
 
   /// Short label used in compact badges and list tiles.

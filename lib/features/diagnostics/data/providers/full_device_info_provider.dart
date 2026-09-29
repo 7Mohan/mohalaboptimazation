@@ -6,9 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mohalab_optimization/features/diagnostics/data/models/device_info_model.dart';
 import 'package:mohalab_optimization/features/diagnostics/data/services/device_info_service.dart';
 
-// ---------------------------------------------------------------------------
 // Static provider (loaded once on app start)
-// ---------------------------------------------------------------------------
 
 /// Full hardware snapshot -- fetched once at app startup.
 final fullDeviceInfoProvider = FutureProvider<FullDeviceInfo>(
@@ -16,9 +14,7 @@ final fullDeviceInfoProvider = FutureProvider<FullDeviceInfo>(
   name: 'fullDeviceInfoProvider',
 );
 
-// ---------------------------------------------------------------------------
 // Live polling notifiers
-// ---------------------------------------------------------------------------
 
 /// Live battery state, refreshed every 30 s.
 class BatteryNotifier extends AutoDisposeAsyncNotifier<BatteryInfo> {
@@ -75,6 +71,7 @@ class MemoryNotifier extends AutoDisposeAsyncNotifier<MemoryInfo> {
 
 final liveMemoryProvider =
     AsyncNotifierProvider.autoDispose<MemoryNotifier, MemoryInfo>(MemoryNotifier.new);
+
 /// Live CPU clocks, sampled every 2 s only while a widget is watching.
 final liveCpuClockProvider = StreamProvider.autoDispose<CpuClockSnapshot>((ref) async* {
   yield await DeviceInfoService.fetchCpuClocks();

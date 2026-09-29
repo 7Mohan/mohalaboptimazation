@@ -10,8 +10,7 @@ import '../models/device_info_model.dart';
 class DeviceInfoService {
   static const _channel = MethodChannel('com.mohalab.optimization/device_info');
 
-  static bool get _isTesting =>
-      WidgetsBinding.instance is! WidgetsFlutterBinding;
+  static bool get _isTesting => WidgetsBinding.instance is! WidgetsFlutterBinding;
 
   /// Fetch all hardware telemetry in a single round-trip.
   static Future<FullDeviceInfo> fetchAll() async {
@@ -131,7 +130,8 @@ class CpuClockSnapshot {
     return loads.reduce((a, b) => a + b) / loads.length;
   }
 
-  int get peakMhz => cores.isEmpty ? 0 : cores.map((c) => c.curKhz).reduce((a, b) => a > b ? a : b) ~/ 1000;
+  int get peakMhz =>
+      cores.isEmpty ? 0 : cores.map((c) => c.curKhz).reduce((a, b) => a > b ? a : b) ~/ 1000;
 }
 
 class ThermalSnapshot {

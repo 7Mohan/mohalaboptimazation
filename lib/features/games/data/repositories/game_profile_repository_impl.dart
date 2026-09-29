@@ -155,8 +155,8 @@ class InMemoryGameProfileRepository implements GameProfileRepository {
     required String targetPackage,
     required String targetGameName,
   }) async {
-    final source = _store[sourcePackage] ??
-        GameProfile.defaultForGame(sourcePackage, targetGameName);
+    final source =
+        _store[sourcePackage] ?? GameProfile.defaultForGame(sourcePackage, targetGameName);
 
     final copy = source.copyWith(
       gamePackage: targetPackage,

@@ -53,10 +53,9 @@ class DataManagementScreen extends ConsumerWidget {
       body: ListView(
         padding: EdgeInsets.only(bottom: AppShell.bottomInset(context)),
         children: [
-          // ── Privacy statement ───────────────────────────────────────────────
+          // Privacy statement
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
             child: Card(
               color: theme.colorScheme.primaryContainer.withAlpha(70),
               child: Padding(
@@ -66,13 +65,12 @@ class DataManagementScreen extends ConsumerWidget {
                   children: [
                     Row(children: [
                       Icon(Icons.storage_outlined,
-                          color: theme.colorScheme.primary,
-                          size: AppSizes.iconMd),
+                          color: theme.colorScheme.primary, size: AppSizes.iconMd),
                       const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text('Stored Locally On Your Device',
-                            style: theme.textTheme.titleSmall
-                                ?.copyWith(fontWeight: FontWeight.w700)),
+                            style:
+                                theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
                       ),
                     ]),
                     const SizedBox(height: AppSpacing.sm),
@@ -80,8 +78,7 @@ class DataManagementScreen extends ConsumerWidget {
                       'No account is required. '
                       'Your profiles and history are stored on this device only — '
                       'they are never uploaded automatically.',
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(height: 1.45),
+                      style: theme.textTheme.bodySmall?.copyWith(height: 1.45),
                     ),
                   ],
                 ),
@@ -90,7 +87,7 @@ class DataManagementScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.md),
 
-          // ── Storage summary ─────────────────────────────────────────────────
+          // Storage summary
           if (stats != null) ...[
             const SectionHeader(
               title: 'Storage Summary',
@@ -106,19 +103,15 @@ class DataManagementScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        child: _StatBox(
-                            label: 'Game\nProfiles',
-                            value: '${stats.gameProfileCount}'),
+                        child:
+                            _StatBox(label: 'Game\nProfiles', value: '${stats.gameProfileCount}'),
                       ),
                       Expanded(
                         child: _StatBox(
-                            label: 'Network\nHistory',
-                            value: '${stats.networkHistoryCount}'),
+                            label: 'Network\nHistory', value: '${stats.networkHistoryCount}'),
                       ),
                       Expanded(
-                        child: _StatBox(
-                            label: 'Est. Size',
-                            value: stats.estimatedStorageDisplay),
+                        child: _StatBox(label: 'Est. Size', value: stats.estimatedStorageDisplay),
                       ),
                     ],
                   ),
@@ -128,7 +121,7 @@ class DataManagementScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.lg),
           ],
 
-          // ── Export ──────────────────────────────────────────────────────────
+          // Export
           const SectionHeader(
             title: 'Export Data',
             subtitle: 'Save your profiles and history to a local JSON file.',
@@ -141,19 +134,14 @@ class DataManagementScreen extends ConsumerWidget {
                 children: [
                   MohaSettingsTile(
                     title: 'Export All Data',
-                    subtitle:
-                        'Creates a backup JSON file containing your settings, '
+                    subtitle: 'Creates a backup JSON file containing your settings, '
                         'game profiles, and network history',
                     leadingIcon: Icons.download_for_offline_outlined,
                     trailing: isLoading
                         ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2))
+                            width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                         : null,
-                    onTap: isLoading
-                        ? null
-                        : () => _handleExport(context, ref),
+                    onTap: isLoading ? null : () => _handleExport(context, ref),
                     showDivider: false,
                   ),
                 ],
@@ -162,7 +150,7 @@ class DataManagementScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Import ──────────────────────────────────────────────────────────
+          // Import
           const SectionHeader(
             title: 'Import Data',
             subtitle: 'Restore from a previously exported backup file.',
@@ -180,8 +168,7 @@ class DataManagementScreen extends ConsumerWidget {
                       children: [
                         Row(children: [
                           Icon(Icons.info_outline,
-                              size: 16,
-                              color: theme.colorScheme.onSurfaceVariant),
+                              size: 16, color: theme.colorScheme.onSurfaceVariant),
                           const SizedBox(width: AppSpacing.xs),
                           Expanded(
                             child: Text(
@@ -189,8 +176,7 @@ class DataManagementScreen extends ConsumerWidget {
                               'are accepted. The file will be validated before '
                               'any data is changed.',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                  height: 1.4),
+                                  color: theme.colorScheme.onSurfaceVariant, height: 1.4),
                             ),
                           ),
                         ]),
@@ -199,9 +185,7 @@ class DataManagementScreen extends ConsumerWidget {
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             key: const Key('import_data_button'),
-                            onPressed: isLoading
-                                ? null
-                                : () => _handleImport(context, ref),
+                            onPressed: isLoading ? null : () => _handleImport(context, ref),
                             icon: const Icon(Icons.folder_open_outlined),
                             label: const Text('Paste / Enter Import JSON'),
                           ),
@@ -215,7 +199,7 @@ class DataManagementScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Clear history ───────────────────────────────────────────────────
+          // Clear history
           const SectionHeader(
             title: 'Clear History',
             subtitle: 'Remove stored diagnostic records.',
@@ -235,11 +219,9 @@ class DataManagementScreen extends ConsumerWidget {
                         : () => _confirmOp(
                               context: context,
                               title: 'Clear Network History?',
-                              body:
-                                  'All saved network test sessions will be permanently deleted.',
-                              onConfirm: () => ref
-                                  .read(dataManagementProvider.notifier)
-                                  .clearNetworkHistory(),
+                              body: 'All saved network test sessions will be permanently deleted.',
+                              onConfirm: () =>
+                                  ref.read(dataManagementProvider.notifier).clearNetworkHistory(),
                             ),
                     showDivider: true,
                   ),
@@ -252,12 +234,10 @@ class DataManagementScreen extends ConsumerWidget {
                         : () => _confirmOp(
                               context: context,
                               title: 'Clear All Game Profiles?',
-                              body:
-                                  'All your custom game profiles will be permanently deleted. '
+                              body: 'All your custom game profiles will be permanently deleted. '
                                   'Default profiles will regenerate automatically.',
-                              onConfirm: () => ref
-                                  .read(dataManagementProvider.notifier)
-                                  .clearGameProfiles(),
+                              onConfirm: () =>
+                                  ref.read(dataManagementProvider.notifier).clearGameProfiles(),
                             ),
                     showDivider: false,
                   ),
@@ -267,7 +247,7 @@ class DataManagementScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // ── Danger zone ─────────────────────────────────────────────────────
+          // Danger zone
           const SectionHeader(
             title: 'Reset Application',
             subtitle: 'Factory reset — removes everything stored locally.',
@@ -279,15 +259,11 @@ class DataManagementScreen extends ConsumerWidget {
               color: theme.colorScheme.errorContainer.withAlpha(60),
               child: MohaSettingsTile(
                 title: 'Reset All Data',
-                subtitle:
-                    'Wipes all settings, profiles, and history. '
+                subtitle: 'Wipes all settings, profiles, and history. '
                     'This cannot be undone.',
                 leadingIcon: Icons.delete_forever_outlined,
-                trailing: Icon(Icons.chevron_right,
-                    color: theme.colorScheme.error),
-                onTap: isLoading
-                    ? null
-                    : () => _confirmReset(context, ref),
+                trailing: Icon(Icons.chevron_right, color: theme.colorScheme.error),
+                onTap: isLoading ? null : () => _confirmReset(context, ref),
                 showDivider: false,
               ),
             ),
@@ -297,7 +273,7 @@ class DataManagementScreen extends ConsumerWidget {
     );
   }
 
-  // ── Handlers ────────────────────────────────────────────────────────────────
+  // Handlers
 
   Future<void> _handleExport(BuildContext context, WidgetRef ref) async {
     await ref.read(dataManagementProvider.notifier).exportData();
@@ -404,9 +380,7 @@ class DataManagementScreen extends ConsumerWidget {
           ),
         ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Import'),
@@ -415,9 +389,7 @@ class DataManagementScreen extends ConsumerWidget {
       ),
     );
     if (confirmed == true && controller.text.trim().isNotEmpty) {
-      await ref
-          .read(dataManagementProvider.notifier)
-          .importData(controller.text.trim());
+      await ref.read(dataManagementProvider.notifier).importData(controller.text.trim());
     }
   }
 
@@ -433,9 +405,7 @@ class DataManagementScreen extends ConsumerWidget {
         title: Text(title),
         content: Text(body),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Confirm'),
@@ -459,12 +429,9 @@ class DataManagementScreen extends ConsumerWidget {
           'The app will return to its initial state. This cannot be undone.',
         ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
           FilledButton(
-            style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.error),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Delete Everything'),
           ),
@@ -490,14 +457,12 @@ class _StatBox extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(value,
-              style: theme.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.w700)),
+              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
         ),
         const SizedBox(height: 2),
         Text(label,
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
       ],
     );
   }

@@ -29,6 +29,5 @@ class AppInfo {
           buildNumber == other.buildNumber;
 
   @override
-  int get hashCode =>
-      Object.hash(appName, packageName, version, buildNumber);
+  int get hashCode => Object.hash(appName, packageName, version, buildNumber);
 }

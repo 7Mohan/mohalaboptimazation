@@ -63,15 +63,21 @@ class _TemperatureMonitorWidgetState extends ConsumerState<TemperatureMonitorWid
               GlassIconTile(icon: Icons.thermostat_rounded, color: color, size: 32),
               const SizedBox(width: AppSpacing.xs),
               Expanded(
-                child: Text('Thermals', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                child: Text('Thermals',
+                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          Text(display, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: color)),
+          Text(display,
+              style: theme.textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.w800, color: color)),
           Text(
-            thermal?.statusLabel != null ? '$verdict · status ${thermal!.statusLabel}' : '$verdict · battery sensor',
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 11),
+            thermal?.statusLabel != null
+                ? '$verdict · status ${thermal!.statusLabel}'
+                : '$verdict · battery sensor',
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 11),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -91,8 +97,11 @@ class _TemperatureMonitorWidgetState extends ConsumerState<TemperatureMonitorWid
           ),
           const SizedBox(height: 4),
           Text(
-            headroom == null ? 'Forecast needs Android 11+' : '${(headroom * 100).round()}% of throttle point in 10 s',
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 10.5),
+            headroom == null
+                ? 'Forecast needs Android 11+'
+                : '${(headroom * 100).round()}% of throttle point in 10 s',
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 10.5),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

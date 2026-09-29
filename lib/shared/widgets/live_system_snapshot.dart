@@ -30,127 +30,125 @@ class LiveSystemSnapshot extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.monitor_heart_outlined,
-                  size: AppSizes.iconSm,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: Text(
-                    'Live System Telemetry',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+          Row(
+            children: [
+              Icon(
+                Icons.monitor_heart_outlined,
+                size: AppSizes.iconSm,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: Text(
+                  'Live System Telemetry',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    ref.read(liveBatteryProvider.notifier).refresh();
-                    ref.read(liveMemoryProvider.notifier).refresh();
-                  },
-                  borderRadius: AppRadius.radiusFull,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xs,
-                      vertical: AppSpacing.xxs,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.refresh_rounded,
-                          size: 14,
+              ),
+              InkWell(
+                onTap: () {
+                  ref.read(liveBatteryProvider.notifier).refresh();
+                  ref.read(liveMemoryProvider.notifier).refresh();
+                },
+                borderRadius: AppRadius.radiusFull,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs,
+                    vertical: AppSpacing.xxs,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.refresh_rounded,
+                        size: 14,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Refresh',
+                        style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Refresh',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Row(
-              children: [
-                // Battery Card
-                Expanded(
-                  child: batteryAsync.when(
-                    data: (b) => _TelemetryTile(
-                      icon: b.isCharging
-                          ? Icons.battery_charging_full_rounded
-                          : Icons.battery_std_rounded,
-                      title: 'Battery',
-                      value: b.percentage != null ? '${b.percentage}%' : 'N/A',
-                      subtitle: b.isCharging
-                          ? 'Charging'
-                          : (b.temperatureC != null
-                              ? '${b.temperatureC!.toStringAsFixed(1)}°C'
-                              : b.status),
-                      statusColor: (b.percentage ?? 100) < 20
-                          ? Colors.orange
-                          : const Color(0xFF10B981),
-                    ),
-                    loading: () => const _TelemetryLoadingTile(title: 'Battery'),
-                    error: (_, __) => const _TelemetryTile(
-                      icon: Icons.battery_unknown_rounded,
-                      title: 'Battery',
-                      value: 'Unavailable',
-                      subtitle: 'Sensor error',
-                      statusColor: Colors.grey,
-                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              // Battery Card
+              Expanded(
+                child: batteryAsync.when(
+                  data: (b) => _TelemetryTile(
+                    icon: b.isCharging
+                        ? Icons.battery_charging_full_rounded
+                        : Icons.battery_std_rounded,
+                    title: 'Battery',
+                    value: b.percentage != null ? '${b.percentage}%' : 'N/A',
+                    subtitle: b.isCharging
+                        ? 'Charging'
+                        : (b.temperatureC != null
+                            ? '${b.temperatureC!.toStringAsFixed(1)}°C'
+                            : b.status),
+                    statusColor:
+                        (b.percentage ?? 100) < 20 ? Colors.orange : const Color(0xFF10B981),
+                  ),
+                  loading: () => const _TelemetryLoadingTile(title: 'Battery'),
+                  error: (_, __) => const _TelemetryTile(
+                    icon: Icons.battery_unknown_rounded,
+                    title: 'Battery',
+                    value: 'Unavailable',
+                    subtitle: 'Sensor error',
+                    statusColor: Colors.grey,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+              ),
+              const SizedBox(width: AppSpacing.sm),
 
-                // RAM Card
-                Expanded(
-                  child: memoryAsync.when(
-                    data: (m) {
-                      final usedPercent = m.usedPercent;
-                      final availGb = m.availableRamGb;
-                      final isHigh = (usedPercent ?? 0) > 85;
-                      return _TelemetryTile(
-                        icon: Icons.memory_rounded,
-                        title: 'RAM Active',
-                        value: usedPercent != null ? '$usedPercent%' : 'N/A',
-                        subtitle: availGb != null
-                            ? '${availGb.toStringAsFixed(1)} GB Free'
-                            : 'Active',
-                        statusColor: isHigh ? Colors.orange : const Color(0xFF3B82F6),
-                      );
-                    },
-                    loading: () => const _TelemetryLoadingTile(title: 'RAM Active'),
-                    error: (_, __) => const _TelemetryTile(
+              // RAM Card
+              Expanded(
+                child: memoryAsync.when(
+                  data: (m) {
+                    final usedPercent = m.usedPercent;
+                    final availGb = m.availableRamGb;
+                    final isHigh = (usedPercent ?? 0) > 85;
+                    return _TelemetryTile(
                       icon: Icons.memory_rounded,
                       title: 'RAM Active',
-                      value: 'Unavailable',
-                      subtitle: 'Sensor error',
-                      statusColor: Colors.grey,
-                    ),
+                      value: usedPercent != null ? '$usedPercent%' : 'N/A',
+                      subtitle:
+                          availGb != null ? '${availGb.toStringAsFixed(1)} GB Free' : 'Active',
+                      statusColor: isHigh ? Colors.orange : const Color(0xFF3B82F6),
+                    );
+                  },
+                  loading: () => const _TelemetryLoadingTile(title: 'RAM Active'),
+                  error: (_, __) => const _TelemetryTile(
+                    icon: Icons.memory_rounded,
+                    title: 'RAM Active',
+                    value: 'Unavailable',
+                    subtitle: 'Sensor error',
+                    statusColor: Colors.grey,
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
+              ),
+              const SizedBox(width: AppSpacing.sm),
 
-                // Network / Latency Card
-                Expanded(
-                  child: _buildNetworkTile(networkState),
-                ),
-              ],
-            ),
-          ],
-        ),
+              // Network / Latency Card
+              Expanded(
+                child: _buildNetworkTile(networkState),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

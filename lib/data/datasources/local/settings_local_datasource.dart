@@ -11,7 +11,7 @@ class SettingsLocalDataSource {
 
   final SharedPreferences _prefs;
 
-  // ── Key constants ──────────────────────────────────────────────────────────
+  // Key constants
   static const _kTheme = 'theme_mode'; // existing key — keep unchanged
   static const _kLanguage = 'pref_language';
   static const _kNotifications = 'pref_notifications_enabled';
@@ -20,25 +20,20 @@ class SettingsLocalDataSource {
   static const _kNetAutoRun = 'pref_net_auto_run';
   static const _kCrashReporting = 'pref_crash_reporting_opt_in';
 
-  // ── Full settings read/write ───────────────────────────────────────────────
+  // Full settings read/write
 
   AppSettings getSettingsSync() {
     return AppSettings(
-      theme: _enumFrom(ThemePreference.values,
-          _prefs.getString(_kTheme), ThemePreference.system),
-      language: _enumFrom(LanguagePreference.values,
-          _prefs.getString(_kLanguage), LanguagePreference.systemDefault),
+      theme: _enumFrom(ThemePreference.values, _prefs.getString(_kTheme), ThemePreference.system),
+      language: _enumFrom(LanguagePreference.values, _prefs.getString(_kLanguage),
+          LanguagePreference.systemDefault),
       notificationsEnabled: _prefs.getBool(_kNotifications) ?? true,
-      defaultOptimizationBehaviour: _enumFrom(
-          DefaultOptimizationBehaviour.values,
-          _prefs.getString(_kDefaultOptBehaviour),
-          DefaultOptimizationBehaviour.askEveryTime),
-      performanceMonitoringMode: _enumFrom(
-          PerformanceMonitoringMode.values,
-          _prefs.getString(_kPerfMonMode),
-          PerformanceMonitoringMode.balanced),
-      networkTestAutoRun: _enumFrom(NetworkTestAutoRun.values,
-          _prefs.getString(_kNetAutoRun), NetworkTestAutoRun.never),
+      defaultOptimizationBehaviour: _enumFrom(DefaultOptimizationBehaviour.values,
+          _prefs.getString(_kDefaultOptBehaviour), DefaultOptimizationBehaviour.askEveryTime),
+      performanceMonitoringMode: _enumFrom(PerformanceMonitoringMode.values,
+          _prefs.getString(_kPerfMonMode), PerformanceMonitoringMode.balanced),
+      networkTestAutoRun: _enumFrom(
+          NetworkTestAutoRun.values, _prefs.getString(_kNetAutoRun), NetworkTestAutoRun.never),
       crashReportingOptIn: _prefs.getBool(_kCrashReporting) ?? false,
     );
   }
@@ -49,35 +44,38 @@ class SettingsLocalDataSource {
     await _prefs.setString(_kTheme, s.theme.name);
     await _prefs.setString(_kLanguage, s.language.name);
     await _prefs.setBool(_kNotifications, s.notificationsEnabled);
-    await _prefs.setString(
-        _kDefaultOptBehaviour, s.defaultOptimizationBehaviour.name);
+    await _prefs.setString(_kDefaultOptBehaviour, s.defaultOptimizationBehaviour.name);
     await _prefs.setString(_kPerfMonMode, s.performanceMonitoringMode.name);
     await _prefs.setString(_kNetAutoRun, s.networkTestAutoRun.name);
     await _prefs.setBool(_kCrashReporting, s.crashReportingOptIn);
   }
 
-  // ── Single-field legacy helpers (kept for ThemeNotifier compatibility) ─────
+  // Single-field legacy helpers (kept for ThemeNotifier compatibility)
 
   Future<ThemePreference> getThemePreference() async {
-    return _enumFrom(ThemePreference.values,
-        _prefs.getString(_kTheme), ThemePreference.system);
+    return _enumFrom(ThemePreference.values, _prefs.getString(_kTheme), ThemePreference.system);
   }
 
   Future<void> setThemePreference(ThemePreference preference) async {
     await _prefs.setString(_kTheme, preference.name);
   }
 
-  // ── Export / Import ────────────────────────────────────────────────────────
+  // Export / Import
 
   /// Serialises only the settings map (not profile or history data).
   Map<String, dynamic> exportSettingsMap() => getSettingsSync().toMap();
 
   static const _settingsKeys = {
-    _kTheme, _kLanguage, _kNotifications,
-    _kDefaultOptBehaviour, _kPerfMonMode, _kNetAutoRun, _kCrashReporting,
+    _kTheme,
+    _kLanguage,
+    _kNotifications,
+    _kDefaultOptBehaviour,
+    _kPerfMonMode,
+    _kNetAutoRun,
+    _kCrashReporting,
   };
 
-  // ── Reset ──────────────────────────────────────────────────────────────────
+  // Reset
 
   Future<void> clearSettings() async {
     for (final key in _settingsKeys) {
@@ -85,10 +83,9 @@ class SettingsLocalDataSource {
     }
   }
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // Helpers
 
-  static T _enumFrom<T extends Enum>(
-      List<T> values, String? raw, T fallback) {
+  static T _enumFrom<T extends Enum>(List<T> values, String? raw, T fallback) {
     if (raw == null) return fallback;
     return values.firstWhere((e) => e.name == raw, orElse: () => fallback);
   }
@@ -158,8 +155,7 @@ class ImportValidator {
   ImportValidationResult validate(String rawJson) {
     // Size guard
     if (rawJson.length > _maxFileSizeBytes) {
-      return const ImportValidationResult.fail(
-          'File is too large to import (max 5 MB). '
+      return const ImportValidationResult.fail('File is too large to import (max 5 MB). '
           'This is not a valid Moha Lab export file.');
     }
 
@@ -168,8 +164,7 @@ class ImportValidator {
     try {
       final decoded = jsonDecode(rawJson);
       if (decoded is! Map<String, dynamic>) {
-        return const ImportValidationResult.fail(
-            'Import file is not a valid JSON object.');
+        return const ImportValidationResult.fail('Import file is not a valid JSON object.');
       }
       map = decoded;
     } catch (_) {
@@ -197,16 +192,14 @@ class ImportValidator {
     // Settings field type validation
     final settings = map['settings'];
     if (settings != null && settings is! Map) {
-      return const ImportValidationResult.fail(
-          'Settings block has an invalid format.');
+      return const ImportValidationResult.fail('Settings block has an invalid format.');
     }
 
     // Profiles list validation
     final profiles = map['profiles'];
     if (profiles != null) {
       if (profiles is! List) {
-        return const ImportValidationResult.fail(
-            'Profiles block has an invalid format.');
+        return const ImportValidationResult.fail('Profiles block has an invalid format.');
       }
       if (profiles.length > _maxProfiles) {
         return const ImportValidationResult.fail(
@@ -215,12 +208,10 @@ class ImportValidator {
       }
       for (final p in profiles) {
         if (p is! Map) {
-          return const ImportValidationResult.fail(
-              'One or more profile entries are malformed.');
+          return const ImportValidationResult.fail('One or more profile entries are malformed.');
         }
         if (p['gamePackage'] is! String || p['gameName'] is! String) {
-          return const ImportValidationResult.fail(
-              'A profile entry is missing required fields '
+          return const ImportValidationResult.fail('A profile entry is missing required fields '
               '(gamePackage, gameName).');
         }
       }
@@ -230,8 +221,7 @@ class ImportValidator {
     final history = map['networkHistory'];
     if (history != null) {
       if (history is! List) {
-        return const ImportValidationResult.fail(
-            'Network history block has an invalid format.');
+        return const ImportValidationResult.fail('Network history block has an invalid format.');
       }
       if (history.length > _maxNetworkHistory) {
         return const ImportValidationResult.fail(
@@ -245,18 +235,12 @@ class ImportValidator {
     if (rawDate is String) exportedAt = DateTime.tryParse(rawDate);
 
     final bundle = DataExportBundle(
-      settings:
-          (settings as Map?)?.cast<String, dynamic>() ?? const {},
-      profiles: (profiles as List?)
-              ?.whereType<Map>()
-              .map((m) => m.cast<String, dynamic>())
-              .toList() ??
-          [],
-      networkHistory: (history as List?)
-              ?.whereType<Map>()
-              .map((m) => m.cast<String, dynamic>())
-              .toList() ??
-          [],
+      settings: (settings as Map?)?.cast<String, dynamic>() ?? const {},
+      profiles:
+          (profiles as List?)?.whereType<Map>().map((m) => m.cast<String, dynamic>()).toList() ??
+              [],
+      networkHistory:
+          (history as List?)?.whereType<Map>().map((m) => m.cast<String, dynamic>()).toList() ?? [],
       exportedAt: exportedAt ?? DateTime.now(),
       schemaVersion: schemaVersion,
     );

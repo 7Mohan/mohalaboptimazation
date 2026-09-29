@@ -37,7 +37,8 @@ void main() {
   });
 
   test('hot phone: fixed performance is flagged to skip, with the temperature', () {
-    const hot = DeviceSignals(sdkInt: 34, ramGb: 8, maxCpuGhz: 2.4, batteryTempC: 44.2, thermalStatus: 2);
+    const hot =
+        DeviceSignals(sdkInt: 34, ramGb: 8, maxCpuGhz: 2.4, batteryTempC: 44.2, thermalStatus: 2);
     final a = DeviceAdvisor.analyze(hot);
     expect(avoidIds(a), contains('fixed_performance'));
     expect(recIds(a), isNot(contains('fixed_performance')));
@@ -61,7 +62,8 @@ void main() {
       storageFreePercent: 8,
     );
     final a = DeviceAdvisor.analyze(entry);
-    expect(recIds(a), containsAll(['ram_boost', 'trim_caches', 'disable_blurs', 'animation_scale']));
+    expect(
+        recIds(a), containsAll(['ram_boost', 'trim_caches', 'disable_blurs', 'animation_scale']));
     expect(recIds(a), isNot(contains('wifi_low_latency')), reason: 'not on Wi-Fi');
     // Tight storage → smaller profile-guided compile.
     expect(a.compile.maxSpeed, isFalse);

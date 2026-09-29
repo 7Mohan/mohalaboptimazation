@@ -4,9 +4,7 @@ import '../../data/services/shizuku_service_impl.dart';
 import '../../domain/entities/shizuku_status.dart';
 import '../../domain/services/shizuku_service.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Service provider
-// ─────────────────────────────────────────────────────────────────────────────
 
 /// Provides the active [ShizukuService] implementation.
 ///
@@ -16,9 +14,7 @@ final shizukuServiceProvider = Provider<ShizukuService>((ref) {
   return ShizukuServiceImpl();
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Status notifier
-// ─────────────────────────────────────────────────────────────────────────────
 
 /// Async notifier that holds the current [ShizukuStatus] and exposes actions.
 class ShizukuNotifier extends AsyncNotifier<ShizukuStatus> {

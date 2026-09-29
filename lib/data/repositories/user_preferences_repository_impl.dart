@@ -15,8 +15,7 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
     try {
       return await _dataSource.getThemePreference();
     } on LocalStorageException catch (e) {
-      AppLogger.warning('Could not read theme preference, using default',
-          error: e);
+      AppLogger.warning('Could not read theme preference, using default', error: e);
       return ThemePreference.system;
     }
   }
@@ -32,6 +31,5 @@ class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
 
   Future<AppSettings> getSettings() => _dataSource.getSettings();
 
-  Future<void> saveSettings(AppSettings settings) =>
-      _dataSource.saveSettings(settings);
+  Future<void> saveSettings(AppSettings settings) => _dataSource.saveSettings(settings);
 }

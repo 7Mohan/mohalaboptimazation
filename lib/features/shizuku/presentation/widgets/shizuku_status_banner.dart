@@ -30,9 +30,7 @@ class ShizukuStatusBanner extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Banner content
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _BannerContent extends ConsumerWidget {
   const _BannerContent({required this.status});
@@ -132,14 +130,16 @@ class _BannerContent extends ConsumerWidget {
     ShizukuStatus status,
     ColorScheme cs,
   ) =>
-      _glass(switch (status) {
-        ShizukuStatus.notInstalled => cs.error,
-        ShizukuStatus.notRunning => cs.error,
-        ShizukuStatus.binderConnected => cs.tertiary,
-        ShizukuStatus.permissionDenied => cs.secondary,
-        ShizukuStatus.permissionGranted => cs.primary,
-        ShizukuStatus.ready => cs.primary,
-      }, cs);
+      _glass(
+          switch (status) {
+            ShizukuStatus.notInstalled => cs.error,
+            ShizukuStatus.notRunning => cs.error,
+            ShizukuStatus.binderConnected => cs.tertiary,
+            ShizukuStatus.permissionDenied => cs.secondary,
+            ShizukuStatus.permissionGranted => cs.primary,
+            ShizukuStatus.ready => cs.primary,
+          },
+          cs);
 
   /// Translucent tint of [accent] so the banner reads as glass on the canvas.
   (Color, Color, Color) _glass(Color accent, ColorScheme cs) =>
@@ -155,9 +155,7 @@ class _BannerContent extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Action chip
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _ActionChip extends ConsumerWidget {
   const _ActionChip({
@@ -207,8 +205,7 @@ class _ActionChip extends ConsumerWidget {
   }
 
   Future<void> _handleAction(BuildContext context, WidgetRef ref) async {
-    if (status == ShizukuStatus.binderConnected ||
-        status == ShizukuStatus.permissionDenied) {
+    if (status == ShizukuStatus.binderConnected || status == ShizukuStatus.permissionDenied) {
       await ref.read(shizukuStatusProvider.notifier).requestPermission();
     } else {
       // For install / how-to-start — open the full setup sheet
@@ -224,9 +221,7 @@ class _ActionChip extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Loading shimmer
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _BannerShimmer extends StatelessWidget {
   const _BannerShimmer();
@@ -245,9 +240,7 @@ class _BannerShimmer extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Error fallback
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _BannerError extends StatelessWidget {
   const _BannerError();

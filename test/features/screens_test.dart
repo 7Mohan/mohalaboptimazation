@@ -62,7 +62,8 @@ void main() {
       await tester.pumpWidget(_buildTestApp(
         const OptimizationScreen(),
         overrides: [
-          deviceAdviceProvider.overrideWith((ref) async => DeviceAdvisor.analyze(const DeviceSignals(maxRefreshHz: 120))),
+          deviceAdviceProvider.overrideWith(
+              (ref) async => DeviceAdvisor.analyze(const DeviceSignals(maxRefreshHz: 120))),
         ],
       ));
       await tester.pumpAndSettle();

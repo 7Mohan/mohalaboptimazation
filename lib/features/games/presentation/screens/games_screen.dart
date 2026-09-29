@@ -349,9 +349,7 @@ class _GamesScreenState extends ConsumerState<GamesScreen> {
             ),
             onPressed: () {
               Navigator.pop(context);
-              ref
-                  .read(gameLibraryControllerProvider.notifier)
-                  .removeGame(game.packageName);
+              ref.read(gameLibraryControllerProvider.notifier).removeGame(game.packageName);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Removed ${game.appName} from Gaming Hub'),
@@ -367,9 +365,8 @@ class _GamesScreenState extends ConsumerState<GamesScreen> {
   }
 
   void _launchGame(GameEntity game) async {
-    final launched = await ref
-        .read(gameLibraryControllerProvider.notifier)
-        .launchGame(game.packageName);
+    final launched =
+        await ref.read(gameLibraryControllerProvider.notifier).launchGame(game.packageName);
 
     if (!mounted) return;
 

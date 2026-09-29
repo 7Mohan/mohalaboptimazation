@@ -64,9 +64,8 @@ class MohaSettingsSwitchTile extends StatelessWidget {
                       child: Icon(
                         leadingIcon,
                         size: AppSizes.iconMd,
-                        color: value
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.onSurfaceVariant,
+                        color:
+                            value ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(width: AppSpacing.md),

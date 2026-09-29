@@ -5,15 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mohalab_optimization/core/theme/app_theme.dart';
 import 'package:mohalab_optimization/features/shizuku/data/services/shizuku_mock_service.dart';
 import 'package:mohalab_optimization/features/shizuku/domain/entities/shizuku_status.dart';
-import 'package:mohalab_optimization/features/shizuku/domain/registry/command_registry.dart';
 import 'package:mohalab_optimization/features/shizuku/domain/services/shizuku_service.dart';
 import 'package:mohalab_optimization/features/shizuku/presentation/providers/shizuku_provider.dart';
 import 'package:mohalab_optimization/features/shizuku/presentation/widgets/shizuku_setup_sheet.dart';
 import 'package:mohalab_optimization/features/shizuku/presentation/widgets/shizuku_status_banner.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Test helpers
-// ─────────────────────────────────────────────────────────────────────────────
 
 Widget _buildApp(
   Widget child, {
@@ -31,9 +28,7 @@ Widget _buildApp(
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // ShizukuStatus unit tests
-// ─────────────────────────────────────────────────────────────────────────────
 
 void main() {
   group('ShizukuStatus — enum helpers', () {
@@ -84,9 +79,7 @@ void main() {
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // ShizukuMockService unit tests
-  // ─────────────────────────────────────────────────────────────────────────
 
   group('ShizukuMockService', () {
     test('returns initial status from getStatus()', () async {
@@ -153,9 +146,7 @@ void main() {
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // State transition sequence tests
-  // ─────────────────────────────────────────────────────────────────────────
 
   group('ShizukuMockService — state transition sequence', () {
     test('full happy path: notInstalled → notRunning → binderConnected → ready', () async {
@@ -201,35 +192,7 @@ void main() {
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // CommandRegistry tests
-  // ─────────────────────────────────────────────────────────────────────────
-
-  group('CommandRegistry', () {
-    late CommandRegistry registry;
-
-    setUp(() {
-      // Fresh instance for each test via the singleton's registered map
-      registry = CommandRegistry.instance;
-    });
-
-    test('starts empty in a fresh test context', () {
-      // We cannot clear the singleton across tests, so verify the type
-      expect(registry.registeredIds, isA<List<String>>());
-    });
-
-    test('isRegistered returns false for unknown commandId', () {
-      expect(registry.isRegistered('nonExistentCommand_xyz'), isFalse);
-    });
-
-    test('lookup returns null for unknown commandId', () {
-      expect(registry.lookup('nonExistentCommand_xyz'), isNull);
-    });
-  });
-
-  // ─────────────────────────────────────────────────────────────────────────
   // ShizukuStatusBanner widget tests
-  // ─────────────────────────────────────────────────────────────────────────
 
   group('ShizukuStatusBanner widget', () {
     testWidgets('renders nothing (SizedBox) when status is ready', (tester) async {
@@ -312,9 +275,7 @@ void main() {
     });
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
   // ShizukuSetupSheet widget tests
-  // ─────────────────────────────────────────────────────────────────────────
 
   group('ShizukuSetupSheet widget', () {
     Future<void> openSheet(WidgetTester tester, ShizukuMockService svc) async {

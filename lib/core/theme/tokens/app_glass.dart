@@ -35,8 +35,7 @@ abstract final class AppGlass {
   static const double radiusLevel3 = 22.0;
   static const double radiusLevel4 = 28.0;
 
-  static bool _dark(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark;
+  static bool _dark(BuildContext context) => Theme.of(context).brightness == Brightness.dark;
 
   static double blurFor(AppGlassLevel level) => switch (level) {
         AppGlassLevel.level1 => blurLevel1,
@@ -57,15 +56,12 @@ abstract final class AppGlass {
     final dark = _dark(context);
     return switch (level) {
       AppGlassLevel.level1 => Colors.transparent,
-      AppGlassLevel.level2 => dark
-          ? Colors.white.withOpacity(0.055)
-          : Colors.white.withOpacity(0.62),
-      AppGlassLevel.level3 => dark
-          ? const Color(0xFF7AA5FF).withOpacity(0.10)
-          : Colors.white.withOpacity(0.78),
-      AppGlassLevel.level4 => dark
-          ? const Color(0xFF0E1428).withOpacity(0.72)
-          : Colors.white.withOpacity(0.74),
+      AppGlassLevel.level2 =>
+        dark ? Colors.white.withOpacity(0.055) : Colors.white.withOpacity(0.62),
+      AppGlassLevel.level3 =>
+        dark ? const Color(0xFF7AA5FF).withOpacity(0.10) : Colors.white.withOpacity(0.78),
+      AppGlassLevel.level4 =>
+        dark ? const Color(0xFF0E1428).withOpacity(0.72) : Colors.white.withOpacity(0.74),
     };
   }
 
@@ -79,8 +75,7 @@ abstract final class AppGlass {
       end: Alignment.bottomRight,
       colors: dark
           ? [
-              (accent ? AppColors.primaryDark : Colors.white)
-                  .withOpacity(accent ? 0.55 : 0.20),
+              (accent ? AppColors.primaryDark : Colors.white).withOpacity(accent ? 0.55 : 0.20),
               Colors.white.withOpacity(0.04),
               Colors.white.withOpacity(accent ? 0.14 : 0.08),
             ]
@@ -95,9 +90,8 @@ abstract final class AppGlass {
   }
 
   /// Plain hairline color, for widgets that cannot paint a gradient border.
-  static Color hairline(BuildContext context) => _dark(context)
-      ? Colors.white.withOpacity(0.09)
-      : const Color(0xFF8C9AC0).withOpacity(0.22);
+  static Color hairline(BuildContext context) =>
+      _dark(context) ? Colors.white.withOpacity(0.09) : const Color(0xFF8C9AC0).withOpacity(0.22);
 
   static List<BoxShadow>? shadowsFor(BuildContext context, AppGlassLevel level) {
     final dark = _dark(context);
@@ -105,7 +99,8 @@ abstract final class AppGlass {
       AppGlassLevel.level1 => null,
       AppGlassLevel.level2 => [
           BoxShadow(
-            color: dark ? Colors.black.withOpacity(0.28) : const Color(0xFF3A4A7A).withOpacity(0.07),
+            color:
+                dark ? Colors.black.withOpacity(0.28) : const Color(0xFF3A4A7A).withOpacity(0.07),
             blurRadius: 24,
             spreadRadius: -6,
             offset: const Offset(0, 10),
@@ -113,7 +108,8 @@ abstract final class AppGlass {
         ],
       AppGlassLevel.level3 => [
           BoxShadow(
-            color: dark ? AppColors.glowAzure.withOpacity(0.16) : AppColors.primary.withOpacity(0.10),
+            color:
+                dark ? AppColors.glowAzure.withOpacity(0.16) : AppColors.primary.withOpacity(0.10),
             blurRadius: 28,
             spreadRadius: -6,
             offset: const Offset(0, 12),
@@ -121,7 +117,8 @@ abstract final class AppGlass {
         ],
       AppGlassLevel.level4 => [
           BoxShadow(
-            color: dark ? Colors.black.withOpacity(0.45) : const Color(0xFF3A4A7A).withOpacity(0.14),
+            color:
+                dark ? Colors.black.withOpacity(0.45) : const Color(0xFF3A4A7A).withOpacity(0.14),
             blurRadius: 32,
             spreadRadius: -8,
             offset: const Offset(0, 12),

@@ -15,32 +15,27 @@ sealed class Failure {
 
 /// The requested feature is not yet implemented.
 final class FeatureUnavailableFailure extends Failure {
-  const FeatureUnavailableFailure({required super.message})
-      : super(code: 'feature_unavailable');
+  const FeatureUnavailableFailure({required super.message}) : super(code: 'feature_unavailable');
 }
 
 /// The device does not meet the minimum requirements.
 final class DeviceNotSupportedFailure extends Failure {
-  const DeviceNotSupportedFailure({required super.message})
-      : super(code: 'device_not_supported');
+  const DeviceNotSupportedFailure({required super.message}) : super(code: 'device_not_supported');
 }
 
 /// A local storage read/write failure.
 final class StorageFailure extends Failure {
-  const StorageFailure({required super.message})
-      : super(code: 'storage_error');
+  const StorageFailure({required super.message}) : super(code: 'storage_error');
 }
 
 /// A permission was denied by the user or system.
 final class PermissionFailure extends Failure {
-  const PermissionFailure({required super.message})
-      : super(code: 'permission_denied');
+  const PermissionFailure({required super.message}) : super(code: 'permission_denied');
 }
 
 /// An unknown/unexpected failure occurred.
 final class UnknownFailure extends Failure {
-  const UnknownFailure({required super.message, this.cause})
-      : super(code: 'unknown');
+  const UnknownFailure({required super.message, this.cause}) : super(code: 'unknown');
 
   final Object? cause;
 }

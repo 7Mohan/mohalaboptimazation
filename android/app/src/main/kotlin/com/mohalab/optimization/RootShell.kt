@@ -27,7 +27,7 @@ internal class RootShell(private val context: Context) {
     @Volatile var granted: Boolean = false
         private set
 
-    // ── Detection ──────────────────────────────────────────────────────────
+    // Detection
 
     private val suPaths = listOf(
         "/system/bin/su", "/system/xbin/su", "/sbin/su", "/su/bin/su",
@@ -63,7 +63,7 @@ internal class RootShell(private val context: Context) {
         return path.split(':').any { File(it, "su").exists() } || manager() != null
     }
 
-    // ── Session ────────────────────────────────────────────────────────────
+    // Session
 
     /**
      * Opens the root shell. Shows the manager's grant dialog the first time;

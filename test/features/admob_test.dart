@@ -13,15 +13,12 @@ import 'package:mohalab_optimization/core/ads/ad_state.dart';
 import 'package:mohalab_optimization/shared/widgets/ads/moha_banner_ad_widget.dart';
 import 'package:mohalab_optimization/shared/widgets/ads/rewarded_ad_button.dart';
 
-// ---------------------------------------------------------------------------
 // Helpers
-// ---------------------------------------------------------------------------
 
 Widget _buildTestApp(Widget child, {AdServiceBase? adService}) {
   return ProviderScope(
     overrides: [
-      if (adService != null)
-        adServiceProvider.overrideWithValue(adService),
+      if (adService != null) adServiceProvider.overrideWithValue(adService),
     ],
     child: MaterialApp(home: Scaffold(body: child)),
   );
@@ -37,9 +34,7 @@ void main() {
         .setMockMethodCallHandler(SystemChannels.platform, (call) async => null);
   });
 
-  // ---------------------------------------------------------------------------
   // AdConfiguration Tests
-  // ---------------------------------------------------------------------------
 
   group('AdConfiguration', () {
     test('test() configuration is always in test mode', () {
@@ -107,67 +102,56 @@ void main() {
     });
   });
 
-  // ---------------------------------------------------------------------------
   // AdPlacement Tests
-  // ---------------------------------------------------------------------------
 
   group('AdPlacement', () {
     test('all expected placement values exist', () {
       expect(AdPlacement.values, contains(AdPlacement.homeBanner));
       expect(AdPlacement.values, contains(AdPlacement.gameDetailBanner));
-      expect(AdPlacement.values,
-          contains(AdPlacement.postOptimizationInterstitial));
-      expect(AdPlacement.values,
-          contains(AdPlacement.postDiagnosticsInterstitial));
+      expect(AdPlacement.values, contains(AdPlacement.postOptimizationInterstitial));
+      expect(AdPlacement.values, contains(AdPlacement.postDiagnosticsInterstitial));
       expect(AdPlacement.values, contains(AdPlacement.rewardedBandwidthTest));
     });
 
     test('isBannerPlacement correctly identifies banners', () {
       expect(isBannerPlacement(AdPlacement.homeBanner), isTrue);
       expect(isBannerPlacement(AdPlacement.gameDetailBanner), isTrue);
-      expect(isBannerPlacement(AdPlacement.postOptimizationInterstitial),
-          isFalse);
+      expect(isBannerPlacement(AdPlacement.postOptimizationInterstitial), isFalse);
       expect(isBannerPlacement(AdPlacement.rewardedBandwidthTest), isFalse);
     });
 
     test('isInterstitialPlacement correctly identifies interstitials', () {
-      expect(isInterstitialPlacement(AdPlacement.postOptimizationInterstitial),
-          isTrue);
-      expect(isInterstitialPlacement(AdPlacement.postDiagnosticsInterstitial),
-          isTrue);
+      expect(isInterstitialPlacement(AdPlacement.postOptimizationInterstitial), isTrue);
+      expect(isInterstitialPlacement(AdPlacement.postDiagnosticsInterstitial), isTrue);
       expect(isInterstitialPlacement(AdPlacement.homeBanner), isFalse);
-      expect(isInterstitialPlacement(AdPlacement.rewardedBandwidthTest),
-          isFalse);
+      expect(isInterstitialPlacement(AdPlacement.rewardedBandwidthTest), isFalse);
     });
 
     test('isRewardedPlacement correctly identifies rewarded ads', () {
       expect(isRewardedPlacement(AdPlacement.rewardedBandwidthTest), isTrue);
       expect(isRewardedPlacement(AdPlacement.homeBanner), isFalse);
-      expect(isRewardedPlacement(AdPlacement.postOptimizationInterstitial),
-          isFalse);
+      expect(isRewardedPlacement(AdPlacement.postOptimizationInterstitial), isFalse);
     });
   });
 
-  // ---------------------------------------------------------------------------
   // AdState Tests
-  // ---------------------------------------------------------------------------
 
   group('AdState', () {
     test('has all expected lifecycle states', () {
-      expect(AdState.values, containsAll([
-        AdState.idle,
-        AdState.loading,
-        AdState.ready,
-        AdState.showing,
-        AdState.failed,
-        AdState.disabled,
-      ]));
+      expect(
+          AdState.values,
+          containsAll([
+            AdState.idle,
+            AdState.loading,
+            AdState.ready,
+            AdState.showing,
+            AdState.failed,
+            AdState.disabled,
+          ]));
     });
   });
 
-  // ---------------------------------------------------------------------------
   // FakeAdService Tests
-  // ---------------------------------------------------------------------------
 
   group('FakeAdService', () {
     test('initializes correctly', () async {
@@ -192,8 +176,7 @@ void main() {
     test('simulateAdFailed sets state to failed', () {
       final fake = FakeAdService();
       fake.simulateAdFailed(AdPlacement.postOptimizationInterstitial);
-      expect(fake.getState(AdPlacement.postOptimizationInterstitial),
-          AdState.failed);
+      expect(fake.getState(AdPlacement.postOptimizationInterstitial), AdState.failed);
     });
 
     test('showInterstitial does nothing when canShow is false', () async {
@@ -268,9 +251,7 @@ void main() {
     });
   });
 
-  // ---------------------------------------------------------------------------
   // AdGuard Tests
-  // ---------------------------------------------------------------------------
 
   group('AdGuard', () {
     testWidgets('canShowAd returns true when no operations active', (tester) async {
@@ -295,9 +276,7 @@ void main() {
     });
   });
 
-  // ---------------------------------------------------------------------------
   // MohaBannerAdWidget Tests
-  // ---------------------------------------------------------------------------
 
   group('MohaBannerAdWidget', () {
     testWidgets('renders SizedBox.shrink when ad state is idle', (tester) async {
@@ -344,9 +323,7 @@ void main() {
     });
   });
 
-  // ---------------------------------------------------------------------------
   // RewardedAdButton Tests
-  // ---------------------------------------------------------------------------
 
   group('RewardedAdButton', () {
     testWidgets('is hidden when ad is disabled', (tester) async {

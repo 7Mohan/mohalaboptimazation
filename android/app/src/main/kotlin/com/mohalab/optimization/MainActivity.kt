@@ -147,10 +147,8 @@ class MainActivity : FlutterActivity() {
         super.onDestroy()
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Live CPU clocks — /proc/stat is blocked for apps since Android 8,
     // so load is expressed as current vs. max frequency per core.
-    // ─────────────────────────────────────────────────────────────
     private fun getCpuFreqs(): List<Map<String, Long?>> {
         val cores = Runtime.getRuntime().availableProcessors()
         return (0 until cores).mapNotNull { core ->
@@ -161,9 +159,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Thermal status (API 29+) and headroom forecast (API 30+)
-    // ─────────────────────────────────────────────────────────────
     private fun getThermal(): Map<String, Any?> {
         val pm = getSystemService(Context.POWER_SERVICE) as? PowerManager
         val status = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) pm?.currentThermalStatus else null
@@ -173,9 +169,7 @@ class MainActivity : FlutterActivity() {
         return mapOf("status" to status, "headroom" to headroom)
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Basic device identity
-    // ─────────────────────────────────────────────────────────────
     private fun getBasicDeviceInfo(): Map<String, Any?> = mapOf(
         "manufacturer"   to Build.MANUFACTURER.capitalize(),
         "brand"          to Build.BRAND.capitalize(),
@@ -191,9 +185,7 @@ class MainActivity : FlutterActivity() {
         "supportedAbis"  to Build.SUPPORTED_ABIS.toList(),
     )
 
-    // ─────────────────────────────────────────────────────────────
     // RAM
-    // ─────────────────────────────────────────────────────────────
     private fun getMemoryInfo(): Map<String, Any?> {
         val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val memInfo = ActivityManager.MemoryInfo()
@@ -207,9 +199,7 @@ class MainActivity : FlutterActivity() {
         )
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Storage
-    // ─────────────────────────────────────────────────────────────
     private fun getStorageInfo(): Map<String, Any?> {
         val internalStat  = StatFs(Environment.getDataDirectory().path)
         val externalStat  = runCatching { StatFs(Environment.getExternalStorageDirectory().path) }.getOrNull()
@@ -228,9 +218,7 @@ class MainActivity : FlutterActivity() {
         )
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Battery
-    // ─────────────────────────────────────────────────────────────
     private fun getBatteryInfo(): Map<String, Any?> {
         val intent: Intent? = registerReceiver(
             null,
@@ -294,9 +282,7 @@ class MainActivity : FlutterActivity() {
         )
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Display
-    // ─────────────────────────────────────────────────────────────
     @Suppress("DEPRECATION")
     private fun getDisplayInfo(): Map<String, Any?> {
         val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -333,9 +319,7 @@ class MainActivity : FlutterActivity() {
         )
     }
 
-    // ─────────────────────────────────────────────────────────────
     // CPU info (best-effort, reads /proc/cpuinfo)
-    // ─────────────────────────────────────────────────────────────
     private fun getCpuInfo(): Map<String, Any?> {
         val numCores = Runtime.getRuntime().availableProcessors()
 
@@ -377,9 +361,7 @@ class MainActivity : FlutterActivity() {
         )
     }
 
-    // ─────────────────────────────────────────────────────────────
     // Convenience: fetch everything in one call
-    // ─────────────────────────────────────────────────────────────
     private fun getAllDeviceInfo(): Map<String, Any?> = mapOf(
         "device"  to getBasicDeviceInfo(),
         "memory"  to getMemoryInfo(),
@@ -389,9 +371,7 @@ class MainActivity : FlutterActivity() {
         "cpu"     to getCpuInfo(),
     )
 
-    // ─────────────────────────────────────────────────────────────
     // Game & Installed Application Discovery
-    // ─────────────────────────────────────────────────────────────
     private fun getInstalledApps(includeIcons: Boolean): List<Map<String, Any?>> {
         val pm = packageManager
         val gameResolves = try {
@@ -583,7 +563,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    // ── Security & Integrity Protections ──────────────────────────────────────────
+    // Security & Integrity Protections
     private val packageNameRegex = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*(\\.[a-zA-Z][a-zA-Z0-9_]*)+$")
 
     private fun isValidPackageName(pkg: String?): Boolean {

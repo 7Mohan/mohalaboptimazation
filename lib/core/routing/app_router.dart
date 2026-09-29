@@ -23,8 +23,7 @@ Page<void> _glassPage(GoRouterState state, Widget child, {bool tab = false}) {
     child: child,
     transitionDuration: Duration(milliseconds: tab ? 220 : 300),
     reverseTransitionDuration: Duration(milliseconds: tab ? 180 : 240),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-        GlassFadeThrough(
+    transitionsBuilder: (context, animation, secondaryAnimation, child) => GlassFadeThrough(
       animation: animation,
       secondaryAnimation: secondaryAnimation,
       child: child,

@@ -9,7 +9,7 @@ enum GlassButtonVariant {
   danger,
 }
 
-/// A precision tactile glass button with haptic feedback and micro-interaction scale.
+/// Glass-style button with haptic feedback and a slight press-scale.
 class GlassButton extends StatefulWidget {
   final Widget child;
   final VoidCallback? onPressed;

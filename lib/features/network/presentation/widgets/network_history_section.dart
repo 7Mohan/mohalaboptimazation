@@ -66,9 +66,7 @@ class NetworkHistorySection extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: () async {
-                    await ref
-                        .read(networkDiagnosticsControllerProvider.notifier)
-                        .clearHistory();
+                    await ref.read(networkDiagnosticsControllerProvider.notifier).clearHistory();
                   },
                   child: const Text('Clear All'),
                 ),

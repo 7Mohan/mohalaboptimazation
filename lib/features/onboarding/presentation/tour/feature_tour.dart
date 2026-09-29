@@ -59,14 +59,16 @@ final List<TourStep> featureTourSteps = [
     route: RouteNames.home,
     icon: Icons.waving_hand_rounded,
     title: 'Welcome to Moha Lab',
-    body: 'A quick hands-on tour of every feature. Follow the hand, or tap Next. You can skip anytime.',
+    body:
+        'A quick hands-on tour of every feature. Follow the hand, or tap Next. You can skip anytime.',
   ),
   TourStep(
     route: RouteNames.home,
     target: TourKeys.homeHero,
     icon: Icons.phone_android_rounded,
     title: 'Your device at a glance',
-    body: 'See how many tweaks are really active and which access mode you have: Shizuku, ADB grant or standard.',
+    body:
+        'See how many tweaks are really active and which access mode you have: Shizuku, ADB grant or standard.',
   ),
   TourStep(
     route: RouteNames.home,
@@ -87,7 +89,8 @@ final List<TourStep> featureTourSteps = [
     target: TourKeys.homeVitals,
     icon: Icons.thermostat_rounded,
     title: 'CPU clocks & thermals',
-    body: 'Real per-core clock speeds and Android\'s own throttling forecast, so you know when heat is about to cost FPS.',
+    body:
+        'Real per-core clock speeds and Android\'s own throttling forecast, so you know when heat is about to cost FPS.',
   ),
   TourStep(
     route: RouteNames.home,
@@ -114,7 +117,8 @@ final List<TourStep> featureTourSteps = [
     target: TourKeys.gamesList,
     icon: Icons.tune_rounded,
     title: 'Per-game tuning',
-    body: 'Tap any game to set Game Mode, render resolution and an FPS cap, compile it for speed, then Turbo Launch.',
+    body:
+        'Tap any game to set Game Mode, render resolution and an FPS cap, compile it for speed, then Turbo Launch.',
   ),
   TourStep(
     target: TourKeys.tabs[2],
@@ -127,14 +131,16 @@ final List<TourStep> featureTourSteps = [
     target: TourKeys.tweaksStatus,
     icon: Icons.verified_user_rounded,
     title: 'Access status',
-    body: 'Shows which permissions are ready. Connect Shizuku, or grant once over ADB, to unlock more tweaks.',
+    body:
+        'Shows which permissions are ready. Connect Shizuku, or grant once over ADB, to unlock more tweaks.',
   ),
   TourStep(
     route: RouteNames.optimization,
     target: TourKeys.tweaksAdvice,
     icon: Icons.insights_rounded,
     title: 'Recommended for you',
-    body: 'The app analyses your RAM, CPU, display, temperature, battery and network, then suggests tweaks with the reason for each — and warns what to skip right now.',
+    body:
+        'The app analyses your RAM, CPU, display, temperature, battery and network, then suggests tweaks with the reason for each — and warns what to skip right now.',
   ),
   TourStep(
     route: RouteNames.optimization,
@@ -148,14 +154,16 @@ final List<TourStep> featureTourSteps = [
     target: TourKeys.tweaksActions,
     icon: Icons.flash_on_rounded,
     title: 'Maintenance actions',
-    body: 'RAM Boost and cache cleanup, plus Compile All Apps and System Dexopt with a live progress screen.',
+    body:
+        'RAM Boost and cache cleanup, plus Compile All Apps and System Dexopt with a live progress screen.',
   ),
   TourStep(
     route: RouteNames.optimization,
     target: TourKeys.tweaksList,
     icon: Icons.toggle_on_rounded,
     title: 'Real switches',
-    body: 'Each switch shows the device\'s true setting. Tap a row to see the exact command. Switching off restores your original value.',
+    body:
+        'Each switch shows the device\'s true setting. Tap a row to see the exact command. Switching off restores your original value.',
   ),
   TourStep(
     target: TourKeys.tabs[3],
@@ -557,7 +565,8 @@ class _TipCardState extends State<_TipCard> with SingleTickerProviderStateMixin 
     } else if (target.center.dy < widget.area.height * 0.5) {
       top = math.min(target.bottom + 20, widget.area.height - 260 - padding.bottom);
     } else {
-      bottom = math.min(widget.area.height - target.top + 20, widget.area.height - 260 - padding.top);
+      bottom =
+          math.min(widget.area.height - target.top + 20, widget.area.height - 260 - padding.top);
     }
 
     final card = FadeTransition(
@@ -568,7 +577,8 @@ class _TipCardState extends State<_TipCard> with SingleTickerProviderStateMixin 
         child: GlassCard(
           level: AppGlassLevel.level4,
           blur: 18,
-          padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.sm),
+          padding:
+              const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.sm),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -611,7 +621,8 @@ class _TipCardState extends State<_TipCard> with SingleTickerProviderStateMixin 
               const SizedBox(height: 4),
               Text(
                 widget.step.body,
-                style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant, height: 1.4),
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: scheme.onSurfaceVariant, height: 1.4),
               ),
               const SizedBox(height: AppSpacing.sm),
               ClipRRect(
@@ -644,7 +655,8 @@ class _TipCardState extends State<_TipCard> with SingleTickerProviderStateMixin 
                         shadowColor: Colors.transparent,
                         foregroundColor: Colors.white,
                       ),
-                      icon: Icon(last ? Icons.check_rounded : Icons.arrow_forward_rounded, size: 18),
+                      icon:
+                          Icon(last ? Icons.check_rounded : Icons.arrow_forward_rounded, size: 18),
                       label: Text(last ? 'Let\'s go' : (widget.index == 0 ? 'Start tour' : 'Next')),
                     ),
                   ),
@@ -675,4 +687,3 @@ class _TipCardState extends State<_TipCard> with SingleTickerProviderStateMixin 
     );
   }
 }
-

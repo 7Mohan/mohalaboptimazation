@@ -11,6 +11,7 @@ import '../../domain/repositories/game_repository.dart';
 
 /// Key for storing manually added games
 const _kManualGamesKey = 'user_manual_games_v1';
+
 /// Key for storing package names removed/hidden by the user
 const _kHiddenGamesKey = 'user_hidden_games_v1';
 
@@ -35,7 +36,7 @@ class GameLibraryController extends AsyncNotifier<List<GameEntity>> {
   Future<List<GameEntity>> _fetchGames({required bool forceRefresh}) async {
     final repo = ref.read(gameRepositoryProvider);
     final detected = await repo.getInstalledGames(forceRefresh: forceRefresh);
-    
+
     SharedPreferences? prefs;
     try {
       prefs = ref.read(sharedPreferencesProvider);
@@ -96,7 +97,7 @@ class GameLibraryController extends AsyncNotifier<List<GameEntity>> {
 
     if (prefs != null) {
       final manualRaw = prefs.getStringList(_kManualGamesKey) ?? [];
-      
+
       // Remove if previously hidden
       final hiddenList = prefs.getStringList(_kHiddenGamesKey) ?? [];
       if (hiddenList.contains(packageName)) {
@@ -159,8 +160,7 @@ final gameLibraryControllerProvider =
 final gameSearchQueryProvider = StateProvider<String>((ref) => '');
 
 /// State provider for game sorting order.
-final gameSortOrderProvider =
-    StateProvider<GameSortOrder>((ref) => GameSortOrder.nameAsc);
+final gameSortOrderProvider = StateProvider<GameSortOrder>((ref) => GameSortOrder.nameAsc);
 
 /// Filtered and sorted list of games derived from library state, query, and sort order.
 final filteredGamesProvider = Provider<AsyncValue<List<GameEntity>>>((ref) {

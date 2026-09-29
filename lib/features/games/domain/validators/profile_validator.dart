@@ -8,8 +8,7 @@ class ProfileValidationResult {
     this.errors = const [],
   });
 
-  factory ProfileValidationResult.success() =>
-      const ProfileValidationResult._(isValid: true);
+  factory ProfileValidationResult.success() => const ProfileValidationResult._(isValid: true);
 
   factory ProfileValidationResult.failure(List<String> errors) =>
       ProfileValidationResult._(isValid: false, errors: errors);
@@ -58,8 +57,7 @@ abstract final class ProfileValidator {
     }
 
     // 3. Version check
-    if (profile.profileVersion < 1 ||
-        profile.profileVersion > GameProfile.currentVersion) {
+    if (profile.profileVersion < 1 || profile.profileVersion > GameProfile.currentVersion) {
       errors.add(
         'Unsupported profile version (${profile.profileVersion}). Current supported version is ${GameProfile.currentVersion}.',
       );
@@ -126,8 +124,7 @@ abstract final class ProfileValidator {
         !NetworkPreference.values.any((e) => e.name == map['network'])) {
       errors.add('Invalid network preference: "${map['network']}"');
     }
-    if (map.containsKey('touch') &&
-        !TouchPreference.values.any((e) => e.name == map['touch'])) {
+    if (map.containsKey('touch') && !TouchPreference.values.any((e) => e.name == map['touch'])) {
       errors.add('Invalid touch preference: "${map['touch']}"');
     }
     if (map.containsKey('display') &&
@@ -184,7 +181,21 @@ abstract final class ProfileValidator {
 
   static bool _containsCommandInjectionChars(String value) {
     const forbidden = [
-      ';', '&', '|', '`', '\$', '(', ')', '<', '>', '\n', '\r', '"', '\'', '\\', ' ',
+      ';',
+      '&',
+      '|',
+      '`',
+      '\$',
+      '(',
+      ')',
+      '<',
+      '>',
+      '\n',
+      '\r',
+      '"',
+      '\'',
+      '\\',
+      ' ',
     ];
     return forbidden.any((char) => value.contains(char));
   }

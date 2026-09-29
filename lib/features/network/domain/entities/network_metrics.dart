@@ -57,9 +57,7 @@ class NetworkMetrics {
   /// Round-trip time to the local router/gateway in milliseconds (if measurable).
   final double? localGatewayLatencyMs;
 
-  // ---------------------------------------------------------------------------
   // Display helpers
-  // ---------------------------------------------------------------------------
 
   String get latencyDisplay {
     if (latencyMs == null) return 'Unavailable';

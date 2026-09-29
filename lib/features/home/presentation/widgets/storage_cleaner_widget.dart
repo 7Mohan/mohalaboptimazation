@@ -42,11 +42,13 @@ class StorageCleanerWidget extends ConsumerWidget {
               GlassIconTile(icon: Icons.sd_storage_rounded, color: color, size: 32),
               const SizedBox(width: AppSpacing.xs),
               Expanded(
-                child: Text('Storage', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                child: Text('Storage',
+                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
               ),
               Text(
                 hasData ? '${(ratio * 100).round()}% used' : '—',
-                style: theme.textTheme.labelMedium?.copyWith(color: color, fontWeight: FontWeight.w700),
+                style: theme.textTheme.labelMedium
+                    ?.copyWith(color: color, fontWeight: FontWeight.w700),
               ),
             ],
           ),
@@ -70,7 +72,8 @@ class StorageCleanerWidget extends ConsumerWidget {
                   shizuku
                       ? 'Clears cached files of every app. Measured after cleanup.'
                       : 'Without Shizuku only this app\'s cache can be cleared.',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 11),
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontSize: 11),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
@@ -85,7 +88,8 @@ class StorageCleanerWidget extends ConsumerWidget {
                         if (context.mounted) showTweakResult(context, res);
                       },
                 icon: busy
-                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                    ? const SizedBox(
+                        width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.cleaning_services_rounded, size: 18),
                 label: const Text('Clean'),
               ),

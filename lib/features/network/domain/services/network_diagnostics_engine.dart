@@ -23,7 +23,7 @@ class NetworkDiagnosticsEngine {
     final startTime = DateTime.now();
     final stopwatch = Stopwatch()..start();
 
-    // ── 1. Connection Type ──────────────────────────────────────────────────
+    // 1. Connection Type
     onProgress?.call('Detecting connection type...');
     final connType = await _probeSource.getConnectionType();
     final interfaceDetails = await _probeSource.getInterfaceDetails();
@@ -45,7 +45,8 @@ class NetworkDiagnosticsEngine {
         recommendations: const [
           NetworkRecommendation(
             title: 'No Active Connection',
-            detail: 'Your device is not connected to Wi-Fi, mobile data, or Ethernet. Connect to a network to test gaming connectivity.',
+            detail:
+                'Your device is not connected to Wi-Fi, mobile data, or Ethernet. Connect to a network to test gaming connectivity.',
             severity: RecommendationSeverity.critical,
           ),
         ],
@@ -53,11 +54,11 @@ class NetworkDiagnosticsEngine {
       );
     }
 
-    // ── 2. DNS Resolution Timing ────────────────────────────────────────────
+    // 2. DNS Resolution Timing
     onProgress?.call('Testing DNS resolution speed...');
     final dnsDuration = await _probeSource.measureDnsResolution('dns.google');
 
-    // ── 3. Gateway Latency (if available) ───────────────────────────────────
+    // 3. Gateway Latency (if available)
     final gatewayIp = interfaceDetails['gatewayIp'] as String?;
     double? gatewayLatency;
     if (gatewayIp != null && gatewayIp.isNotEmpty) {
@@ -65,7 +66,7 @@ class NetworkDiagnosticsEngine {
       gatewayLatency = await _probeSource.probeGatewayLatency(gatewayIp);
     }
 
-    // ── 4. Multi-Sample Latency Probes ──────────────────────────────────────
+    // 4. Multi-Sample Latency Probes
     onProgress?.call('Measuring packet latency and jitter...');
     final samples = await _probeSource.probeLatencySamples(
       targetHost,
@@ -75,12 +76,10 @@ class NetworkDiagnosticsEngine {
 
     stopwatch.stop();
 
-    // ── 5. Statistical Calculations ─────────────────────────────────────────
+    // 5. Statistical Calculations
     final validSamples = samples.whereType<double>().toList();
     final droppedCount = samples.length - validSamples.length;
-    final packetLoss = samples.isEmpty
-        ? 0.0
-        : (droppedCount / samples.length) * 100.0;
+    final packetLoss = samples.isEmpty ? 0.0 : (droppedCount / samples.length) * 100.0;
 
     double? medianLatency;
     double? minLatency;
@@ -88,7 +87,7 @@ class NetworkDiagnosticsEngine {
     double? jitter;
 
     if (validSamples.isNotEmpty) {
-      // ── Jitter: computed BEFORE sorting, on original probe-arrival order ───
+      // Jitter: computed BEFORE sorting, on original probe-arrival order
       // RFC 3550 / IETF definition: mean absolute difference of consecutive RTTs
       if (validSamples.length > 1) {
         double diffSum = 0.0;
@@ -100,7 +99,7 @@ class NetworkDiagnosticsEngine {
         jitter = 0.0;
       }
 
-      // ── Sort for min / median / max ─────────────────────────────────────────
+      // Sort for min / median / max
       validSamples.sort();
       minLatency = validSamples.first;
       maxLatency = validSamples.last;
@@ -125,10 +124,10 @@ class NetworkDiagnosticsEngine {
       localGatewayLatencyMs: gatewayLatency,
     );
 
-    // ── 6. Verdict Classification ───────────────────────────────────────────
+    // 6. Verdict Classification
     final (primaryVerdict, secondaryVerdicts) = _classifyVerdicts(metrics);
 
-    // ── 7. Formulate Factual, Conditional Recommendations ───────────────────
+    // 7. Formulate Factual, Conditional Recommendations
     final recommendations = _generateRecommendations(metrics, primaryVerdict);
 
     return NetworkDiagnosticSession(
@@ -202,7 +201,8 @@ class NetworkDiagnosticsEngine {
     if (!m.isOnline) {
       list.add(const NetworkRecommendation(
         title: 'Check Connection State',
-        detail: 'External servers could not be reached. Ensure airplane mode is off and Wi-Fi/cellular connection is active.',
+        detail:
+            'External servers could not be reached. Ensure airplane mode is off and Wi-Fi/cellular connection is active.',
         severity: RecommendationSeverity.critical,
       ));
       return list;
@@ -213,7 +213,8 @@ class NetworkDiagnosticsEngine {
       if (m.wifiFrequencyMhz! < 3000) {
         list.add(NetworkRecommendation(
           title: 'Switch to 5GHz or 6GHz Wi-Fi Band',
-          detail: 'Your device is connected to a 2.4GHz Wi-Fi channel. 2.4GHz channels are narrow and easily congested by household appliances and Bluetooth, which directly contributes to jitter.',
+          detail:
+              'Your device is connected to a 2.4GHz Wi-Fi channel. 2.4GHz channels are narrow and easily congested by household appliances and Bluetooth, which directly contributes to jitter.',
           severity: RecommendationSeverity.warning,
           evidence: 'Frequency: ${m.wifiFrequencyMhz} MHz (2.4 GHz band)',
         ));
@@ -225,14 +226,17 @@ class NetworkDiagnosticsEngine {
       if (m.localGatewayLatencyMs != null && m.localGatewayLatencyMs! < 10.0) {
         list.add(NetworkRecommendation(
           title: 'Upstream Packet Loss Detected',
-          detail: 'Your local connection to your router is healthy (${m.localGatewayLatencyMs!.toStringAsFixed(1)}ms), but packets were lost beyond the local gateway. This points to external routing or upstream ISP line congestion rather than device Wi-Fi signal.',
+          detail:
+              'Your local connection to your router is healthy (${m.localGatewayLatencyMs!.toStringAsFixed(1)}ms), but packets were lost beyond the local gateway. This points to external routing or upstream ISP line congestion rather than device Wi-Fi signal.',
           severity: RecommendationSeverity.critical,
-          evidence: 'Local hop: ${m.localGatewayLatencyMs!.toStringAsFixed(1)}ms | Packet loss: ${m.packetLossPercent.toStringAsFixed(1)}%',
+          evidence:
+              'Local hop: ${m.localGatewayLatencyMs!.toStringAsFixed(1)}ms | Packet loss: ${m.packetLossPercent.toStringAsFixed(1)}%',
         ));
       } else if (m.connectionType == NetworkConnectionType.wifi) {
         list.add(NetworkRecommendation(
           title: 'Local Wi-Fi Packet Loss',
-          detail: 'Packet drops may be caused by weak Wi-Fi signal or router queuing. Moving closer to the wireless access point or restarting the router can stabilize packet delivery.',
+          detail:
+              'Packet drops may be caused by weak Wi-Fi signal or router queuing. Moving closer to the wireless access point or restarting the router can stabilize packet delivery.',
           severity: RecommendationSeverity.warning,
           evidence: 'Observed loss: ${m.packetLossPercent.toStringAsFixed(1)}%',
         ));
@@ -243,7 +247,8 @@ class NetworkDiagnosticsEngine {
     if (m.jitterMs != null && m.jitterMs! >= 15.0) {
       list.add(NetworkRecommendation(
         title: 'Bufferbloat / Network Congestion Likely',
-        detail: 'Jitter exceeding 15ms indicates packets are queuing inconsistently. Ensure other devices on the same network are not downloading large files, torrenting, or streaming 4K video during competitive matches.',
+        detail:
+            'Jitter exceeding 15ms indicates packets are queuing inconsistently. Ensure other devices on the same network are not downloading large files, torrenting, or streaming 4K video during competitive matches.',
         severity: RecommendationSeverity.warning,
         evidence: 'Measured jitter: ${m.jitterMs!.toStringAsFixed(1)}ms',
       ));
@@ -253,7 +258,8 @@ class NetworkDiagnosticsEngine {
     if (m.dnsResolutionMs != null && m.dnsResolutionMs! > 120.0) {
       list.add(NetworkRecommendation(
         title: 'Slow DNS Lookup Time',
-        detail: 'DNS hostname resolution took ${m.dnsResolutionMs!.toStringAsFixed(0)}ms. While match gameplay packets use direct IP addresses, matchmaking and game asset loading may feel sluggish.',
+        detail:
+            'DNS hostname resolution took ${m.dnsResolutionMs!.toStringAsFixed(0)}ms. While match gameplay packets use direct IP addresses, matchmaking and game asset loading may feel sluggish.',
         severity: RecommendationSeverity.info,
         evidence: 'DNS lookup: ${m.dnsResolutionMs!.toStringAsFixed(0)}ms',
       ));
@@ -263,7 +269,8 @@ class NetworkDiagnosticsEngine {
     if (m.connectionType == NetworkConnectionType.cellular) {
       list.add(const NetworkRecommendation(
         title: 'Mobile Cellular Connection',
-        detail: 'Mobile network ping naturally varies depending on tower handoff, physical obstacles, and carrier traffic prioritization. Low-latency 5GHz Wi-Fi usually delivers more consistent frame delivery.',
+        detail:
+            'Mobile network ping naturally varies depending on tower handoff, physical obstacles, and carrier traffic prioritization. Low-latency 5GHz Wi-Fi usually delivers more consistent frame delivery.',
         severity: RecommendationSeverity.info,
       ));
     }
@@ -272,7 +279,8 @@ class NetworkDiagnosticsEngine {
     if (verdict == GamingNetworkVerdict.lowLatency && list.isEmpty) {
       list.add(NetworkRecommendation(
         title: 'Optimal Competitive Connection',
-        detail: 'Your latency is low (${m.latencyDisplay}) with zero packet loss and minimal jitter (${m.jitterDisplay}). Network conditions are ideal for competitive multiplayer play.',
+        detail:
+            'Your latency is low (${m.latencyDisplay}) with zero packet loss and minimal jitter (${m.jitterDisplay}). Network conditions are ideal for competitive multiplayer play.',
         severity: RecommendationSeverity.positive,
         evidence: 'Ping: ${m.latencyDisplay} | Jitter: ${m.jitterDisplay} | Loss: 0%',
       ));

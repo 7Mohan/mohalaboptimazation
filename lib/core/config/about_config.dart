@@ -24,8 +24,7 @@ class AboutConfig {
     this.termsOfServiceUrl = 'https://mohalab.dev/terms',
     this.copyrightOwner = 'Moha Lab',
     this.copyrightYear = '2024–2026',
-    this.ownershipNotice =
-        'Moha Lab Optimization, including its user interface design, visual branding, '
+    this.ownershipNotice = 'Moha Lab Optimization, including its user interface design, visual branding, '
         'graphics, custom algorithms, and original content, is the intellectual property of Moha Lab. '
         'All rights reserved. Third-party open-source libraries and frameworks remain the property '
         'of their respective authors and are used in compliance with their open-source licenses.',
@@ -86,7 +85,11 @@ class AboutConfig {
   static bool isValidUrl(String? url) {
     if (url == null || url.trim().isEmpty) return false;
     final uri = Uri.tryParse(url.trim());
-    return uri != null && (uri.scheme == 'http' || uri.scheme == 'https' || uri.scheme == 'mailto' || uri.scheme == 'tg');
+    return uri != null &&
+        (uri.scheme == 'http' ||
+            uri.scheme == 'https' ||
+            uri.scheme == 'mailto' ||
+            uri.scheme == 'tg');
   }
 
   /// Creates a copy of this configuration with optional overrides.

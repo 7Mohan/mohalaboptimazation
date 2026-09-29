@@ -49,9 +49,8 @@ class GameRepositoryImpl implements GameRepository {
             ? MohaStatusType.safe
             : MohaStatusType.optimal;
 
-        final statusLabel = classification.confidence == GameConfidence.high
-            ? 'Optimized'
-            : 'Ready';
+        final statusLabel =
+            classification.confidence == GameConfidence.high ? 'Optimized' : 'Ready';
 
         games.add(
           GameEntity(

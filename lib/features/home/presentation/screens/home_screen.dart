@@ -141,9 +141,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Hero: device identity, real tweak status and a measured one-tap boost.
-// ---------------------------------------------------------------------------
 
 class _HeroCard extends ConsumerWidget {
   const _HeroCard();
@@ -157,8 +155,11 @@ class _HeroCard extends ConsumerWidget {
     final active = snapshot.activeCount;
     final caps = snapshot.capabilities;
 
+    // Many models already start with the brand ("Infinix X6891"); don't repeat it.
     final name = (identity != null && identity.manufacturer != 'Unavailable')
-        ? '${identity.manufacturer} ${identity.model}'
+        ? (identity.model.toLowerCase().startsWith(identity.manufacturer.toLowerCase())
+            ? identity.model
+            : '${identity.manufacturer} ${identity.model}')
         : 'Your device';
     final android = (identity != null && identity.androidVersion != 'Unavailable')
         ? 'Android ${identity.androidVersion}'
@@ -345,9 +346,7 @@ class _BoostButton extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Quick actions
-// ---------------------------------------------------------------------------
 
 class _QuickActionsGrid extends StatelessWidget {
   const _QuickActionsGrid();
@@ -444,9 +443,7 @@ class _QuickActionTile extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Principles & social
-// ---------------------------------------------------------------------------
 
 class _PrinciplesCard extends StatelessWidget {
   const _PrinciplesCard();

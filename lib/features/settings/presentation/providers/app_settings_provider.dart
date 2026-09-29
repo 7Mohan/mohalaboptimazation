@@ -8,14 +8,13 @@ import '../../../games/data/datasources/game_profile_local_datasource.dart';
 import '../../../network/data/datasources/network_history_local_datasource.dart';
 import '../providers/theme_provider.dart'; // re-exports sharedPreferencesProvider
 
-// ── Infrastructure ────────────────────────────────────────────────────────────
+// Infrastructure
 
 final gameProfileLocalDsProvider = Provider<GameProfileLocalDataSource>((ref) {
   return GameProfileLocalDataSource(ref.watch(sharedPreferencesProvider));
 });
 
-final networkHistoryLocalDsProvider =
-    Provider<NetworkHistoryLocalDataSource>((ref) {
+final networkHistoryLocalDsProvider = Provider<NetworkHistoryLocalDataSource>((ref) {
   return NetworkHistoryLocalDataSource(ref.watch(sharedPreferencesProvider));
 });
 
@@ -28,7 +27,7 @@ final dataManagerProvider = Provider<DataManager>((ref) {
   );
 });
 
-// ── App Settings State ─────────────────────────────────────────────────────────
+// App Settings State
 
 class AppSettingsNotifier extends AsyncNotifier<AppSettings> {
   @override
@@ -70,12 +69,11 @@ class AppSettingsNotifier extends AsyncNotifier<AppSettings> {
   }
 }
 
-final appSettingsProvider =
-    AsyncNotifierProvider<AppSettingsNotifier, AppSettings>(
+final appSettingsProvider = AsyncNotifierProvider<AppSettingsNotifier, AppSettings>(
   AppSettingsNotifier.new,
 );
 
-// ── Data Management State ──────────────────────────────────────────────────────
+// Data Management State
 
 enum DataOpStatus { idle, loading, success, error }
 

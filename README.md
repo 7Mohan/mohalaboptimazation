@@ -10,11 +10,16 @@
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?style=flat-square&logo=dart&logoColor=white)](https://dart.dev)
 [![Android](https://img.shields.io/badge/Android-10%20to%2015-3DDC84?style=flat-square&logo=android&logoColor=white)](https://android.com)
 [![Shizuku](https://img.shields.io/badge/Shizuku-Privilege%20API-FF6F00?style=flat-square)](https://shizuku.rikka.app/)
-[![License](https://img.shields.io/badge/License-Proprietary-gray?style=flat-square)](#license)
+[![License](https://img.shields.io/badge/License-View%20Only-gray?style=flat-square)](LICENSE)
 
-[Features](#-key-features) • [Architecture](#-architecture) • [Security & Privacy](#-security--privacy) • [Getting Started](#-getting-started) • [Community](#-community--links)
+[Features](#-key-features) • [Architecture](#-architecture) • [Security & Privacy](#-security--privacy) • [Review the code](#-review-the-code) • [Community](#-community--links)
 
 </div>
+
+> 🔎 **Published for transparency — view only.**
+> This code is public so anyone can check exactly what the app does on their phone.
+> It is **not open source**: copying, modifying, building or redistributing it is not permitted (see [LICENSE](LICENSE)).
+> **Official download:** [github.com/7Mohan/mohalab-optimization-app/releases](https://github.com/7Mohan/mohalab-optimization-app/releases) — any other build is unofficial.
 
 ---
 
@@ -91,49 +96,34 @@ Native side (`android/app/src/main/kotlin/.../`): `TweakEngine.kt` owns every pr
 
 ## 🛡️ Security & Privacy
 
-Security and device integrity are core design priorities:
-- **No Insecure Exploits:** Uses official Android platform APIs and standardized Shizuku binder IPC.
-- **Audited Commands:** All ADB and shell commands are pre-registered and validated against an explicit whitelist.
-- **Zero Telemetry Leaks:** No personal identity data, IMEI, or sensitive hardware identifiers are collected or transmitted.
-- For complete audits, refer to [SECURITY_AUDIT.md](SECURITY_AUDIT.md) and [PERMISSIONS_AND_PRIVACY.md](PERMISSIONS_AND_PRIVACY.md).
+- **Fixed commands only.** Every privileged command is built from a fixed template inside
+  `TweakEngine.kt`; arguments are validated (package-name regex, allow-listed values and paths).
+  There is no "run any command" entry point from the UI.
+- **Reversible.** Original values are saved on the device before the first change and restored
+  when a tweak is switched off.
+- **No data collection by the app.** No account, no analytics, no uploads. Device information is
+  read and processed on the phone only.
+- **Ads:** the app shows Google AdMob ads. AdMob may use the device's advertising ID; EEA/UK users
+  get Google's consent form. See [store/privacy-policy.md](store/privacy-policy.md).
+- Details: [SECURITY_AUDIT.md](SECURITY_AUDIT.md) · [PERMISSIONS_AND_PRIVACY.md](PERMISSIONS_AND_PRIVACY.md)
 
 ---
 
-## 🚀 Getting Started
+## 🔎 Review the code
 
-### Prerequisites
-- **Flutter SDK**: `^3.24.0` or higher
-- **Android SDK**: API Level 26 (Android 8.0) to API Level 35 (Android 15)
-- **Java**: JDK 17
-- Optional: [Shizuku](https://shizuku.rikka.app/) installed on device for privileged system-level optimizations.
+Everything that touches system settings lives in three Kotlin files — start here:
 
-### Build and Run
+| File | What it does |
+|---|---|
+| [`TweakEngine.kt`](android/app/src/main/kotlin/com/mohalab/optimization/TweakEngine.kt) | Every tweak: the exact setting / command, snapshot of your original value, read-back check, restore |
+| [`ShizukuBridge.kt`](android/app/src/main/kotlin/com/mohalab/optimization/ShizukuBridge.kt) | Runs those commands through Shizuku and checks exit codes |
+| [`RootShell.kt`](android/app/src/main/kotlin/com/mohalab/optimization/RootShell.kt) | Optional root session (Magisk / KernelSU / APatch) |
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/7Mohan/mohalaboptimazation.git
-   cd mohalaboptimazation
-   ```
+The Dart side lists every tweak with the exact change it makes in
+[`tweak_catalog.dart`](lib/features/optimization/domain/tweak_catalog.dart) — the same text the app
+shows under "Exactly what changes".
 
-2. **Install Flutter dependencies:**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Build Release APK:**
-   ```bash
-   flutter build apk --release
-   ```
-
-4. **Install to connected Android device:**
-   ```bash
-   adb install -r -d build/app/outputs/flutter-apk/app-release.apk
-   ```
-
-5. **Run Web Version:**
-   ```bash
-   flutter build web --release
-   ```
+Network access: Google AdMob (ads) and the in-app network test only.
 
 ---
 
@@ -149,3 +139,6 @@ Security and device integrity are core design priorities:
 ## 📄 License
 
 Copyright © 2026 Mohamed Bashir Ali ([@7Mohan](https://github.com/7Mohan)). All rights reserved.
+
+Source-available, **view only** — see [LICENSE](LICENSE). You may read this code to verify the app;
+copying, modifying, building or redistributing it requires written permission.

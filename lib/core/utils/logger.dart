@@ -14,11 +14,9 @@ enum _LogLevel { debug, info, warning, error }
 abstract final class AppLogger {
   AppLogger._();
 
-  static void debug(String message, {String? tag}) =>
-      _log(_LogLevel.debug, message, tag: tag);
+  static void debug(String message, {String? tag}) => _log(_LogLevel.debug, message, tag: tag);
 
-  static void info(String message, {String? tag}) =>
-      _log(_LogLevel.info, message, tag: tag);
+  static void info(String message, {String? tag}) => _log(_LogLevel.info, message, tag: tag);
 
   static void warning(String message, {String? tag, Object? error}) =>
       _log(_LogLevel.warning, message, tag: tag, error: error);
@@ -36,10 +34,10 @@ abstract final class AppLogger {
     if (!kDebugMode) return;
 
     final prefix = switch (level) {
-      _LogLevel.debug   => '🔍 DEBUG',
-      _LogLevel.info    => 'ℹ️  INFO ',
+      _LogLevel.debug => '🔍 DEBUG',
+      _LogLevel.info => 'ℹ️  INFO ',
       _LogLevel.warning => '⚠️  WARN ',
-      _LogLevel.error   => '🔴 ERROR',
+      _LogLevel.error => '🔴 ERROR',
     };
     final tagStr = tag != null ? '[$tag] ' : '';
     debugPrint('$prefix $tagStr$message');

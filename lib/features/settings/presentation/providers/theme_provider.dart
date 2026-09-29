@@ -6,9 +6,7 @@ import '../../../../data/datasources/local/settings_local_datasource.dart';
 import '../../../../data/repositories/user_preferences_repository_impl.dart';
 import '../../../../domain/entities/theme_preference.dart';
 
-// ---------------------------------------------------------------------------
 // Infrastructure providers
-// ---------------------------------------------------------------------------
 
 /// Provides the SharedPreferences instance.
 /// Must be overridden with the real instance at app startup.
@@ -29,9 +27,7 @@ final userPreferencesRepositoryProvider = Provider<UserPreferencesRepositoryImpl
   name: 'userPreferencesRepositoryProvider',
 );
 
-// ---------------------------------------------------------------------------
 // Theme state
-// ---------------------------------------------------------------------------
 
 /// Notifier that reads and persists the user's theme preference.
 class ThemeNotifier extends AsyncNotifier<ThemePreference> {
@@ -48,8 +44,7 @@ class ThemeNotifier extends AsyncNotifier<ThemePreference> {
   }
 }
 
-final themeNotifierProvider =
-    AsyncNotifierProvider<ThemeNotifier, ThemePreference>(
+final themeNotifierProvider = AsyncNotifierProvider<ThemeNotifier, ThemePreference>(
   ThemeNotifier.new,
   name: 'themeNotifierProvider',
 );

@@ -4,10 +4,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/tokens/app_sizes.dart';
 import '../../../core/theme/tokens/app_spacing.dart';
 
-/// Standardized top application bar for Moha Lab Optimization.
-///
-/// Communicates technical precision with the signature "MOHA LAB" brand tag
-/// and consistent typography hierarchy.
+/// App bar with the "MOHA LAB" brand tag above the title.
 class MohaAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MohaAppBar({
     super.key,
