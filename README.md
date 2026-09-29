@@ -19,7 +19,13 @@
 > 🔎 **Published for transparency — view only.**
 > This code is public so anyone can check exactly what the app does on their phone.
 > It is **not open source**: copying, modifying, building or redistributing it is not permitted (see [LICENSE](LICENSE)).
-> **Official download:** [github.com/7Mohan/mohalab-optimization-app/releases](https://github.com/7Mohan/mohalab-optimization-app/releases) — any other build is unofficial.
+> **Official download:** [Releases](../../releases/latest) — any other build is unofficial.
+
+## 📥 Download
+
+Get the latest signed APK from **[Releases](../../releases/latest)** — open it on your phone and allow *Install unknown apps*.
+
+<p align="center"><img src="screenshots/home.png" width="300" alt="Home screen"></p>
 
 ---
 
