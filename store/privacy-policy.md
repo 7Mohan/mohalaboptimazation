@@ -1,6 +1,6 @@
 # Privacy Policy — Moha Lab Optimization
 
-_Last updated: September 29, 2026_
+_Last updated: September 30, 2026_
 
 Moha Lab Optimization ("the app") is developed by Mohamed Bashir Ali ("we").
 This policy explains what data the app handles.
@@ -18,8 +18,21 @@ This policy explains what data the app handles.
 We do not require an account and we do not collect your name, email, contacts,
 photos, location or messages.
 
-## 2. Advertising (Google AdMob)
-The app shows ads provided by **Google AdMob**. To serve and measure ads, AdMob
+## 2. Anonymous usage statistics (Firebase Analytics)
+To understand how many people use the app and which features are useful, the
+app uses **Google Firebase Analytics**. It collects:
+- anonymous app-instance identifiers, app version, device model, Android
+  version, country (from IP) and session information,
+- which screens are opened and which features are used (for example "tweak
+  switched on", "preset applied"), without any personal content.
+
+EEA/UK users are asked for consent first, through Google's consent form, and can
+change their choice in **Settings → Privacy options**.
+See https://firebase.google.com/support/privacy
+
+## 3. Advertising (Google AdMob)
+**Version 1.3.0 shows no ads and requests none.** Earlier versions, and future
+versions that show ads again, use **Google AdMob**. When ads are shown, AdMob
 may collect and process:
 - your device's **advertising ID**,
 - IP address and approximate location derived from it,
@@ -33,23 +46,23 @@ delete your advertising ID in your Android settings (Google → Ads).
 Learn how Google uses this data:
 https://policies.google.com/technologies/partner-sites
 
-## 3. System permissions
+## 4. System permissions
 Optional features use Shizuku, a one-time ADB permission, or root
 (Magisk / KernelSU / APatch) to change documented Android settings you choose.
 These changes happen only on your device, only when you turn them on, and your
 original values are restored when you turn them off.
 
-## 4. Network
+## 5. Network
 The network test contacts public servers to measure latency. No personal data is
 sent as part of these tests.
 
-## 5. Children
+## 6. Children
 The app is not directed at children under 13.
 
-## 6. Changes
+## 7. Changes
 We may update this policy; the date above shows the latest version.
 
-## 7. Contact
+## 8. Contact
 - Telegram: https://t.me/Mohagaminglab
 - Website: https://mohagaminglab.vercel.app
 - GitHub: https://github.com/7Mohan

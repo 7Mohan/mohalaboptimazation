@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Moha Lab Optimization Banner](https://img.shields.io/badge/MOHA%20LAB-OPTIMIZATION%20v1.2-00DC82?style=for-the-badge&logo=android&logoColor=white)
+![Moha Lab Optimization Banner](https://img.shields.io/badge/MOHA%20LAB-OPTIMIZATION%20v1.3-00DC82?style=for-the-badge&logo=android&logoColor=white)
 
 **High-Performance Android Gaming & System Tuning Framework**
 
