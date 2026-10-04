@@ -43,6 +43,15 @@ Get the latest signed APK from **[Releases](../../releases/latest)** — open it
 <img src="screenshots/09-settings.png" width="220" alt="Settings: dark and light theme">
 </p>
 
+**Root mode** (Magisk, KernelSU, APatch)
+
+<p align="center">
+<img src="screenshots/10-root-lag-fighter.png" width="220" alt="Root view: Lag Fighter, root actions and tools">
+<img src="screenshots/11-root-performance.png" width="220" alt="Root performance tweaks">
+<img src="screenshots/12-root-network.png" width="220" alt="Root network tweaks">
+<img src="screenshots/13-cpu-gpu-limits.png" width="220" alt="CPU and GPU limits with governors">
+</p>
+
 ---
 
 ## 📖 Overview
@@ -69,7 +78,9 @@ Built with **Flutter** in a **liquid glass** design (calm dark theme by default,
 ### 🔓 Root Mode (Magisk / KernelSU / APatch)
 - Tweaks are split into **Non-root** and **Root** tabs.
 - Detects Magisk, KernelSU (and Next), APatch and Kitsune; "Grant root" triggers the manager's standard `su` prompt. One persistent root shell is reused (no per-command toasts); the grant is resumed silently on next launch.
+- **Lag Fighter:** cuts micro-stutter: the CPU speeds up the moment a frame needs it and the game on screen gets priority over background work.
 - CPU and GPU **governor choice** from the governors your kernel offers, and minimum / maximum clock limits with live graphs.
+- I/O scheduler for gaming and faster game loading (storage read-ahead); Ultra Cleaner also clears system logs.
 - Root-only kernel tweaks: CPU performance governor, GPU (Adreno / Mali) performance governor, TCP BBR, reduced swappiness, Wi-Fi low-latency / high-perf locks. Root actions: drop kernel caches, storage TRIM.
 - Every kernel node's original value is saved and restored; values reset on reboot and active tweaks are re-applied when the root session resumes. Shizuku started as root is also treated as root.
 

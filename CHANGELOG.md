@@ -22,10 +22,27 @@ Any APK from another source is unofficial.
 ### New
 - **FPS cap that works on more phones:** where Android ignores its per-game frame-rate limit, Moha Lab caps the screen refresh rate while the game runs and puts it back when you leave (start the game from Moha Lab).
 - **Ultra Cleaner (Shizuku):** app caches, shared-storage caches and thumbnail caches, with the space really freed. Your own files are only removed when you tick them; root adds system logs.
-- **CPU and GPU governor choice (root),** from the governors your kernel offers.
 - **Performance check:** finds what slows your phone, why, and what to do.
 - **ANGLE on Vulkan tweak,** and Device Lab shows your GPU, OpenGL ES and Vulkan versions.
 - **Memory Lab, CPU cores graph, Background apps** in Games, and per-game graphics driver and priority.
+
+### Root (Magisk, KernelSU, APatch)
+
+<p>
+<img src="screenshots/10-root-lag-fighter.png" width="200" alt="Root view with Lag Fighter">
+<img src="screenshots/11-root-performance.png" width="200" alt="Root performance tweaks">
+<img src="screenshots/13-cpu-gpu-limits.png" width="200" alt="CPU and GPU limits with governors">
+</p>
+
+- **Lag Fighter:** cuts micro-stutter. The CPU speeds up the moment a frame needs it, and the game on screen always gets priority over background work.
+- **CPU and GPU governor choice:** pick from the governors your kernel lists, next to the live clock graphs and minimum / maximum locks in CPU & GPU limits.
+- **I/O Scheduler for Gaming:** switches storage to the scheduler with the least delay.
+- **Faster Game Loading:** raises storage read-ahead to 512 KB, so large game files load in fewer, bigger reads.
+- **Per-CPU trace buffer** setting, and **Ultra Cleaner** also clears crash reports and system logs with root.
+- Root-only tweaks and recommendations now live in their own Root view.
+- Every kernel value is saved before the first change and put back when you turn the tweak off.
+
+Root features are new; if one does not work on your phone, tell us in the community.
 
 ### Improved
 - Game Mode, render resolution and FPS can be set independently, and the app tells you when to reopen the game to apply them.
