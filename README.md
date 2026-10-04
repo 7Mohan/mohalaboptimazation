@@ -2,13 +2,13 @@
 
 <div align="center">
 
-![Moha Lab Optimization Banner](https://img.shields.io/badge/MOHA%20LAB-OPTIMIZATION%20v1.3-00DC82?style=for-the-badge&logo=android&logoColor=white)
+![Moha Lab Optimization Banner](https://img.shields.io/badge/MOHA%20LAB-OPTIMIZATION%20v1.4-00E5A0?style=for-the-badge&logo=android&logoColor=white)
 
 **High-Performance Android Gaming & System Tuning Framework**
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=flat-square&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?style=flat-square&logo=dart&logoColor=white)](https://dart.dev)
-[![Android](https://img.shields.io/badge/Android-10%20to%2015-3DDC84?style=flat-square&logo=android&logoColor=white)](https://android.com)
+[![Android](https://img.shields.io/badge/Android-10%20to%2016-3DDC84?style=flat-square&logo=android&logoColor=white)](https://android.com)
 [![Shizuku](https://img.shields.io/badge/Shizuku-Privilege%20API-FF6F00?style=flat-square)](https://shizuku.rikka.app/)
 [![License](https://img.shields.io/badge/License-View%20Only-gray?style=flat-square)](LICENSE)
 
@@ -25,7 +25,23 @@
 
 Get the latest signed APK from **[Releases](../../releases/latest)** — open it on your phone and allow *Install unknown apps*.
 
-<p align="center"><img src="screenshots/home.png" width="300" alt="Home screen"></p>
+### Screenshots (v1.4.0)
+
+<p align="center">
+<img src="screenshots/01-intro.png" width="220" alt="Opening screen">
+<img src="screenshots/02-home.png" width="220" alt="Home with the status card and banners">
+<img src="screenshots/03-home-status.png" width="220" alt="Home: live telemetry and quick actions">
+</p>
+<p align="center">
+<img src="screenshots/04-ultra-cleaner.png" width="220" alt="Ultra Cleaner">
+<img src="screenshots/05-optimize.png" width="220" alt="Optimize: tweaks verified on the device">
+<img src="screenshots/06-optimize-presets.png" width="220" alt="Recommended tweaks and presets">
+</p>
+<p align="center">
+<img src="screenshots/07-games.png" width="220" alt="Games">
+<img src="screenshots/08-tools.png" width="220" alt="Tools: Performance check and labs">
+<img src="screenshots/09-settings.png" width="220" alt="Settings: dark and light theme">
+</p>
 
 ---
 
@@ -33,7 +49,7 @@ Get the latest signed APK from **[Releases](../../releases/latest)** — open it
 
 **Moha Lab Optimization** is an Android gaming utility that applies **real, verifiable system tweaks** — documented Android settings and `cmd` services — with live telemetry, per-game Game Mode tuning and gaming network diagnostics.
 
-Built with **Flutter** and a performant **glassmorphism** design language, it works rootless through the **Shizuku API** (or a one-time ADB permission grant for settings-based tweaks).
+Built with **Flutter** in a **liquid glass** design (calm dark theme by default, light theme in Settings), it works rootless through the **Shizuku API** (or a one-time ADB permission grant for settings-based tweaks).
 
 ---
 
@@ -53,16 +69,20 @@ Built with **Flutter** and a performant **glassmorphism** design language, it wo
 ### 🔓 Root Mode (Magisk / KernelSU / APatch)
 - Tweaks are split into **Non-root** and **Root** tabs.
 - Detects Magisk, KernelSU (and Next), APatch and Kitsune; "Grant root" triggers the manager's standard `su` prompt. One persistent root shell is reused (no per-command toasts); the grant is resumed silently on next launch.
+- CPU and GPU **governor choice** from the governors your kernel offers, and minimum / maximum clock limits with live graphs.
 - Root-only kernel tweaks: CPU performance governor, GPU (Adreno / Mali) performance governor, TCP BBR, reduced swappiness, Wi-Fi low-latency / high-perf locks. Root actions: drop kernel caches, storage TRIM.
 - Every kernel node's original value is saved and restored; values reset on reboot and active tweaks are re-applied when the root session resumes. Shizuku started as root is also treated as root.
 
 ### 🎮 3. Per-Game Tuning (Android 13/14+ Game Mode)
 - Game Mode (standard / performance / battery), render-resolution downscale and FPS override per game.
+- Where the phone ignores Android's per-game FPS limit, the FPS cap is applied through the screen refresh rate while the game runs, and restored when you leave.
+- The graphics driver each game really used is read back from Android.
 - Settings are per-app and only active while the game runs.
 - ART `speed` compilation per game; Turbo Launch applies the profile before launching.
 
 ### 🧹 4. Measured Maintenance
-- RAM Boost, app-cache cleanup and ART background dexopt — results are measured (MB freed), never estimated.
+- RAM Boost, **Ultra Cleaner** (app, shared-storage and thumbnail caches; system logs with root) and ART background dexopt — results are measured (MB freed), never estimated.
+- Your own files (installer APKs, empty folders) are only removed when you tick them.
 
 ### 🌐 5. Gaming Network Diagnostics
 - Latency, jitter and packet-loss probing with connection quality scoring.
@@ -107,10 +127,9 @@ Native side (`android/app/src/main/kotlin/.../`): `TweakEngine.kt` owns every pr
   There is no "run any command" entry point from the UI.
 - **Reversible.** Original values are saved on the device before the first change and restored
   when a tweak is switched off.
-- **No data collection by the app.** No account, no analytics, no uploads. Device information is
-  read and processed on the phone only.
-- **Ads:** the app shows Google AdMob ads. AdMob may use the device's advertising ID; EEA/UK users
-  get Google's consent form. See [store/privacy-policy.md](store/privacy-policy.md).
+- **No account, no uploads of your data.** Device information is read and processed on the phone
+  only. Anonymous usage statistics (Firebase Analytics) are asked for first in the EEA and the UK.
+- **Ads:** versions 1.3.0 and 1.4.0 show no ads. See [store/privacy-policy.md](store/privacy-policy.md).
 - Details: [SECURITY_AUDIT.md](SECURITY_AUDIT.md) · [PERMISSIONS_AND_PRIVACY.md](PERMISSIONS_AND_PRIVACY.md)
 
 ---

@@ -31,7 +31,7 @@ change their choice in **Settings → Privacy options**.
 See https://firebase.google.com/support/privacy
 
 ## 3. Advertising (Google AdMob)
-**Version 1.3.0 shows no ads and requests none.** Earlier versions, and future
+**Versions 1.3.0 and 1.4.0 show no ads and request none.** Earlier versions, and future
 versions that show ads again, use **Google AdMob**. When ads are shown, AdMob
 may collect and process:
 - your device's **advertising ID**,
