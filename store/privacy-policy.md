@@ -62,7 +62,7 @@ The network test contacts public servers to measure latency. No personal data is
 sent as part of these tests.
 
 When the app opens, it downloads a small settings file from our server
-(mohalab-admin.mohalab-admin.workers.dev, hosted by Cloudflare) with announcements, the latest
+(hosted by Cloudflare) with announcements, the latest
 version number and switches that can turn a feature off. With it the app sends
 its version number and a random install ID that it creates once on your phone,
 so we can count how many installs use each version. About every six hours it
