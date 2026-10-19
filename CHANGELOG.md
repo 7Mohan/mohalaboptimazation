@@ -3,6 +3,37 @@
 Download the latest signed APK from [Releases](../../releases/latest).
 Any APK from another source is unofficial.
 
+## v1.5.0 — October 19, 2026
+
+### MohaLab Boost
+A game panel over your games. Turn it on in Games, choose your games, and a small FPS handle appears at the screen edge while you play. Tap it to open the panel. Everything the panel switches on is undone when you leave the game.
+
+- **Basic:** live FPS, CPU and GPU gauges, battery temperature and RAM. Power saving, Balanced and Performance modes. Screenshot, screen recording, screen search, memory cleanup and a brightness slider. Up to five apps that open in a small window over the game.
+- **Quick access:** Esports mode (performance mode, Do Not Disturb, no pop-ups and a locked notification bar in one switch), Eye care, Off-screen gaming (the picture goes black, the game keeps running; double-tap to come back).
+- **Smart trigger:** save a part of the screen, like a button or a pop-up, and choose up to two taps. When it appears there again, Moha Lab taps for you. Some online games treat automatic taps as cheating, so check the game's rules first.
+- **Network enhancement:** low-latency Wi-Fi, mobile data on standby beside Wi-Fi, and a ping test.
+- **Anti-interference:** Call rejection, Do Not Disturb, hide notification pop-ups, block the drag-down notification bar.
+- **Gameplay add-ons:** game filters (grayscale, inverted colours).
+- **Infinix, Tecno and itel (XOS):** image stabilization, touch optimization, bypass charging, call on hold, stay online during calls and mistouch prevention for navigation gestures, using the phone's own switches. They only show on phones that have them.
+
+Most Boost tools need Shizuku or root. Without it the panel still opens and says what is missing.
+
+### New
+- **Custom resolution** in Tools: pick how many pixels the phone renders. It goes back by itself unless you tap Keep.
+- **Touch test** in Tools: find dead spots, check multi-touch and catch ghost touches.
+- **New tweaks without root:** Keep Games Alive in the Background (Android 12L and newer) and Stay Awake While Charging.
+- **New root tweak:** turn off ZRAM and swap. Refused when free RAM is too low.
+- **Messages from Moha Lab:** a bell on Home with every message, notifications in your notification bar, and a notice when an update is needed.
+- **First start** explains every permission before asking for it.
+
+### Fixed and improved
+- Reset Everything now turns every tweak off and puts your phone back before deleting any data.
+- Unreadable buttons in the light theme on CPU & GPU limits.
+- If a feature or tweak causes problems, Moha Lab can pause it for everyone until it is fixed, without a new update. A paused tweak that was on is turned off and your setting put back.
+
+### Privacy
+The app now sends its version, a random install ID and the names of the Moha Lab tweaks and features you have on, so we can see what is used and pause something that causes problems. Nothing about you is sent. Details in the [privacy policy](store/privacy-policy.md).
+
 ## v1.4.0 — October 4, 2026
 
 <p>

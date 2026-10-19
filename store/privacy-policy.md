@@ -1,6 +1,6 @@
 # Privacy Policy — Moha Lab Optimization
 
-_Last updated: September 30, 2026_
+_Last updated: October 18, 2026_
 
 Moha Lab Optimization ("the app") is developed by Mohamed Bashir Ali ("we").
 This policy explains what data the app handles.
@@ -26,13 +26,12 @@ app uses **Google Firebase Analytics**. It collects:
 - which screens are opened and which features are used (for example "tweak
   switched on", "preset applied"), without any personal content.
 
-EEA/UK users are asked for consent first, through Google's consent form, and can
-change their choice in **Settings → Privacy options**.
+Analytics follows the same consent choice as ads: EEA/UK users are asked first,
+and can change their choice in **Settings → Ad privacy options**.
 See https://firebase.google.com/support/privacy
 
 ## 3. Advertising (Google AdMob)
-**Versions 1.3.0 and 1.4.0 show no ads and request none.** Earlier versions, and future
-versions that show ads again, use **Google AdMob**. When ads are shown, AdMob
+The app shows ads provided by **Google AdMob**. To serve and measure ads, AdMob
 may collect and process:
 - your device's **advertising ID**,
 - IP address and approximate location derived from it,
@@ -52,9 +51,31 @@ Optional features use Shizuku, a one-time ADB permission, or root
 These changes happen only on your device, only when you turn them on, and your
 original values are restored when you turn them off.
 
+MohaLab Boost, if you turn it on, uses "Display over other apps" to show its
+panel over your games and "Usage access" to notice when one of your games is
+open. Which apps you open is checked on your device only; it is not stored or
+sent anywhere. Smart trigger reads the part of the screen you chose, on your
+phone only, to know when to tap; no picture leaves your phone.
+
 ## 5. Network
 The network test contacts public servers to measure latency. No personal data is
 sent as part of these tests.
+
+When the app opens, it downloads a small settings file from our server
+(mohalab-admin.mohalab-admin.workers.dev, hosted by Cloudflare) with announcements, the latest
+version number and switches that can turn a feature off. With it the app sends
+its version number and a random install ID that it creates once on your phone,
+so we can count how many installs use each version. About every six hours it
+also sends the names of the Moha Lab tweaks and features you have switched on, so
+we can see which are used and pause one that causes problems. The ID is not linked to
+you, your phone or any account, and an ID not seen for 90 days is deleted. Like
+any web request it reveals your IP address; we do not store it, and Cloudflare keeps
+it only in short-lived request logs.
+
+If you allow notifications, the app subscribes to two Firebase Cloud Messaging
+topics ("all" and its version number) so we can send news about updates and
+fixes. Google delivers these messages; we do not receive or store any device
+token.
 
 ## 6. Children
 The app is not directed at children under 13.

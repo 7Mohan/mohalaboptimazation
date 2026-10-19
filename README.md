@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Moha Lab Optimization Banner](https://img.shields.io/badge/MOHA%20LAB-OPTIMIZATION%20v1.4-00E5A0?style=for-the-badge&logo=android&logoColor=white)
+![Moha Lab Optimization Banner](https://img.shields.io/badge/MOHA%20LAB-OPTIMIZATION%20v1.5-00E5A0?style=for-the-badge&logo=android&logoColor=white)
 
 **High-Performance Android Gaming & System Tuning Framework**
 
@@ -140,7 +140,7 @@ Native side (`android/app/src/main/kotlin/.../`): `TweakEngine.kt` owns every pr
   when a tweak is switched off.
 - **No account, no uploads of your data.** Device information is read and processed on the phone
   only. Anonymous usage statistics (Firebase Analytics) are asked for first in the EEA and the UK.
-- **Ads:** versions 1.3.0 and 1.4.0 show no ads. See [store/privacy-policy.md](store/privacy-policy.md).
+- **Ads:** versions 1.3.0 to 1.5.0 show no ads. See [store/privacy-policy.md](store/privacy-policy.md).
 - Details: [SECURITY_AUDIT.md](SECURITY_AUDIT.md) · [PERMISSIONS_AND_PRIVACY.md](PERMISSIONS_AND_PRIVACY.md)
 
 ---
