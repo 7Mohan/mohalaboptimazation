@@ -3,6 +3,31 @@
 Download the latest signed APK from [Releases](../../releases/latest).
 Any APK from another source is unofficial.
 
+## v1.6.0 — October 31, 2026
+
+### MohaLab Net Flash
+Choose which apps lose internet while you play, like a firewall. Turn it on in Tools, from the Boost panel, or in every game. The game itself stays online, and you can change the list during a game, so an app you are waiting for a call in can stay connected.
+
+It uses Android's VPN permission: the chosen apps' data is dropped on your phone and nothing is sent anywhere. It stops those apps using your connection; it can't make your internet or a game server faster. Android allows one VPN at a time.
+
+### New
+- **Debloat cleaner** in Tools: search, select some or all apps, and remove them together. Apps you installed are uninstalled. Pre-installed apps are removed for your user and can be restored; without root their file stays on the phone. Removing an app deletes its data. Needs Shizuku or root.
+- **Clean when a game opens:** Boost clears app caches and cached background apps, then shows what it measured. Apps rebuild their caches later. You can turn this off on the Boost screen.
+- **Compile this game** in the Boost panel: compiles the game's app code ahead of time and checks the result on the phone. It works from the next time you open the game. The engine in many big games is already compiled, so you may see little or no FPS change.
+- **Memory Lab:** separate Clear cache and Force stop, and a list of apps to never force stop.
+- **Touch & Hold:** choose the delay.
+- **Sensor test** in Tools: measures your sensors' rate and noise.
+- **Smart trigger** can look for its picture anywhere on the screen. Some online games treat automatic taps as cheating, so check the game's rules first.
+- Animations and sounds for Net Flash, Smart trigger, Compile and the game-start clean, and a new welcome after the opening logo. Sound effects stay silent during calls.
+
+### Fixed and improved
+- Boost comes back by itself after you clear Moha Lab from recent apps or update it. It can take about 30 seconds. On phones that use Shizuku through ADB, start Shizuku again after a restart.
+- FPS meter: steadier, no blinking, updates every second.
+- Apps in a small window no longer throw you out of the game on phones without small windows; you get a message. This needs Android's small windows, which some phones, including Infinix, don't offer to other apps.
+
+### Privacy
+To improve the app, Moha Lab now also collects your phone's maker and model, Android version and country, and an online signal while the app is open. An anonymous ID keeps one phone counted as one user after a reinstall. No name, account or phone number is attached. Details in the [privacy policy](https://github.com/7Mohan/mohalaboptimazation/blob/main/store/privacy-policy.md).
+
 ## v1.5.0 — October 19, 2026
 
 ### MohaLab Boost

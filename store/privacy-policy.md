@@ -1,6 +1,6 @@
 # Privacy Policy — Moha Lab Optimization
 
-_Last updated: October 18, 2026_
+_Last updated: October 31, 2026_
 
 Moha Lab Optimization ("the app") is developed by Mohamed Bashir Ali ("we").
 This policy explains what data the app handles.
@@ -14,6 +14,9 @@ This policy explains what data the app handles.
 - **Installed apps**: the app reads your list of installed apps
   (`QUERY_ALL_PACKAGES`) only to detect games for per-game tuning. The list is
   never uploaded.
+- **MohaLab Net Flash**: this feature uses Android's VPN permission to cut the
+  internet of the apps you choose. Their data is dropped on your phone. It is not
+  read, stored or sent anywhere, and no VPN server is involved.
 
 We do not require an account and we do not collect your name, email, contacts,
 photos, location or messages.
@@ -64,13 +67,17 @@ sent as part of these tests.
 When the app opens, it downloads a small settings file from our server
 (hosted by Cloudflare) with announcements, the latest
 version number and switches that can turn a feature off. With it the app sends
-its version number and a random install ID that it creates once on your phone,
-so we can count how many installs use each version. About every six hours it
-also sends the names of the Moha Lab tweaks and features you have switched on, so
-we can see which are used and pause one that causes problems. The ID is not linked to
-you, your phone or any account, and an ID not seen for 90 days is deleted. Like
-any web request it reveals your IP address; we do not store it, and Cloudflare keeps
-it only in short-lived request logs.
+its version number, an anonymous user ID, your phone's maker and model, and its
+Android version. The ID is a one-way hash of Android's ID for this app, so
+reinstalling the app is not counted as a new user. It can't be turned back into
+the original and has no name, account or phone number attached; a factory reset
+changes it. About every six hours the app also sends the names of the Moha Lab
+tweaks and features you have switched on, and while it is open it sends a small
+"online" signal once a minute. We store your country from Cloudflare, not your IP
+address; Cloudflare keeps the IP only in short-lived request logs. Records not seen
+for a year are deleted. Which apps you have installed is never sent.
+We use this information to improve the app: to see which phones, Android versions
+and countries use it, find problems and decide what to work on.
 
 If you allow notifications, the app subscribes to two Firebase Cloud Messaging
 topics ("all" and its version number) so we can send news about updates and
