@@ -5,6 +5,8 @@ Any APK from another source is unofficial.
 
 ## v1.6.0 — October 31, 2026
 
+**Updated October 31:** fixes MohaLab Net Flash not turning on from the Boost panel when the VPN permission was missing. The panel now asks for the permission. If you installed v1.6.0 earlier today, download it again and install over it; your settings stay.
+
 ### MohaLab Net Flash
 Choose which apps lose internet while you play, like a firewall. Turn it on in Tools, from the Boost panel, or in every game. The game itself stays online, and you can change the list during a game, so an app you are waiting for a call in can stay connected.
 
