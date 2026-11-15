@@ -1,6 +1,6 @@
 # Privacy Policy — Moha Lab Optimization
 
-_Last updated: October 31, 2026_
+_Last updated: November 14, 2026_
 
 Moha Lab Optimization ("the app") is developed by Mohamed Bashir Ali ("we").
 This policy explains what data the app handles.
@@ -68,7 +68,8 @@ When the app opens, it downloads a small settings file from our server
 (hosted by Cloudflare) with announcements, the latest
 version number and switches that can turn a feature off. With it the app sends
 its version number, an anonymous user ID, your phone's maker and model, and its
-Android version. The ID is a one-way hash of Android's ID for this app, so
+Android version, its chip (for example "MediaTek MT6789") and the app language
+you chose. The ID is a one-way hash of Android's ID for this app, so
 reinstalling the app is not counted as a new user. It can't be turned back into
 the original and has no name, account or phone number attached; a factory reset
 changes it. About every six hours the app also sends the names of the Moha Lab
@@ -79,8 +80,14 @@ for a year are deleted. Which apps you have installed is never sent.
 We use this information to improve the app: to see which phones, Android versions
 and countries use it, find problems and decide what to work on.
 
-If you allow notifications, the app subscribes to two Firebase Cloud Messaging
-topics ("all" and its version number) so we can send news about updates and
+If the app closes because of an error, or a Moha Lab feature fails on your phone,
+the app sends a short report the next time it opens: what failed, the error text
+or technical trace from Moha Lab's own code, and how many times it happened, with
+the same phone details as above. Reports never contain your files, messages,
+contacts, accounts or other apps' data, and are deleted after 90 days.
+
+If you allow notifications, the app subscribes to three Firebase Cloud Messaging
+topics ("all", its version number and its language) so we can send news about updates and
 fixes. Google delivers these messages; we do not receive or store any device
 token.
 

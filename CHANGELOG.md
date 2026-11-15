@@ -3,6 +3,44 @@
 Download the latest signed APK from [Releases](../../releases/latest).
 Any APK from another source is unofficial.
 
+## v1.7.0 — November 15, 2026
+
+### Moha Lab in your language
+Moha Lab now speaks English, Indonesian, Portuguese (Brazil), Filipino, Arabic, Hindi, Malay, Bengali and Vietnamese. You choose one on the first screen, also after this update, and can change it any time in Settings. MohaLab Boost and notifications follow it, and Arabic reads right to left.
+
+### New
+- **Force Peak Refresh Rate:** keeps the screen at its highest refresh rate in every app, also on still screens, with or without root. The card shows the rate the screen really runs at. On Infinix, Tecno and itel (XOS), the system picks the rate for each app and keeps its top rate (for example 144 Hz) for its own game mode, so without root the app can't always reach it, and it tells you so. With root, Moha Lab sets the top rate directly; this is not yet tested on many rooted phones.
+- **New tweaks:**
+  - **Turn Off Logging:** the "Logger buffer sizes: Off" developer option.
+  - **Background App Limit:** keeps at most 4, 8, 16 or 32 background apps. With a low limit, switching from a game to another app can close the game.
+  - **Smallest Width:** 330, 350 or 380 dp.
+  - **Turn Off Touch Indicators:** switches off "Show taps" and "Pointer location".
+  - **Game Edge Guard:** sets the back gesture to its lowest sensitivity, so swipes near the edge stay in the game.
+  - Each one is read back from the phone and put back when you turn it off.
+- **Faster Touch & Hold:** any time from 50 to 1000 ms on a slider. Warning, Gaming, Recommended and Relaxed zones show what each time means. Below 150 ms a normal tap in apps can open a long-press menu; games are not affected.
+- **Storage TRIM** now works with Shizuku too, not only root, and checks with Android that the trim really ran.
+- **Gyro check** in Tools: shows how many milliseconds pass between gyroscope readings and the longest wait. It also explains what really makes gyro aim feel late: low FPS, heat and the game's own gyro settings. No app can make the gyroscope itself faster.
+- **Boost:**
+  - The water wave is replaced by a 10-second fight scene with its own sound: a ninja beats the Lag monster. Then it shows what was really cleaned. It never blocks your touches.
+  - Drag the FPS handle anywhere on the screen. From the panel you can switch the FPS number off and on.
+- **Import a backup** by choosing the file. Pasting the text also works, in a new sheet that stays above the keyboard.
+
+### Fixed and improved
+- **FPS meter:**
+  - It now works in PUBG and other games on phones that block the quick frame counter. Before, it showed "–".
+  - It no longer shows 240 FPS on some phones; it never goes above the screen's rate.
+- **Boost panel:** it no longer blurs the game behind it, and it reads the FPS with less work, so it uses less battery and CPU.
+- **Smoother scrolling:** lighter glass on Android 9, low-RAM phones and phones under 4 GB, and a Smoother scrolling switch in Settings.
+- **Light theme:** the glass is clearer, with a real glass edge.
+- **Problem reports:** when the app crashes or a tweak fails to turn on, it can send a short report, so problems on tablets and other phones can be found and fixed.
+
+### Privacy
+To fix problems on phones the developer doesn't have, Moha Lab now also sends:
+- your phone's chip name and the app language
+- short reports when the app crashes or a feature fails to turn on
+
+No name, account or phone number is attached. Details are in the [privacy policy](https://github.com/7Mohan/mohalaboptimazation/blob/main/store/privacy-policy.md).
+
 ## v1.6.0 — October 31, 2026
 
 **Updated October 31:** fixes MohaLab Net Flash not turning on from the Boost panel when the VPN permission was missing. The panel now asks for the permission. If you installed v1.6.0 earlier today, download it again and install over it; your settings stay.
